@@ -1,7 +1,7 @@
 {
   "name": "Arcakids Arca Digital",
   "short_name": "Arca Digital",
-  "description": "Jogos, historias e atividades biblicas para criancas.",
+  "description": "Jogos, histórias e atividades bíblicas para crianças.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

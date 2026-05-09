@@ -1,34 +1,34 @@
 const games = [
   {
-    title: "Quem Esta na Arca?",
+    title: "Quem Está na Arca?",
     age: "3-5",
     description: "Charadas com animais",
     icon: "A",
     image: "assets/ark-hero.svg",
     progress: 72,
-    level: "Facil",
+    level: "Fácil",
     screen: "play",
     featured: true
   },
   {
-    title: "Memoria da Biblia",
+    title: "Memória da Bíblia",
     age: "3-5",
     description: "Pares de personagens",
     icon: "M",
     image: "assets/sheep.svg",
     progress: 48,
-    level: "Facil",
+    level: "Fácil",
     screen: "memory",
     featured: true
   },
   {
     title: "Fato ou Fake Kids",
     age: "6-8",
-    description: "Quiz biblico leve",
+    description: "Quiz bíblico leve",
     icon: "?",
     image: "assets/david.svg",
     progress: 20,
-    level: "Medio",
+    level: "Médio",
     screen: "quiz",
     featured: true
   },
@@ -44,7 +44,7 @@ const games = [
     featured: true
   },
   {
-    title: "Monte a Historia",
+    title: "Monte a História",
     age: "6-8",
     description: "Cenas na ordem certa",
     icon: "H",
@@ -66,9 +66,9 @@ const games = [
     locked: true
   },
   {
-    title: "Versiculo Secreto",
+    title: "Versículo Secreto",
     age: "6-8",
-    description: "Complete palavras biblicas",
+    description: "Complete palavras bíblicas",
     icon: "V",
     image: "assets/star-badge.svg",
     progress: 0,
@@ -77,7 +77,7 @@ const games = [
     locked: true
   },
   {
-    title: "Triunfo Biblico",
+    title: "Triunfo Bíblico",
     age: "9-10",
     description: "Cartas de reis e profetas",
     icon: "T",
@@ -94,14 +94,14 @@ const games = [
     icon: "Q",
     image: "assets/noah.svg",
     progress: 12,
-    level: "Medio",
+    level: "Médio",
     screen: "quiz",
     featured: true
   },
   {
     title: "Linha do Tempo",
     age: "9-10",
-    description: "Organize eventos biblicos",
+    description: "Organize eventos bíblicos",
     icon: "L",
     image: "assets/story-family.svg",
     progress: 0,
@@ -112,7 +112,7 @@ const games = [
   {
     title: "Desafio dos Reis",
     age: "9-10",
-    description: "Estrategia e perguntas",
+    description: "Estratégia e perguntas",
     icon: "R",
     image: "assets/david.svg",
     progress: 0,
@@ -124,15 +124,15 @@ const games = [
 
 const animalRounds = [
   { prompt: "Toque no animal que tem tromba.", answer: "elefante", praise: "Muito bem. O elefante entrou na Arca." },
-  { prompt: "Toque no animal que tem juba.", answer: "leao", praise: "Isso. O leao achou seu lugar." },
+  { prompt: "Toque no animal que tem juba.", answer: "leao", praise: "Isso. O leão achou seu lugar." },
   { prompt: "Toque no animal que pula alto.", answer: "sapo", praise: "Acertou. O sapo pulou para dentro." },
   { prompt: "Toque no animal que tem casco.", answer: "tartaruga", praise: "Perfeito. A tartaruga chegou devagarinho." },
-  { prompt: "Toque no animal que canta ao amanhecer.", answer: "galo", praise: "Parabens. O galo completou a fase." }
+  { prompt: "Toque no animal que canta ao amanhecer.", answer: "galo", praise: "Parabéns. O galo completou a fase." }
 ];
 
 const animals = [
   { id: "elefante", label: "Elefante", image: "assets/elephant.svg" },
-  { id: "leao", label: "Leao", image: "assets/lion.svg" },
+  { id: "leao", label: "Leão", image: "assets/lion.svg" },
   { id: "sapo", label: "Sapo", image: "assets/frog.svg" },
   { id: "tartaruga", label: "Tartaruga", image: "assets/turtle.svg" },
   { id: "galo", label: "Galo", image: "assets/rooster.svg" },
@@ -140,7 +140,7 @@ const animals = [
 ];
 
 const quizItems = [
-  { text: "Noe construiu uma arca.", answer: true, note: "Isso mesmo." },
+  { text: "Noé construiu uma arca.", answer: true, note: "Isso mesmo." },
   { text: "Davi venceu Golias com uma coroa.", answer: false, note: "Foi com uma pedra e sua funda." },
   { text: "Daniel orava a Deus.", answer: true, note: "Muito bem." },
   { text: "Jonas foi engolido por um grande peixe.", answer: true, note: "Acertou." }
@@ -148,16 +148,16 @@ const quizItems = [
 
 const storyPages = [
   {
-    title: "Noe prepara a Arca",
-    text: "Noe ouviu a Deus e comecou a preparar uma grande arca.",
+    title: "Noé prepara a Arca",
+    text: "Noé ouviu a Deus e começou a preparar uma grande arca.",
     image: "assets/story-noah-build.svg",
-    alt: "Noe construindo uma grande arca"
+    alt: "Noé construindo uma grande arca"
   },
   {
-    title: "A familia ajuda",
-    text: "Ele chamou sua familia e cuidou de cada parte com paciencia.",
+    title: "A família ajuda",
+    text: "Ele chamou sua família e cuidou de cada parte com paciência.",
     image: "assets/story-family.svg",
-    alt: "Familia de Noe ajudando perto da arca"
+    alt: "Família de Noé ajudando perto da arca"
   },
   {
     title: "Os animais entram",
@@ -167,9 +167,9 @@ const storyPages = [
   },
   {
     title: "Deus cuida de todos",
-    text: "Deus cuidou de Noe, da familia dele e de todos os animais.",
+    text: "Deus cuidou de Noé, da família dele e de todos os animais.",
     image: "assets/story-rainbow.svg",
-    alt: "Arca com arco iris no ceu"
+    alt: "Arca com arco-íris no céu"
   }
 ];
 
@@ -178,28 +178,28 @@ const ageProfiles = {
     title: "Arca Digital",
     pill: "3 a 5 anos",
     hero: "Bem-vindo a Arca Digital.",
-    copy: "Atividades simples, narradas e com toque grande para criancas pequenas."
+    copy: "Atividades simples, narradas e com toque grande para crianças pequenas."
   },
   "6-8": {
     title: "Arca Digital",
     pill: "6 a 8 anos",
-    hero: "Explore a Biblia brincando.",
-    copy: "Quiz leve, memoria, historias interativas e missoes semanais."
+    hero: "Explore a Bíblia brincando.",
+    copy: "Quiz leve, memória, histórias interativas e missões semanais."
   },
   "9-10": {
     title: "Arca Digital",
     pill: "9 a 10 anos",
-    hero: "Missoes da Arca para crescer na fe.",
+    hero: "Missões da Arca para crescer na fé.",
     copy: "Atividades com mais desafio, leitura e recompensas por progresso."
   }
 };
 
 const memoryItems = [
-  { id: "noe", label: "Noe", image: "assets/noah.svg" },
+  { id: "noe", label: "Noé", image: "assets/noah.svg" },
   { id: "ovelha", label: "Ovelha", image: "assets/sheep-animal.svg" },
   { id: "davi", label: "Davi", image: "assets/david.svg" },
   { id: "arca", label: "Arca", image: "assets/ark-hero.svg" },
-  { id: "leao", label: "Leao", image: "assets/lion.svg" },
+  { id: "leao", label: "Leão", image: "assets/lion.svg" },
   { id: "selo", label: "Selo", image: "assets/star-badge.svg" }
 ];
 
@@ -259,7 +259,7 @@ function startAnimalGame() {
   currentRound = 0;
   playScore = 0;
   document.querySelector("#animalReward").hidden = true;
-  document.querySelector("#nextRound").textContent = "Proxima charada";
+  document.querySelector("#nextRound").textContent = "Próxima charada";
   renderAnimalRound();
 }
 
@@ -402,7 +402,7 @@ function flipMemoryCard(card) {
     return;
   }
 
-  document.querySelector("#memoryFeedback").textContent = "Essas cartas sao diferentes. Tente de novo.";
+  document.querySelector("#memoryFeedback").textContent = "Essas cartas são diferentes. Tente de novo.";
   playTryAgainSound();
   lockMemory = true;
   setTimeout(() => {
@@ -432,7 +432,7 @@ function startQuiz() {
 }
 
 function finishQuiz() {
-  document.querySelector("#quizQuestion").textContent = `Voce acertou ${quizScore} de ${quizItems.length}.`;
+  document.querySelector("#quizQuestion").textContent = `Você acertou ${quizScore} de ${quizItems.length}.`;
   document.querySelector("#quizFeedback").textContent = "Desafio completo.";
   document.querySelector("#quizReward").hidden = false;
   document.querySelectorAll(".quiz-path span").forEach((step) => {
@@ -569,9 +569,9 @@ function renderStory() {
   document.querySelector("#storyScene").alt = page.alt;
   document.querySelector("#storyThumb").src = page.image;
   document.querySelector("#storyThumb").alt = "";
-  document.querySelector("#storySubtitle").textContent = `Historia narrada · pagina ${currentStoryPage + 1} de ${storyPages.length}`;
+  document.querySelector("#storySubtitle").textContent = `História narrada · página ${currentStoryPage + 1} de ${storyPages.length}`;
   document.querySelector("#storyPrev").disabled = currentStoryPage === 0;
-  document.querySelector("#storyNext").textContent = currentStoryPage === storyPages.length - 1 ? "Recomecar" : "Continuar";
+  document.querySelector("#storyNext").textContent = currentStoryPage === storyPages.length - 1 ? "Recomeçar" : "Continuar";
 }
 
 function playStoryCue() {

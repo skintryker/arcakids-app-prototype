@@ -2,31 +2,31 @@
 
 Protótipo navegavel mobile-first para validar o aplicativo Arcakids antes da etapa nativa iOS/Android.
 
-## O que tem nesta versao
+## O que tem nesta versão
 
-- Inicio com perfil infantil por idade.
-- Biblioteca de jogos biblicos.
-- Jogo "Quem Esta na Arca?" com charadas simples.
+- Início com perfil infantil por idade.
+- Biblioteca de jogos bíblicos.
+- Jogo "Quem Está na Arca?" com charadas simples.
 - Jogo de memoria biblica.
 - Quiz "Fato ou Fake Kids".
 - Tela de colorir com canvas.
-- Historias biblicas com itens premium.
-- Tela de membership familiar.
+- Histórias bíblicas com itens premium.
+- Tela de assinatura familiar.
 - Area dos pais com controles basicos.
 - Direcao visual v2 com assets ilustrados locais.
 - Polimento v3 com trilha semanal, progresso dos jogos e telas de jogo mais completas.
-- Jogo "Quem Esta na Arca?" com fases, feedback de acerto/erro e recompensa final.
+- Jogo "Quem Está na Arca?" com fases, feedback de acerto/erro e recompensa final.
 - Imagens individuais dos animais no jogo da Arca.
-- Botao de musica no topo do app; em celular/navegador o som comeca apos toque do usuario.
-- Faixas etarias renomeadas para Pequenos, Exploradores e Aventureiros.
+- Botão de música no topo do app; em celular/navegador o som começa após toque do usuário.
+- Faixas etárias renomeadas para Pequenos, Exploradores e Aventureiros.
 - Faixas corrigidas para 3-5, 6-8 e 9-10.
 - Mais jogos planejados para 6-8 e 9-10.
-- Memoria da Biblia com cartas ilustradas e recompensa final.
+- Memória da Bíblia com cartas ilustradas e recompensa final.
 - Fato ou Fake Kids com progresso, pontuacao e recompensa final.
-- Historias com leitor pagina a pagina e toque sonoro.
+- Histórias com leitor página a página e toque sonoro.
 - Colorir com tres modelos: Arca, Ovelha e Selo.
-- Manifest e service worker para teste como PWA instalavel no celular.
-- Historias com imagens grandes por pagina e narracao em voz do navegador.
+- Manifest e service worker para teste como PWA instalável no celular.
+- Histórias com imagens grandes por página e narração em voz do navegador.
 - Musica de fundo ajustada para tocar como melodia suave em vez de bipes curtos.
 - Logo Arcakids incorporado e experiencia nomeada como Arca Digital.
 
