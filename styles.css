@@ -1283,8 +1283,17 @@ canvas {
   box-shadow: var(--card-shadow);
 }
 
+.story-scene {
+  width: 100%;
+  display: block;
+  aspect-ratio: 16 / 10.5;
+  border-radius: 20px;
+  object-fit: cover;
+  box-shadow: 0 12px 24px rgba(23, 32, 51, 0.12);
+}
+
 .story-reader p {
-  min-height: 138px;
+  min-height: 112px;
   display: grid;
   place-items: center;
   margin: 0;
@@ -1410,6 +1419,29 @@ canvas {
   color: var(--muted);
   font-size: 12px;
   font-weight: 800;
+}
+
+.install-note {
+  display: grid;
+  gap: 5px;
+  margin-bottom: 12px;
+  padding: 14px;
+  border-radius: 22px;
+  background: linear-gradient(145deg, #172033, #0e7776);
+  color: white;
+  box-shadow: var(--card-shadow);
+}
+
+.install-note strong,
+.install-note span {
+  display: block;
+}
+
+.install-note span {
+  color: rgba(255, 255, 255, 0.76);
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.35;
 }
 
 .nav-item {

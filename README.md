@@ -23,6 +23,9 @@ Protótipo navegavel mobile-first para validar o aplicativo Arcakids antes da et
 - Fato ou Fake Kids com progresso, pontuacao e recompensa final.
 - Historias com leitor pagina a pagina e toque sonoro.
 - Colorir com tres modelos: Arca, Ovelha e Selo.
+- Manifest e service worker para teste como PWA instalavel no celular.
+- Historias com imagens grandes por pagina e narracao em voz do navegador.
+- Musica de fundo ajustada para tocar como melodia suave em vez de bipes curtos.
 
 ## Como abrir
 

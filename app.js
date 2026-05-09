@@ -92,10 +92,30 @@ const quizItems = [
 ];
 
 const storyPages = [
-  "Noe ouviu a Deus e comecou a preparar uma grande arca.",
-  "Ele chamou sua familia e cuidou de cada parte com paciencia.",
-  "Os animais entraram na arca, dois a dois, enquanto a chuva chegava.",
-  "Deus cuidou de Noe, da familia dele e de todos os animais."
+  {
+    title: "Noe prepara a Arca",
+    text: "Noe ouviu a Deus e comecou a preparar uma grande arca.",
+    image: "assets/story-noah-build.svg",
+    alt: "Noe construindo uma grande arca"
+  },
+  {
+    title: "A familia ajuda",
+    text: "Ele chamou sua familia e cuidou de cada parte com paciencia.",
+    image: "assets/story-family.svg",
+    alt: "Familia de Noe ajudando perto da arca"
+  },
+  {
+    title: "Os animais entram",
+    text: "Os animais entraram na arca, dois a dois, enquanto a chuva chegava.",
+    image: "assets/story-animals-enter.svg",
+    alt: "Animais entrando na arca"
+  },
+  {
+    title: "Deus cuida de todos",
+    text: "Deus cuidou de Noe, da familia dele e de todos os animais.",
+    image: "assets/story-rainbow.svg",
+    alt: "Arca com arco iris no ceu"
+  }
 ];
 
 const ageProfiles = {
@@ -134,6 +154,7 @@ const screenEyebrow = document.querySelector("#screenEyebrow");
 const backButton = document.querySelector("#backButton");
 const navItems = [...document.querySelectorAll(".nav-item")];
 const soundButton = document.querySelector("#soundButton");
+const serviceWorkerPath = "./sw.js";
 let historyStack = ["home"];
 let currentAge = "3-5";
 let currentRound = 0;
@@ -150,6 +171,7 @@ let lockMemory = false;
 let audioContext = null;
 let musicTimer = null;
 let musicOn = false;
+let musicStep = 0;
 
 function showScreen(name, push = true) {
   const target = document.querySelector(`#${name}Screen`);
@@ -450,15 +472,15 @@ function ensureAudio() {
   }
 }
 
-function playTone(frequency, duration = 0.16) {
+function playTone(frequency, duration = 0.16, volume = 0.08, type = "sine") {
   ensureAudio();
   if (!audioContext) return;
   const oscillator = audioContext.createOscillator();
   const gain = audioContext.createGain();
-  oscillator.type = "sine";
+  oscillator.type = type;
   oscillator.frequency.value = frequency;
   gain.gain.setValueAtTime(0.0001, audioContext.currentTime);
-  gain.gain.exponentialRampToValueAtTime(0.08, audioContext.currentTime + 0.02);
+  gain.gain.exponentialRampToValueAtTime(volume, audioContext.currentTime + 0.02);
   gain.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + duration);
   oscillator.connect(gain).connect(audioContext.destination);
   oscillator.start();
@@ -466,7 +488,13 @@ function playTone(frequency, duration = 0.16) {
 }
 
 function renderStory() {
-  document.querySelector("#storyText").textContent = storyPages[currentStoryPage];
+  const page = storyPages[currentStoryPage];
+  document.querySelector("#storyTitle").textContent = page.title;
+  document.querySelector("#storyText").textContent = page.text;
+  document.querySelector("#storyScene").src = page.image;
+  document.querySelector("#storyScene").alt = page.alt;
+  document.querySelector("#storyThumb").src = page.image;
+  document.querySelector("#storyThumb").alt = "";
   document.querySelector("#storySubtitle").textContent = `Historia narrada · pagina ${currentStoryPage + 1} de ${storyPages.length}`;
   document.querySelector("#storyPrev").disabled = currentStoryPage === 0;
   document.querySelector("#storyNext").textContent = currentStoryPage === storyPages.length - 1 ? "Recomecar" : "Continuar";
@@ -474,15 +502,44 @@ function renderStory() {
 
 function playStoryCue() {
   ensureAudio();
-  [523.25, 659.25, 783.99].forEach((note, index) => {
-    window.setTimeout(() => playTone(note, 0.18), index * 140);
+  const page = storyPages[currentStoryPage];
+  playSoftChord([523.25, 659.25, 783.99], 0.7);
+  narrate(page.text);
+}
+
+function narrate(text) {
+  if (!("speechSynthesis" in window)) return;
+  window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = "pt-BR";
+  utterance.rate = 0.86;
+  utterance.pitch = 1.08;
+  utterance.volume = 1;
+  window.speechSynthesis.speak(utterance);
+}
+
+function playSoftChord(notes, duration = 0.7) {
+  notes.forEach((note, index) => {
+    window.setTimeout(() => playTone(note, duration, 0.035, "triangle"), index * 70);
   });
 }
 
 function playMusicStep() {
-  const melody = [523.25, 587.33, 659.25, 783.99, 659.25, 587.33, 523.25, 392.0];
-  const note = melody[Math.floor(Date.now() / 420) % melody.length];
-  playTone(note, 0.24);
+  const melody = [
+    [392.0, 523.25],
+    [440.0, 587.33],
+    [493.88, 659.25],
+    [523.25, 783.99],
+    [493.88, 659.25],
+    [440.0, 587.33],
+    [392.0, 523.25],
+    [329.63, 493.88]
+  ];
+  const notes = melody[musicStep % melody.length];
+  notes.forEach((note, index) => {
+    window.setTimeout(() => playTone(note, 0.34, 0.026, "triangle"), index * 90);
+  });
+  musicStep += 1;
 }
 
 function toggleMusic() {
@@ -492,7 +549,7 @@ function toggleMusic() {
   soundButton.textContent = musicOn ? "♫" : "♪";
   if (musicOn) {
     playMusicStep();
-    musicTimer = window.setInterval(playMusicStep, 420);
+    musicTimer = window.setInterval(playMusicStep, 620);
   } else {
     window.clearInterval(musicTimer);
     musicTimer = null;
@@ -631,3 +688,7 @@ paintCanvas.addEventListener("pointerleave", () => {
 renderGameCards(document.querySelector("#allGames"), games);
 updateHomeForProfile(currentAge);
 showScreen("home", false);
+
+if ("serviceWorker" in navigator && window.location.protocol.startsWith("http")) {
+  navigator.serviceWorker.register(serviceWorkerPath).catch(() => {});
+}

@@ -3,7 +3,15 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Arcakids App Prototype</title>
+    <meta name="theme-color" content="#0e7776" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Arcakids" />
+    <meta name="description" content="Jogos, historias e atividades biblicas para criancas." />
+    <title>Arcakids</title>
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="assets/app-icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="assets/app-icon.svg" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -223,7 +231,7 @@
 
         <section class="content" id="storiesScreen" data-title="Historias" data-eyebrow="Biblia infantil">
           <div class="story-player">
-            <img src="assets/noah.svg" alt="" />
+            <img id="storyThumb" src="assets/story-noah-build.svg" alt="" />
             <span>
               <strong id="storyTitle">Noe prepara a Arca</strong>
               <small id="storySubtitle">Historia narrada · pagina 1 de 4</small>
@@ -231,6 +239,7 @@
             <button class="round-play" id="storyPlay" aria-label="Reproduzir historia">▶</button>
           </div>
           <article class="story-reader">
+            <img class="story-scene" id="storyScene" src="assets/story-noah-build.svg" alt="Noe preparando a Arca" />
             <p id="storyText">Noe ouviu a Deus e comecou a preparar uma grande arca.</p>
             <div class="story-controls">
               <button class="secondary-button" id="storyPrev">Voltar</button>
@@ -292,6 +301,10 @@
               <strong>87%</strong>
               <small>semana concluida</small>
             </span>
+          </div>
+          <div class="install-note">
+            <strong>Pronto para testar no celular</strong>
+            <span>Abra pelo link publicado e use "Adicionar a Tela de Inicio" para testar como aplicativo.</span>
           </div>
           <div class="parent-list">
             <label class="parent-item">

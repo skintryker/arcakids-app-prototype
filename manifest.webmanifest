@@ -1,0 +1,19 @@
+{
+  "name": "Arcakids",
+  "short_name": "Arcakids",
+  "description": "Jogos, historias e atividades biblicas para criancas.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fff8e8",
+  "theme_color": "#0e7776",
+  "icons": [
+    {
+      "src": "assets/app-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
