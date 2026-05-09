@@ -172,6 +172,7 @@ let audioContext = null;
 let musicTimer = null;
 let musicOn = false;
 let musicStep = 0;
+let availableVoices = [];
 
 function showScreen(name, push = true) {
   const target = document.querySelector(`#${name}Screen`);
@@ -504,17 +505,59 @@ function playStoryCue() {
   ensureAudio();
   const page = storyPages[currentStoryPage];
   playSoftChord([523.25, 659.25, 783.99], 0.7);
-  narrate(page.text);
+  narrateStory(page.text);
 }
 
-function narrate(text) {
+function refreshVoices() {
+  if (!("speechSynthesis" in window)) return;
+  availableVoices = window.speechSynthesis.getVoices();
+}
+
+function chooseNarratorVoice() {
+  refreshVoices();
+  const preferredNames = [
+    "Luciana",
+    "Google português do Brasil",
+    "Google português",
+    "Microsoft Francisca",
+    "Microsoft Daniel",
+    "Joana",
+    "Felipe"
+  ];
+  return (
+    preferredNames
+      .map((name) => availableVoices.find((voice) => voice.name.toLowerCase().includes(name.toLowerCase())))
+      .find(Boolean) ||
+    availableVoices.find((voice) => voice.lang.toLowerCase() === "pt-br") ||
+    availableVoices.find((voice) => voice.lang.toLowerCase().startsWith("pt")) ||
+    null
+  );
+}
+
+function narrateStory(text) {
   if (!("speechSynthesis" in window)) return;
   window.speechSynthesis.cancel();
-  const utterance = new SpeechSynthesisUtterance(text);
+  const chunks = text
+    .replace(/\./g, ".|")
+    .replace(/,/g, ",|")
+    .split("|")
+    .map((part) => part.trim())
+    .filter(Boolean);
+  speakChunks(chunks, 0);
+}
+
+function speakChunks(chunks, index) {
+  if (index >= chunks.length) return;
+  const utterance = new SpeechSynthesisUtterance(chunks[index]);
+  const narratorVoice = chooseNarratorVoice();
+  if (narratorVoice) utterance.voice = narratorVoice;
   utterance.lang = "pt-BR";
-  utterance.rate = 0.86;
-  utterance.pitch = 1.08;
-  utterance.volume = 1;
+  utterance.rate = 0.78;
+  utterance.pitch = 1.03;
+  utterance.volume = 0.96;
+  utterance.onend = () => {
+    window.setTimeout(() => speakChunks(chunks, index + 1), chunks[index].endsWith(",") ? 180 : 360);
+  };
   window.speechSynthesis.speak(utterance);
 }
 
@@ -644,6 +687,11 @@ document.querySelector("#storyNext").addEventListener("click", () => {
 });
 
 document.querySelector("#storyPlay").addEventListener("click", playStoryCue);
+
+if ("speechSynthesis" in window) {
+  refreshVoices();
+  window.speechSynthesis.onvoiceschanged = refreshVoices;
+}
 
 document.querySelectorAll(".swatches button").forEach((button) => {
   button.addEventListener("click", () => {
