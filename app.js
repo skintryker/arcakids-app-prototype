@@ -146,31 +146,94 @@ const quizItems = [
   { text: "Jonas foi engolido por um grande peixe.", answer: true, note: "Acertou." }
 ];
 
-const storyPages = [
+const stories = [
   {
     title: "Noé prepara a Arca",
-    text: "Noé ouviu a Deus e começou a preparar uma grande arca.",
-    image: "assets/story-noah-build.svg",
-    alt: "Noé construindo uma grande arca"
+    tags: "obediência · cuidado · família",
+    free: true,
+    pages: [
+      {
+        title: "Noé prepara a Arca",
+        text: "Noé ouviu a Deus e começou a preparar uma grande arca.",
+        image: "assets/story-noah-build.svg",
+        alt: "Noé construindo uma grande arca"
+      },
+      {
+        title: "A família ajuda",
+        text: "Ele chamou sua família e cuidou de cada parte com paciência.",
+        image: "assets/story-family.svg",
+        alt: "Família de Noé ajudando perto da arca"
+      },
+      {
+        title: "Os animais entram",
+        text: "Os animais entraram na arca, dois a dois, enquanto a chuva chegava.",
+        image: "assets/story-animals-enter.svg",
+        alt: "Animais entrando na arca"
+      },
+      {
+        title: "Deus cuida de todos",
+        text: "Deus cuidou de Noé, da família dele e de todos os animais.",
+        image: "assets/story-rainbow.svg",
+        alt: "Arca com arco-íris no céu"
+      }
+    ]
   },
   {
-    title: "A família ajuda",
-    text: "Ele chamou sua família e cuidou de cada parte com paciência.",
-    image: "assets/story-family.svg",
-    alt: "Família de Noé ajudando perto da arca"
+    title: "Davi e Golias",
+    tags: "coragem · fé · confiança",
+    free: true,
+    pages: [
+      {
+        title: "Davi cuida das ovelhas",
+        text: "Davi era jovem e cuidava das ovelhas com atenção.",
+        image: "assets/david.svg",
+        alt: "Davi cuidando das ovelhas"
+      },
+      {
+        title: "Um desafio aparece",
+        text: "Quando todos estavam com medo, Davi confiou em Deus.",
+        image: "assets/story-family.svg",
+        alt: "Davi diante de um desafio"
+      },
+      {
+        title: "Coragem com fé",
+        text: "Davi venceu Golias porque sabia que Deus estava com ele.",
+        image: "assets/star-badge.svg",
+        alt: "Selo de coragem"
+      }
+    ]
   },
   {
-    title: "Os animais entram",
-    text: "Os animais entraram na arca, dois a dois, enquanto a chuva chegava.",
-    image: "assets/story-animals-enter.svg",
-    alt: "Animais entrando na arca"
+    title: "Daniel ora com fé",
+    tags: "oração · constância · proteção",
+    free: true,
+    pages: [
+      {
+        title: "Daniel escolhe orar",
+        text: "Daniel conversava com Deus todos os dias.",
+        image: "assets/noah.svg",
+        alt: "Personagem orando"
+      },
+      {
+        title: "Deus protege Daniel",
+        text: "Mesmo em um lugar perigoso, Daniel confiou no cuidado de Deus.",
+        image: "assets/lion.svg",
+        alt: "Leão lembrando a história de Daniel"
+      },
+      {
+        title: "A fé continua",
+        text: "Daniel nos lembra que podemos falar com Deus com confiança.",
+        image: "assets/star-badge.svg",
+        alt: "Selo de fé"
+      }
+    ]
   },
-  {
-    title: "Deus cuida de todos",
-    text: "Deus cuidou de Noé, da família dele e de todos os animais.",
-    image: "assets/story-rainbow.svg",
-    alt: "Arca com arco-íris no céu"
-  }
+  { title: "Jonas e o grande peixe", tags: "obediência · segunda chance · missão", free: false, pages: [] },
+  { title: "Moisés e o mar", tags: "livramento · coragem · liderança", free: false, pages: [] },
+  { title: "Jesus acalma a tempestade", tags: "paz · confiança · cuidado", free: false, pages: [] },
+  { title: "O bom samaritano", tags: "amor ao próximo · ajuda · compaixão", free: false, pages: [] },
+  { title: "A criação do mundo", tags: "criação · natureza · gratidão", free: false, pages: [] },
+  { title: "Nascimento de Jesus", tags: "Natal · promessa · alegria", free: false, pages: [] }
 ];
 
 const ageProfiles = {
@@ -217,6 +280,7 @@ let playScore = 0;
 let roundSolved = false;
 let currentQuiz = 0;
 let quizScore = 0;
+let currentStory = 0;
 let currentStoryPage = 0;
 let chosenColor = "#ef4444";
 let paintTemplate = "arca";
@@ -562,23 +626,43 @@ function playTryAgainSound() {
 }
 
 function renderStory() {
-  const page = storyPages[currentStoryPage];
+  const story = stories[currentStory];
+  const page = story.pages[currentStoryPage];
   document.querySelector("#storyTitle").textContent = page.title;
   document.querySelector("#storyText").textContent = page.text;
   document.querySelector("#storyScene").src = page.image;
   document.querySelector("#storyScene").alt = page.alt;
   document.querySelector("#storyThumb").src = page.image;
   document.querySelector("#storyThumb").alt = "";
-  document.querySelector("#storySubtitle").textContent = `História narrada · página ${currentStoryPage + 1} de ${storyPages.length}`;
+  document.querySelector("#storySubtitle").textContent = `${story.title} · página ${currentStoryPage + 1} de ${story.pages.length}`;
   document.querySelector("#storyPrev").disabled = currentStoryPage === 0;
-  document.querySelector("#storyNext").textContent = currentStoryPage === storyPages.length - 1 ? "Recomeçar" : "Continuar";
+  document.querySelector("#storyNext").textContent = currentStoryPage === story.pages.length - 1 ? "Recomeçar" : "Continuar";
+  renderStoryList();
 }
 
 function playStoryCue() {
   ensureAudio();
-  const page = storyPages[currentStoryPage];
+  const page = stories[currentStory].pages[currentStoryPage];
   playSoftChord([523.25, 659.25, 783.99], 0.7);
   narrateStory(page.text);
+}
+
+function renderStoryList() {
+  const list = document.querySelector("#storyList");
+  list.innerHTML = "";
+  stories.forEach((story, index) => {
+    const card = document.createElement("button");
+    card.className = `story-card${story.free ? "" : " locked"}${index === currentStory ? " active" : ""}`;
+    card.dataset.storyIndex = index;
+    card.innerHTML = `
+      <span class="chapter-number">${String(index + 1).padStart(2, "0")}</span>
+      <span>
+        <strong>${story.title}</strong>
+        <small>${story.tags}</small>
+      </span>
+    `;
+    list.appendChild(card);
+  });
 }
 
 function refreshVoices() {
@@ -758,12 +842,26 @@ document.querySelector("#storyPrev").addEventListener("click", () => {
 });
 
 document.querySelector("#storyNext").addEventListener("click", () => {
-  currentStoryPage = currentStoryPage === storyPages.length - 1 ? 0 : currentStoryPage + 1;
+  const story = stories[currentStory];
+  currentStoryPage = currentStoryPage === story.pages.length - 1 ? 0 : currentStoryPage + 1;
   renderStory();
   playTone(587.33, 0.12);
 });
 
 document.querySelector("#storyPlay").addEventListener("click", playStoryCue);
+
+document.querySelector("#storyList").addEventListener("click", (event) => {
+  const card = event.target.closest("[data-story-index]");
+  if (!card) return;
+  const nextStory = stories[Number(card.dataset.storyIndex)];
+  if (!nextStory.free) {
+    showScreen("membership");
+    return;
+  }
+  currentStory = Number(card.dataset.storyIndex);
+  currentStoryPage = 0;
+  renderStory();
+});
 
 if ("speechSynthesis" in window) {
   refreshVoices();

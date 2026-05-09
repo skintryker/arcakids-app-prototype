@@ -27,6 +27,8 @@ Protótipo navegavel mobile-first para validar o aplicativo Arcakids antes da et
 - Colorir com tres modelos: Arca, Ovelha e Selo.
 - Manifest e service worker para teste como PWA instalável no celular.
 - Histórias com imagens grandes por página e narração em voz do navegador.
+- Três histórias grátis no leitor: Noé, Davi e Daniel.
+- Catálogo ampliado de histórias premium.
 - Musica de fundo ajustada para tocar como melodia suave em vez de bipes curtos.
 - Logo Arcakids incorporado e experiencia nomeada como Arca Digital.
 

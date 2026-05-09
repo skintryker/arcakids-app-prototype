@@ -518,6 +518,23 @@ canvas {
   min-height: 82px;
 }
 
+.story-card.active {
+  box-shadow: inset 0 0 0 3px rgba(35, 165, 163, 0.34), var(--card-shadow);
+}
+
+.story-card:not(.locked)::after {
+  content: "Grátis";
+  display: inline-block;
+  width: fit-content;
+  margin-top: 8px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #e8f7f4;
+  color: var(--deep-aqua);
+  font-size: 11px;
+  font-weight: 900;
+}
+
 .chapter-number {
   display: grid;
   width: 48px;
