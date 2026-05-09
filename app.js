@@ -120,21 +120,21 @@ const storyPages = [
 
 const ageProfiles = {
   "3-5": {
-    title: "Arcakids Pequenos",
+    title: "Arca Digital",
     pill: "3 a 5 anos",
-    hero: "Historias curtinhas, jogo e descoberta.",
+    hero: "Bem-vindo a Arca Digital.",
     copy: "Atividades simples, narradas e com toque grande para criancas pequenas."
   },
   "6-8": {
-    title: "Arcakids Exploradores",
+    title: "Arca Digital",
     pill: "6 a 8 anos",
-    hero: "Desafios biblicos para explorar.",
+    hero: "Explore a Biblia brincando.",
     copy: "Quiz leve, memoria, historias interativas e missoes semanais."
   },
   "8-10": {
-    title: "Arcakids Aventureiros",
+    title: "Arca Digital",
     pill: "8 a 10 anos",
-    hero: "Missoes, cartas e conhecimento biblico.",
+    hero: "Missoes da Arca para crescer na fe.",
     copy: "Atividades com mais desafio, leitura e recompensas por progresso."
   }
 };

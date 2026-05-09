@@ -6,6 +6,7 @@ const APP_SHELL = [
   "./app.js",
   "./manifest.webmanifest",
   "./assets/app-icon.svg",
+  "./assets/arcakids-logo.svg",
   "./assets/ark-hero.svg",
   "./assets/david.svg",
   "./assets/elephant.svg",

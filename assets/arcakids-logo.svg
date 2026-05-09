@@ -1,0 +1,21 @@
+<svg width="760" height="360" viewBox="0 0 760 360" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Arcakids</title>
+  <desc id="desc">Logo Arcakids com arca sobre ondas e texto Brincando e Edificando</desc>
+  <path d="M237 75H496L560 127H521V184H205V127H237V75Z" fill="#F6C978"/>
+  <path d="M278 99H459L421 134H278V99Z" fill="#D49A49"/>
+  <path d="M253 147H414V177H253V147Z" fill="#C98E40"/>
+  <path d="M478 147H535V177H478V147Z" fill="#C98E40"/>
+  <path d="M180 180H589C586 217 565 240 523 240H246C204 240 183 217 180 180Z" fill="#D99E47"/>
+  <path d="M184 222C201 248 230 248 247 222C264 248 293 248 310 222C327 248 356 248 373 222C390 248 419 248 436 222C453 248 482 248 499 222C516 248 545 248 562 222C579 248 608 248 625 222" stroke="#2E7BA6" stroke-width="9" stroke-linecap="round"/>
+  <g font-family="Arial Rounded MT Bold, Arial, sans-serif" font-size="92" font-weight="900" stroke="white" stroke-width="6" paint-order="stroke fill">
+    <text x="71" y="294" fill="#2B80CF">A</text>
+    <text x="146" y="294" fill="#E51B23">R</text>
+    <text x="222" y="294" fill="#FF8A00">C</text>
+    <text x="303" y="294" fill="#77CC43">A</text>
+    <text x="388" y="294" fill="#FFB51F">K</text>
+    <text x="471" y="294" fill="#78D84C">I</text>
+    <text x="516" y="294" fill="#2B91D0">D</text>
+    <text x="599" y="294" fill="#E51B23">S</text>
+  </g>
+  <text x="224" y="342" fill="#2373C8" font-family="Arial Rounded MT Bold, Arial, sans-serif" font-size="38" font-weight="800">Brincando e Edificando</text>
+</svg>

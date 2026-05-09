@@ -80,6 +80,14 @@ button {
   line-height: 1.08;
 }
 
+.brand-logo {
+  display: block;
+  width: 136px;
+  max-width: 100%;
+  height: auto;
+  margin: -6px 0 3px;
+}
+
 .eyebrow {
   color: var(--aqua);
   font-size: 12px;
@@ -645,14 +653,14 @@ body {
   width: fit-content;
   padding: 4px 9px;
   border-radius: 999px;
-  background: #e4f8f5;
-  color: var(--deep-aqua);
+  background: #fff4d4;
+  color: #d95b00;
   letter-spacing: 0;
 }
 
 .topbar h1 {
   margin-top: 5px;
-  font-size: 25px;
+  font-size: 22px;
 }
 
 .icon-button,

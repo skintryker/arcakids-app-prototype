@@ -26,6 +26,7 @@ Protótipo navegavel mobile-first para validar o aplicativo Arcakids antes da et
 - Manifest e service worker para teste como PWA instalavel no celular.
 - Historias com imagens grandes por pagina e narracao em voz do navegador.
 - Musica de fundo ajustada para tocar como melodia suave em vez de bipes curtos.
+- Logo Arcakids incorporado e experiencia nomeada como Arca Digital.
 
 ## Como abrir
 
