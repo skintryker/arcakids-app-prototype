@@ -228,12 +228,60 @@ const stories = [
       }
     ]
   },
-  { title: "Jonas e o grande peixe", tags: "obediência · segunda chance · missão", free: false, pages: [] },
-  { title: "Moisés e o mar", tags: "livramento · coragem · liderança", free: false, pages: [] },
-  { title: "Jesus acalma a tempestade", tags: "paz · confiança · cuidado", free: false, pages: [] },
-  { title: "O bom samaritano", tags: "amor ao próximo · ajuda · compaixão", free: false, pages: [] },
-  { title: "A criação do mundo", tags: "criação · natureza · gratidão", free: false, pages: [] },
-  { title: "Nascimento de Jesus", tags: "Natal · promessa · alegria", free: false, pages: [] }
+  {
+    title: "Jonas e o grande peixe",
+    tags: "obediência · segunda chance · missão",
+    free: false,
+    pages: [
+      { title: "Jonas recebe uma missão", text: "Deus chamou Jonas para falar com uma cidade distante.", image: "assets/story-animals-enter.svg", alt: "Jonas iniciando uma missão" },
+      { title: "Uma nova chance", text: "Jonas aprendeu que Deus dá novas oportunidades para obedecer.", image: "assets/star-badge.svg", alt: "Selo de nova chance" }
+    ]
+  },
+  {
+    title: "Moisés e o mar",
+    tags: "livramento · coragem · liderança",
+    free: false,
+    pages: [
+      { title: "Moisés guia o povo", text: "Moisés confiou em Deus e guiou o povo pelo caminho.", image: "assets/story-family.svg", alt: "Povo caminhando junto" },
+      { title: "Deus abre caminho", text: "Quando parecia impossível, Deus abriu um caminho seguro.", image: "assets/story-rainbow.svg", alt: "Caminho de livramento" }
+    ]
+  },
+  {
+    title: "Jesus acalma a tempestade",
+    tags: "paz · confiança · cuidado",
+    free: false,
+    pages: [
+      { title: "A tempestade chega", text: "Os discípulos ficaram com medo quando o vento ficou forte.", image: "assets/ark-hero.svg", alt: "Barco em uma cena com água" },
+      { title: "Jesus traz paz", text: "Jesus acalmou o vento e mostrou que podemos confiar nele.", image: "assets/story-rainbow.svg", alt: "Céu calmo depois da tempestade" }
+    ]
+  },
+  {
+    title: "O bom samaritano",
+    tags: "amor ao próximo · ajuda · compaixão",
+    free: false,
+    pages: [
+      { title: "Alguém precisa de ajuda", text: "Um homem estava machucado no caminho e precisava de cuidado.", image: "assets/story-family.svg", alt: "Pessoa recebendo ajuda" },
+      { title: "Amar o próximo", text: "O bom samaritano parou, ajudou e mostrou compaixão.", image: "assets/star-badge.svg", alt: "Selo de compaixão" }
+    ]
+  },
+  {
+    title: "A criação do mundo",
+    tags: "criação · natureza · gratidão",
+    free: false,
+    pages: [
+      { title: "Deus cria tudo", text: "Deus fez a luz, o céu, a terra, os animais e as pessoas.", image: "assets/story-rainbow.svg", alt: "Natureza criada por Deus" },
+      { title: "Tudo era bom", text: "A criação nos lembra de agradecer pelo cuidado de Deus.", image: "assets/sheep-animal.svg", alt: "Animal lembrando a criação" }
+    ]
+  },
+  {
+    title: "Nascimento de Jesus",
+    tags: "Natal · promessa · alegria",
+    free: false,
+    pages: [
+      { title: "Uma promessa de alegria", text: "O nascimento de Jesus trouxe alegria para muitas famílias.", image: "assets/star-badge.svg", alt: "Estrela lembrando o nascimento de Jesus" },
+      { title: "Jesus nasceu", text: "Deus enviou Jesus para mostrar amor, esperança e salvação.", image: "assets/story-family.svg", alt: "Família celebrando uma boa notícia" }
+    ]
+  }
 ];
 
 const ageProfiles = {
@@ -273,6 +321,7 @@ const backButton = document.querySelector("#backButton");
 const navItems = [...document.querySelectorAll(".nav-item")];
 const soundButton = document.querySelector("#soundButton");
 const serviceWorkerPath = "./sw.js";
+const trialStorageKey = "arcakidsTrialUntil";
 let historyStack = ["home"];
 let currentAge = "3-5";
 let currentRound = 0;
@@ -292,6 +341,17 @@ let musicTimer = null;
 let musicOn = false;
 let musicStep = 0;
 let availableVoices = [];
+let trialUntil = Number(localStorage.getItem(trialStorageKey) || 0);
+let selectedPremiumActivity = null;
+
+function isTrialActive() {
+  return Date.now() < trialUntil;
+}
+
+function getTrialDaysLeft() {
+  if (!isTrialActive()) return 0;
+  return Math.max(1, Math.ceil((trialUntil - Date.now()) / 86400000));
+}
 
 function showScreen(name, push = true) {
   const target = document.querySelector(`#${name}Screen`);
@@ -317,6 +377,8 @@ function showScreen(name, push = true) {
   if (name === "quiz") startQuiz();
   if (name === "paint") drawColoringPage();
   if (name === "stories") renderStory();
+  if (name === "membership") renderTrialStatus();
+  if (name === "premiumActivity") renderPremiumActivity();
 }
 
 function startAnimalGame() {
@@ -330,12 +392,17 @@ function startAnimalGame() {
 function renderGameCards(container, items) {
   container.innerHTML = "";
   items.forEach((game) => {
+    const locked = Boolean(game.locked && !isTrialActive());
     const card = document.createElement("button");
-    card.className = `game-card${game.locked ? " locked" : ""}`;
-    card.dataset.screen = game.screen;
+    card.className = `game-card${locked ? " locked" : ""}`;
+    card.dataset.screen = locked ? "membership" : game.screen;
+    if (game.locked && isTrialActive()) {
+      card.dataset.premiumActivity = game.title;
+      card.dataset.screen = "premiumActivity";
+    }
     card.innerHTML = `
       <span class="game-art"><img src="${game.image}" alt="" /></span>
-      <span class="game-level">${game.level}</span>
+      <span class="game-level">${game.locked && isTrialActive() ? "Liberado" : game.level}</span>
       <strong>${game.title}</strong>
       <small>${game.description} · ${game.age}</small>
       <span class="progress-track"><i style="width:${game.progress}%"></i></span>
@@ -651,8 +718,9 @@ function renderStoryList() {
   const list = document.querySelector("#storyList");
   list.innerHTML = "";
   stories.forEach((story, index) => {
+    const locked = !story.free && !isTrialActive();
     const card = document.createElement("button");
-    card.className = `story-card${story.free ? "" : " locked"}${index === currentStory ? " active" : ""}`;
+    card.className = `story-card${locked ? " locked" : ""}${index === currentStory ? " active" : ""}`;
     card.dataset.storyIndex = index;
     card.innerHTML = `
       <span class="chapter-number">${String(index + 1).padStart(2, "0")}</span>
@@ -756,10 +824,49 @@ function toggleMusic() {
   }
 }
 
+function startFreeTrial() {
+  trialUntil = Date.now() + 7 * 86400000;
+  localStorage.setItem(trialStorageKey, String(trialUntil));
+  renderTrialStatus();
+  renderGameCards(document.querySelector("#allGames"), games);
+  renderStoryList();
+  playSuccessSound();
+}
+
+function renderTrialStatus() {
+  const status = document.querySelector("#trialStatus");
+  const button = document.querySelector("#freeTrialButton");
+  if (!status || !button) return;
+  if (isTrialActive()) {
+    status.hidden = false;
+    status.innerHTML = `<strong>Teste grátis ativo</strong><span>${getTrialDaysLeft()} dia(s) restantes de acesso premium.</span>`;
+    button.textContent = "Teste grátis ativo";
+    button.disabled = true;
+  } else {
+    status.hidden = true;
+    button.textContent = "Iniciar teste grátis por 7 dias";
+    button.disabled = false;
+  }
+}
+
+function renderPremiumActivity() {
+  const activity = selectedPremiumActivity || games.find((game) => game.locked);
+  if (!activity) return;
+  document.querySelector("#premiumPreviewImage").src = activity.image;
+  document.querySelector("#premiumPreviewTitle").textContent = activity.title;
+  document.querySelector("#premiumPreviewDescription").textContent =
+    `${activity.description}. Atividade liberada durante o teste grátis de 7 dias.`;
+}
+
 document.addEventListener("click", (event) => {
   const target = event.target.closest("[data-screen]");
+  if (target?.dataset.premiumActivity) {
+    selectedPremiumActivity = games.find((game) => game.title === target.dataset.premiumActivity);
+  }
   if (target) showScreen(target.dataset.screen);
 });
+
+document.querySelector("#freeTrialButton").addEventListener("click", startFreeTrial);
 
 soundButton.addEventListener("click", (event) => {
   event.stopPropagation();
@@ -854,7 +961,7 @@ document.querySelector("#storyList").addEventListener("click", (event) => {
   const card = event.target.closest("[data-story-index]");
   if (!card) return;
   const nextStory = stories[Number(card.dataset.storyIndex)];
-  if (!nextStory.free) {
+  if (!nextStory.free && !isTrialActive()) {
     showScreen("membership");
     return;
   }
@@ -910,6 +1017,7 @@ paintCanvas.addEventListener("pointerleave", () => {
 
 renderGameCards(document.querySelector("#allGames"), games);
 updateHomeForProfile(currentAge);
+renderTrialStatus();
 showScreen("home", false);
 
 if ("serviceWorker" in navigator && window.location.protocol.startsWith("http")) {

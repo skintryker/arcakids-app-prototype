@@ -254,20 +254,38 @@
           <div class="membership">
             <img class="premium-badge" src="assets/star-badge.svg" alt="" />
             <h2>Conteúdo novo toda semana</h2>
-            <p>Jogos, histórias narradas, atividades para colorir e desafios por idade em um ambiente infantil seguro.</p>
+            <p>Teste grátis por 7 dias com acesso a todas as histórias e atividades premium do protótipo.</p>
+            <div class="trial-status" id="trialStatus" hidden></div>
             <div class="price-box">
               <span>Plano família</span>
               <strong>R$ 24,90/mês</strong>
-              <small>até 4 perfis infantis</small>
+              <small>7 dias grátis · depois R$ 24,90/mês · até 4 perfis infantis</small>
             </div>
             <ul class="benefits">
+              <li>Teste grátis de 7 dias antes da assinatura</li>
               <li>Sem anúncios dentro da área infantil</li>
               <li>Conteúdo offline para viagens e igreja</li>
               <li>Relatório de progresso para os pais</li>
               <li>Benefícios conectados à loja Arcakids</li>
             </ul>
-            <button class="primary-button">Começar teste</button>
+            <button class="primary-button" id="freeTrialButton">Iniciar teste grátis por 7 dias</button>
           </div>
+        </section>
+
+        <section class="content" id="premiumActivityScreen" data-title="Atividade Premium" data-eyebrow="Teste grátis">
+          <article class="play-panel premium-preview">
+            <img class="premium-preview-art" id="premiumPreviewImage" src="assets/star-badge.svg" alt="" />
+            <h2 id="premiumPreviewTitle">Atividade liberada</h2>
+            <p id="premiumPreviewDescription">Esta atividade premium está liberada durante o teste grátis de 7 dias.</p>
+            <div class="reward-card">
+              <img src="assets/star-badge.svg" alt="" />
+              <span>
+                <strong>Teste grátis ativo</strong>
+                <small>Acesso premium liberado para validação do protótipo.</small>
+              </span>
+            </div>
+            <button class="primary-button" data-screen="games">Voltar aos jogos</button>
+          </article>
         </section>
 
         <section class="content" id="parentScreen" data-title="Área dos pais" data-eyebrow="Controle familiar">
