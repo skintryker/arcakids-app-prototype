@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Arcakids App Prototype</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="phone-shell" aria-label="Protótipo Arcakids">
+      <section class="app-screen">
+        <header class="topbar">
+          <button class="icon-button" id="backButton" aria-label="Voltar" title="Voltar">‹</button>
+          <div>
+            <p class="eyebrow brand-mark" id="screenEyebrow">Arcakids</p>
+            <h1 id="screenTitle">Arcakids</h1>
+          </div>
+          <div class="top-actions">
+            <button class="sound-button" id="soundButton" aria-label="Tocar musica" title="Tocar musica">♪</button>
+            <button class="avatar-button" data-screen="parent" aria-label="Area dos pais" title="Area dos pais">P</button>
+          </div>
+        </header>
+
+        <section class="content active" id="homeScreen" data-title="Arcakids" data-eyebrow="Arcakids">
+          <div class="hero-band">
+            <div>
+              <p class="pill" id="agePill">3 a 5 anos</p>
+              <h2 id="heroTitle">Hoje tem historia, jogo e descoberta.</h2>
+              <p id="heroCopy">Continue a jornada de Noe com atividades simples e seguras.</p>
+              <div class="hero-actions">
+                <button class="mini-button" data-screen="play">Jogar agora</button>
+                <button class="mini-button light" data-screen="stories">Ouvir historia</button>
+              </div>
+            </div>
+            <img class="hero-illustration" src="assets/ark-hero.svg" alt="" />
+          </div>
+
+          <div class="daily-progress" aria-label="Progresso diario">
+            <span>
+              <strong>3</strong>
+              <small>atividades</small>
+            </span>
+            <span>
+              <strong>12</strong>
+              <small>estrelas</small>
+            </span>
+            <span>
+              <strong>5 min</strong>
+              <small>historia</small>
+            </span>
+          </div>
+
+          <div class="profile-row age-row" aria-label="Faixa etaria">
+            <button class="profile active" data-age="3-5">
+              <strong>Pequenos</strong>
+              <span>3-5 anos</span>
+            </button>
+            <button class="profile" data-age="6-8">
+              <strong>Exploradores</strong>
+              <span>6-8 anos</span>
+            </button>
+            <button class="profile" data-age="8-10">
+              <strong>Aventureiros</strong>
+              <span>8-10 anos</span>
+            </button>
+          </div>
+
+          <button class="mission-card" data-screen="games">
+            <span class="mission-icon">★</span>
+            <span>
+              <strong>Trilha da semana</strong>
+              <small>Complete 4 atividades sobre Noe e ganhe um selo.</small>
+            </span>
+            <b>2/4</b>
+          </button>
+
+          <section class="section">
+            <div class="section-heading">
+              <h3>Jogos de hoje</h3>
+              <button class="text-button" data-screen="games">Ver todos</button>
+            </div>
+            <div class="game-grid compact" id="featuredGames"></div>
+          </section>
+
+          <section class="section">
+            <div class="section-heading">
+              <h3>Historias</h3>
+              <button class="text-button" data-screen="stories">Abrir</button>
+            </div>
+            <button class="story-strip" data-screen="stories">
+              <span class="story-art"></span>
+              <span>
+                <strong>Noe prepara a Arca</strong>
+                <small>5 min · narrada</small>
+              </span>
+              <b>›</b>
+            </button>
+          </section>
+        </section>
+
+        <section class="content" id="gamesScreen" data-title="Jogos Biblicos" data-eyebrow="Aprender brincando">
+          <div class="library-intro">
+            <strong>Escolha uma atividade</strong>
+            <span>Jogos curtos, seguros e separados por idade.</span>
+          </div>
+          <div class="tabs" role="tablist" aria-label="Faixas de idade">
+            <button class="tab active" data-filter="all">Todos</button>
+            <button class="tab" data-filter="3-5">3-5</button>
+            <button class="tab" data-filter="6-8">6-8</button>
+            <button class="tab" data-filter="8-10">8-10</button>
+          </div>
+          <div class="game-grid" id="allGames"></div>
+        </section>
+
+        <section class="content" id="playScreen" data-title="Quem Esta na Arca?" data-eyebrow="Jogo">
+          <article class="play-panel">
+            <div class="game-masthead">
+              <img src="assets/ark-hero.svg" alt="" />
+              <span>
+                <strong>Charadas da Arca</strong>
+                <small>Escute a dica e encontre o animal.</small>
+              </span>
+            </div>
+            <div class="round-path" aria-label="Fases do jogo">
+              <span class="active"></span>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <div class="play-score">
+              <span id="playPrompt">Toque no animal que tem tromba.</span>
+              <strong><span id="playScore">0</span>/5</strong>
+            </div>
+            <div class="animal-board" id="animalBoard"></div>
+            <p class="game-feedback" id="animalFeedback">A Arca esta esperando o primeiro animal.</p>
+            <div class="reward-card" id="animalReward" hidden>
+              <img src="assets/star-badge.svg" alt="" />
+              <span>
+                <strong>Selo da Arca desbloqueado</strong>
+                <small>Voce encontrou todos os animais desta fase.</small>
+              </span>
+            </div>
+            <button class="primary-button" id="nextRound">Proxima charada</button>
+          </article>
+        </section>
+
+        <section class="content" id="memoryScreen" data-title="Memoria da Biblia" data-eyebrow="Jogo">
+          <article class="play-panel">
+            <div class="game-masthead">
+              <img src="assets/sheep.svg" alt="" />
+              <span>
+                <strong>Cartas da Arca</strong>
+                <small>Combine personagens e objetos biblicos.</small>
+              </span>
+            </div>
+            <div class="play-score">
+              <span>Encontre os pares.</span>
+              <strong><span id="matchCount">0</span>/6</strong>
+            </div>
+            <div class="memory-board" id="memoryBoard"></div>
+            <p class="game-feedback" id="memoryFeedback">Vire duas cartas para encontrar um par.</p>
+            <div class="reward-card" id="memoryReward" hidden>
+              <img src="assets/star-badge.svg" alt="" />
+              <span>
+                <strong>Selo da Memoria desbloqueado</strong>
+                <small>Voce encontrou todos os pares biblicos.</small>
+              </span>
+            </div>
+            <button class="primary-button" id="resetMemory">Recomecar</button>
+          </article>
+        </section>
+
+        <section class="content" id="quizScreen" data-title="Fato ou Fake Kids" data-eyebrow="Jogo">
+          <article class="play-panel quiz-panel">
+            <div class="game-masthead">
+              <img src="assets/david.svg" alt="" />
+              <span>
+                <strong>Verdade ou brincadeira?</strong>
+                <small>Responda e ganhe estrelas de conhecimento.</small>
+              </span>
+            </div>
+            <div class="round-path quiz-path" aria-label="Perguntas do quiz">
+              <span class="active"></span>
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <p class="quiz-question" id="quizQuestion"></p>
+            <div class="choice-row">
+              <button class="primary-button" data-answer="true">Fato</button>
+              <button class="secondary-button" data-answer="false">Fake</button>
+            </div>
+            <p class="feedback" id="quizFeedback"></p>
+            <div class="reward-card" id="quizReward" hidden>
+              <img src="assets/star-badge.svg" alt="" />
+              <span>
+                <strong>Selo do Conhecimento</strong>
+                <small>Voce completou o desafio Fato ou Fake Kids.</small>
+              </span>
+            </div>
+          </article>
+        </section>
+
+        <section class="content" id="paintScreen" data-title="Colorindo com Jesus" data-eyebrow="Criatividade">
+          <article class="play-panel">
+            <div class="template-row" aria-label="Desenhos para colorir">
+              <button class="template-button active" data-template="arca">Arca</button>
+              <button class="template-button" data-template="ovelha">Ovelha</button>
+              <button class="template-button" data-template="estrela">Selo</button>
+            </div>
+            <div class="swatches" aria-label="Cores">
+              <button style="--swatch:#ef4444" data-color="#ef4444" class="active"></button>
+              <button style="--swatch:#f59e0b" data-color="#f59e0b"></button>
+              <button style="--swatch:#22c55e" data-color="#22c55e"></button>
+              <button style="--swatch:#2563eb" data-color="#2563eb"></button>
+              <button style="--swatch:#111827" data-color="#111827"></button>
+            </div>
+            <canvas id="paintCanvas" width="320" height="260" aria-label="Desenho para colorir"></canvas>
+            <button class="primary-button" id="clearPaint">Limpar desenho</button>
+          </article>
+        </section>
+
+        <section class="content" id="storiesScreen" data-title="Historias" data-eyebrow="Biblia infantil">
+          <div class="story-player">
+            <img src="assets/noah.svg" alt="" />
+            <span>
+              <strong id="storyTitle">Noe prepara a Arca</strong>
+              <small id="storySubtitle">Historia narrada · pagina 1 de 4</small>
+            </span>
+            <button class="round-play" id="storyPlay" aria-label="Reproduzir historia">▶</button>
+          </div>
+          <article class="story-reader">
+            <p id="storyText">Noe ouviu a Deus e comecou a preparar uma grande arca.</p>
+            <div class="story-controls">
+              <button class="secondary-button" id="storyPrev">Voltar</button>
+              <button class="primary-button" id="storyNext">Continuar</button>
+            </div>
+          </article>
+          <div class="story-list">
+            <button class="story-card">
+              <span class="chapter-number">01</span>
+              <span>
+                <strong>Noe prepara a Arca</strong>
+                <small>obediencia · cuidado · familia</small>
+              </span>
+            </button>
+            <button class="story-card locked">
+              <span class="chapter-number">02</span>
+              <span>
+                <strong>Davi e Golias</strong>
+                <small>coragem · fe · confianca</small>
+              </span>
+            </button>
+            <button class="story-card locked">
+              <span class="chapter-number">03</span>
+              <span>
+                <strong>Daniel ora com fe</strong>
+                <small>oracao · constancia · protecao</small>
+              </span>
+            </button>
+          </div>
+        </section>
+
+        <section class="content" id="membershipScreen" data-title="Arcakids Premium" data-eyebrow="Membership">
+          <div class="membership">
+            <img class="premium-badge" src="assets/star-badge.svg" alt="" />
+            <h2>Conteudo novo toda semana</h2>
+            <p>Jogos, historias narradas, atividades para colorir e desafios por idade em um ambiente infantil seguro.</p>
+            <div class="price-box">
+              <span>Plano familia</span>
+              <strong>R$ 24,90/mês</strong>
+              <small>ate 4 perfis infantis</small>
+            </div>
+            <ul class="benefits">
+              <li>Sem anuncios dentro da area infantil</li>
+              <li>Conteudo offline para viagens e igreja</li>
+              <li>Relatorio de progresso para os pais</li>
+              <li>Beneficios conectados a loja Arcakids</li>
+            </ul>
+            <button class="primary-button">Comecar teste</button>
+          </div>
+        </section>
+
+        <section class="content" id="parentScreen" data-title="Area dos Pais" data-eyebrow="Controle familiar">
+          <div class="parent-summary">
+            <span>
+              <strong>25 min</strong>
+              <small>tempo diario</small>
+            </span>
+            <span>
+              <strong>87%</strong>
+              <small>semana concluida</small>
+            </span>
+          </div>
+          <div class="parent-list">
+            <label class="parent-item">
+              <span>
+                <strong>Tempo diario</strong>
+                <small>25 minutos</small>
+              </span>
+              <input type="range" min="10" max="60" value="25" />
+            </label>
+            <label class="parent-item">
+              <span>
+                <strong>Conteudo por idade</strong>
+                <small>automatico pelo perfil</small>
+              </span>
+              <input type="checkbox" checked />
+            </label>
+            <label class="parent-item">
+              <span>
+                <strong>Links externos</strong>
+                <small>bloqueados por senha</small>
+              </span>
+              <input type="checkbox" checked />
+            </label>
+            <button class="secondary-button" data-screen="membership">Ver assinatura</button>
+          </div>
+        </section>
+
+        <nav class="bottom-nav" aria-label="Navegacao principal">
+          <button class="nav-item active" data-screen="home"><span>⌂</span>Inicio</button>
+          <button class="nav-item" data-screen="games"><span>▦</span>Jogos</button>
+          <button class="nav-item" data-screen="stories"><span>◉</span>Historias</button>
+          <button class="nav-item" data-screen="membership"><span>★</span>Premium</button>
+        </nav>
+      </section>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>
