@@ -55,10 +55,65 @@ const games = [
     locked: true
   },
   {
+    title: "Mapa dos Milagres",
+    age: "6-8",
+    description: "Encontre cenas de Jesus",
+    icon: "M",
+    image: "assets/story-rainbow.svg",
+    progress: 0,
+    level: "Premium",
+    screen: "membership",
+    locked: true
+  },
+  {
+    title: "Versiculo Secreto",
+    age: "6-8",
+    description: "Complete palavras biblicas",
+    icon: "V",
+    image: "assets/star-badge.svg",
+    progress: 0,
+    level: "Premium",
+    screen: "membership",
+    locked: true
+  },
+  {
     title: "Triunfo Biblico",
-    age: "8-10",
+    age: "9-10",
     description: "Cartas de reis e profetas",
     icon: "T",
+    image: "assets/david.svg",
+    progress: 0,
+    level: "Premium",
+    screen: "membership",
+    locked: true
+  },
+  {
+    title: "Quiz dos Profetas",
+    age: "9-10",
+    description: "Perguntas de conhecimento",
+    icon: "Q",
+    image: "assets/noah.svg",
+    progress: 12,
+    level: "Medio",
+    screen: "quiz",
+    featured: true
+  },
+  {
+    title: "Linha do Tempo",
+    age: "9-10",
+    description: "Organize eventos biblicos",
+    icon: "L",
+    image: "assets/story-family.svg",
+    progress: 0,
+    level: "Premium",
+    screen: "membership",
+    locked: true
+  },
+  {
+    title: "Desafio dos Reis",
+    age: "9-10",
+    description: "Estrategia e perguntas",
+    icon: "R",
     image: "assets/david.svg",
     progress: 0,
     level: "Premium",
@@ -131,9 +186,9 @@ const ageProfiles = {
     hero: "Explore a Biblia brincando.",
     copy: "Quiz leve, memoria, historias interativas e missoes semanais."
   },
-  "8-10": {
+  "9-10": {
     title: "Arca Digital",
-    pill: "8 a 10 anos",
+    pill: "9 a 10 anos",
     hero: "Missoes da Arca para crescer na fe.",
     copy: "Atividades com mais desafio, leitura e recompensas por progresso."
   }

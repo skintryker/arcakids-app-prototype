@@ -19,6 +19,8 @@ Protótipo navegavel mobile-first para validar o aplicativo Arcakids antes da et
 - Imagens individuais dos animais no jogo da Arca.
 - Botao de musica no topo do app; em celular/navegador o som comeca apos toque do usuario.
 - Faixas etarias renomeadas para Pequenos, Exploradores e Aventureiros.
+- Faixas corrigidas para 3-5, 6-8 e 9-10.
+- Mais jogos planejados para 6-8 e 9-10.
 - Memoria da Biblia com cartas ilustradas e recompensa final.
 - Fato ou Fake Kids com progresso, pontuacao e recompensa final.
 - Historias com leitor pagina a pagina e toque sonoro.
