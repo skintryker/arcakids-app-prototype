@@ -59,10 +59,10 @@ button {
 
 .topbar {
   display: grid;
-  grid-template-columns: 42px minmax(0, 1fr) auto;
-  gap: 8px;
-  align-items: center;
-  padding: 12px 14px 8px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: start;
+  padding: 18px 18px 10px;
 }
 
 .topbar h1,
@@ -83,16 +83,16 @@ button {
 .brand-block {
   min-width: 0;
   display: grid;
-  justify-items: center;
-  gap: 2px;
+  justify-items: start;
+  gap: 6px;
 }
 
 .brand-logo {
   display: block;
-  width: min(158px, 100%);
+  width: min(246px, 100%);
   max-width: 100%;
   height: auto;
-  max-height: 58px;
+  max-height: 92px;
   margin: 0;
 }
 
@@ -663,16 +663,16 @@ body {
 }
 
 .topbar {
-  padding: 12px 14px 8px;
+  padding: 18px 18px 10px;
 }
 
 .brand-mark {
   width: fit-content;
-  padding: 3px 8px;
+  padding: 5px 12px;
   border-radius: 999px;
   background: #fff4d4;
   color: #d95b00;
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 0;
 }
 
@@ -685,6 +685,10 @@ body {
 .avatar-button,
 .sound-button {
   box-shadow: 0 7px 16px rgba(23, 32, 51, 0.1), inset 0 0 0 1px rgba(23, 32, 51, 0.08);
+}
+
+#backButton {
+  display: none;
 }
 
 .avatar-button {
