@@ -983,9 +983,9 @@ body {
 }
 
 .animal-image {
-  width: min(112px, 82%);
+  width: min(138px, 92%);
   height: auto;
-  border-radius: 22px;
+  border-radius: 26px;
   filter: drop-shadow(0 10px 12px rgba(23, 32, 51, 0.12));
   transition: transform 160ms ease;
 }

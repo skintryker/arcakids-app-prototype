@@ -275,7 +275,11 @@ function renderAnimalRound() {
       if (roundSolved) return;
       const correct = animal.id === round.answer;
       tile.classList.add(correct ? "correct" : "wrong");
-      playTone(correct ? 659.25 : 220, correct ? 0.18 : 0.12);
+      if (correct) {
+        playSuccessSound();
+      } else {
+        playTryAgainSound();
+      }
       if (correct) {
         roundSolved = true;
         playScore = Math.min(5, playScore + 1);
@@ -335,7 +339,7 @@ function flipMemoryCard(card) {
     const pairs = document.querySelectorAll(".memory-card.done").length / 2;
     document.querySelector("#matchCount").textContent = pairs;
     document.querySelector("#memoryFeedback").textContent = "Par encontrado. Muito bem.";
-    playTone(659.25, 0.16);
+    playSuccessSound();
     if (pairs === memoryItems.length) {
       document.querySelector("#memoryFeedback").textContent = "Todos os pares encontrados.";
       document.querySelector("#memoryReward").hidden = false;
@@ -344,7 +348,7 @@ function flipMemoryCard(card) {
   }
 
   document.querySelector("#memoryFeedback").textContent = "Essas cartas sao diferentes. Tente de novo.";
-  playTone(220, 0.12);
+  playTryAgainSound();
   lockMemory = true;
   setTimeout(() => {
     [firstMemoryCard, card].forEach((item) => {
@@ -486,6 +490,20 @@ function playTone(frequency, duration = 0.16, volume = 0.08, type = "sine") {
   oscillator.connect(gain).connect(audioContext.destination);
   oscillator.start();
   oscillator.stop(audioContext.currentTime + duration + 0.02);
+}
+
+function playSuccessSound() {
+  ensureAudio();
+  [523.25, 659.25, 783.99].forEach((note, index) => {
+    window.setTimeout(() => playTone(note, 0.18, 0.1, "triangle"), index * 95);
+  });
+}
+
+function playTryAgainSound() {
+  ensureAudio();
+  [246.94, 196.0].forEach((note, index) => {
+    window.setTimeout(() => playTone(note, 0.12, 0.06, "sine"), index * 90);
+  });
 }
 
 function renderStory() {
@@ -660,7 +678,11 @@ document.querySelectorAll("[data-answer]").forEach((button) => {
     const answer = button.dataset.answer === "true";
     const correct = answer === item.answer;
     document.querySelector("#quizFeedback").textContent = correct ? item.note : "Tente outra vez.";
-    playTone(correct ? 659.25 : 220, correct ? 0.16 : 0.12);
+    if (correct) {
+      playSuccessSound();
+    } else {
+      playTryAgainSound();
+    }
     if (correct) quizScore += 1;
     if (answer === item.answer) {
       setTimeout(() => {
