@@ -968,6 +968,11 @@ body {
   padding: 12px;
 }
 
+.daily-story-list {
+  display: grid;
+  gap: 12px;
+}
+
 .story-art {
   border-radius: 18px;
   background-image: url("assets/ark-hero.svg");

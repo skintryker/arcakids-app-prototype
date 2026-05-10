@@ -12,7 +12,7 @@
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="icon" href="assets/app-icon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="assets/app-icon.svg" />
-    <link rel="stylesheet" href="styles.css?v=13" />
+    <link rel="stylesheet" href="styles.css?v=14" />
   </head>
   <body>
     <main class="phone-shell" aria-label="Protótipo Arcakids">
@@ -120,14 +120,7 @@
               <h3>Histórias</h3>
               <button class="text-button" data-screen="stories">Abrir</button>
             </div>
-            <button class="story-strip" data-screen="stories">
-              <span class="story-art"></span>
-              <span>
-                <strong>Noé prepara a Arca</strong>
-                <small>5 min · narrada</small>
-              </span>
-              <b>›</b>
-            </button>
+            <div class="daily-story-list" id="dailyStories"></div>
           </section>
         </section>
 
@@ -487,6 +480,6 @@
         </nav>
       </section>
     </main>
-    <script src="app.js?v=13"></script>
+    <script src="app.js?v=14"></script>
   </body>
 </html>

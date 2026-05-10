@@ -650,8 +650,9 @@ const screenEyebrow = document.querySelector("#screenEyebrow");
 const backButton = document.querySelector("#backButton");
 const navItems = [...document.querySelectorAll(".nav-item")];
 const soundButton = document.querySelector("#soundButton");
-const serviceWorkerPath = "./sw.js?v=13";
+const serviceWorkerPath = "./sw.js?v=14";
 const trialStorageKey = "arcakidsTrialUntil";
+const membershipStorageKey = "arcakidsMembershipActive";
 const dailyLimitStorageKey = "arcakidsDailyLimit";
 const cacheStorageKey = "arcakidsCacheVersion";
 let historyStack = ["home"];
@@ -684,6 +685,8 @@ let selectedGame = games[0];
 let miniGameStage = 0;
 let miniGameSolved = false;
 let miniGameScore = 0;
+let dailyFreeGameTitles = new Set();
+let dailyFreeStoryTitles = new Set();
 
 if (localStorage.getItem(cacheStorageKey) !== "8") {
   localStorage.removeItem(dailyLimitStorageKey);
@@ -695,9 +698,63 @@ function isTrialActive() {
   return Date.now() < trialUntil;
 }
 
+function hasCompleteAccess() {
+  return isTrialActive() || localStorage.getItem(membershipStorageKey) === "true";
+}
+
 function getTrialDaysLeft() {
   if (!isTrialActive()) return 0;
   return Math.max(1, Math.ceil((trialUntil - Date.now()) / 86400000));
+}
+
+function getTodayKey() {
+  const today = new Date();
+  return `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+}
+
+function seededNumber(seedText) {
+  let seed = 2166136261;
+  for (let index = 0; index < seedText.length; index += 1) {
+    seed ^= seedText.charCodeAt(index);
+    seed = Math.imul(seed, 16777619);
+  }
+  return seed >>> 0;
+}
+
+function shuffleForDay(items, seedText) {
+  const mixed = [...items];
+  let seed = seededNumber(seedText);
+  for (let index = mixed.length - 1; index > 0; index -= 1) {
+    seed = Math.imul(seed ^ (seed >>> 15), 2246822519) >>> 0;
+    const swapIndex = seed % (index + 1);
+    [mixed[index], mixed[swapIndex]] = [mixed[swapIndex], mixed[index]];
+  }
+  return mixed;
+}
+
+function getDailyGames(age, complete = hasCompleteAccess()) {
+  const pool = games.filter((game) => game.age === age);
+  return shuffleForDay(pool, `${getTodayKey()}-${age}-${complete ? "complete" : "free"}-games`)
+    .slice(0, complete ? 6 : 2);
+}
+
+function getDailyStories(complete = hasCompleteAccess()) {
+  const pool = complete ? stories : stories.filter((story) => story.free);
+  return shuffleForDay(pool, `${getTodayKey()}-${complete ? "complete" : "free"}-stories`)
+    .slice(0, complete ? 3 : 1);
+}
+
+function refreshDailyAccess() {
+  dailyFreeGameTitles = new Set(getDailyGames(currentAge, false).map((game) => game.title));
+  dailyFreeStoryTitles = new Set(getDailyStories(false).map((story) => story.title));
+}
+
+function isGameUnlocked(game) {
+  return hasCompleteAccess() || dailyFreeGameTitles.has(game.title);
+}
+
+function isStoryUnlocked(story) {
+  return hasCompleteAccess() || dailyFreeStoryTitles.has(story.title);
 }
 
 function showScreen(name, push = true) {
@@ -753,18 +810,18 @@ function startAnimalGame() {
 function renderGameCards(container, items) {
   container.innerHTML = "";
   items.forEach((game) => {
-    const locked = Boolean(game.locked && !isTrialActive());
+    const locked = !isGameUnlocked(game);
     const card = document.createElement("button");
     card.className = `game-card${locked ? " locked" : ""}`;
     card.dataset.screen = locked ? "parent" : game.screen;
     card.dataset.gameTitle = game.title;
-    if (game.locked && isTrialActive() && game.screen === "membership") {
+    if (game.locked && hasCompleteAccess() && game.screen === "membership") {
       card.dataset.premiumActivity = game.title;
       card.dataset.screen = "premiumActivity";
     }
     card.innerHTML = `
       <span class="game-art"><img src="${game.image}" alt="" /></span>
-      <span class="game-level">${locked ? "Peça ajuda" : game.locked && isTrialActive() ? "Liberado" : game.level}</span>
+      <span class="game-level">${locked ? "Peça ajuda" : game.locked && hasCompleteAccess() ? "Liberado" : game.level}</span>
       <strong>${game.title}</strong>
       <small>${locked ? "Peça para um adulto liberar esta aventura" : `${game.description} · ${game.age}`}</small>
       <span class="progress-track"><i style="width:${game.progress}%"></i></span>
@@ -776,6 +833,7 @@ function renderGameCards(container, items) {
 function updateHomeForProfile(age) {
   const profile = ageProfiles[age];
   currentAge = age;
+  refreshDailyAccess();
   document.querySelector("#homeScreen").dataset.title = profile.title;
   document.querySelector("#agePill").textContent = profile.pill;
   document.querySelector("#heroTitle").textContent = profile.hero;
@@ -783,10 +841,35 @@ function updateHomeForProfile(age) {
   if (document.querySelector("#homeScreen").classList.contains("active")) {
     screenTitle.textContent = profile.title;
   }
-  renderGameCards(
-    document.querySelector("#featuredGames"),
-    games.filter((game) => game.featured && (game.age === age || age === "3-5")).slice(0, 4)
-  );
+  renderDailyHomeContent();
+  renderGameCards(document.querySelector("#allGames"), games);
+}
+
+function renderDailyHomeContent() {
+  const complete = hasCompleteAccess();
+  const dailyGames = getDailyGames(currentAge, complete);
+  const dailyStories = getDailyStories(complete);
+  renderGameCards(document.querySelector("#featuredGames"), dailyGames);
+
+  const storyList = document.querySelector("#dailyStories");
+  storyList.innerHTML = "";
+  dailyStories.forEach((story) => {
+    const firstPage = story.pages[0];
+    const storyIndex = stories.findIndex((item) => item.title === story.title);
+    const card = document.createElement("button");
+    card.className = "story-strip";
+    card.dataset.screen = "stories";
+    card.dataset.storyIndex = storyIndex;
+    card.innerHTML = `
+      <span class="story-art" style="background-image:url('${firstPage.image}')"></span>
+      <span>
+        <strong>${story.title}</strong>
+        <small>${complete ? "Completo" : "Liberado hoje"} · ${story.tags}</small>
+      </span>
+      <b>›</b>
+    `;
+    storyList.appendChild(card);
+  });
 }
 
 function renderAnimalRound() {
@@ -1399,7 +1482,7 @@ function renderStoryList() {
   const list = document.querySelector("#storyList");
   list.innerHTML = "";
   stories.forEach((story, index) => {
-    const locked = !story.free && !isTrialActive();
+    const locked = !isStoryUnlocked(story);
     const card = document.createElement("button");
     card.className = `story-card${locked ? " locked" : ""}${index === currentStory ? " active" : ""}`;
     card.dataset.storyIndex = index;
@@ -1508,8 +1591,10 @@ function toggleMusic() {
 function startFreeTrial() {
   trialUntil = Date.now() + 7 * 86400000;
   localStorage.setItem(trialStorageKey, String(trialUntil));
+  refreshDailyAccess();
   renderTrialStatus();
   renderGameCards(document.querySelector("#allGames"), games);
+  renderDailyHomeContent();
   renderStoryList();
   playSuccessSound();
 }
@@ -1661,6 +1746,10 @@ document.addEventListener("click", (event) => {
     miniGameSolved = false;
     miniGameScore = 0;
   }
+  if (target?.dataset.storyIndex) {
+    currentStory = Number(target.dataset.storyIndex);
+    currentStoryPage = 0;
+  }
   if (target?.dataset.premiumActivity) {
     selectedPremiumActivity = games.find((game) => game.title === target.dataset.premiumActivity);
   }
@@ -1779,7 +1868,7 @@ document.querySelector("#storyList").addEventListener("click", (event) => {
   const card = event.target.closest("[data-story-index]");
   if (!card) return;
   const nextStory = stories[Number(card.dataset.storyIndex)];
-  if (!nextStory.free && !isTrialActive()) {
+  if (!isStoryUnlocked(nextStory)) {
     showScreen("parent");
     return;
   }
