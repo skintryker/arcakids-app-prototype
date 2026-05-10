@@ -667,7 +667,7 @@ const screenEyebrow = document.querySelector("#screenEyebrow");
 const backButton = document.querySelector("#backButton");
 const navItems = [...document.querySelectorAll(".nav-item")];
 const soundButton = document.querySelector("#soundButton");
-const assetVersion = "35";
+const assetVersion = "36";
 const serviceWorkerPath = `./sw.js?v=${assetVersion}`;
 const trialStorageKey = "arcakidsTrialUntil";
 const membershipStorageKey = "arcakidsMembershipActive";

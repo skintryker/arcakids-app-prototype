@@ -2201,8 +2201,8 @@ canvas {
 }
 
 .hero-band {
-  min-height: 480px;
-  padding: 22px 18px 238px;
+  min-height: 520px;
+  padding: 22px 18px 248px;
 }
 
 .hero-illustration {
@@ -2210,10 +2210,14 @@ canvas {
   right: 0;
   bottom: 0;
   width: 100%;
-  height: 58%;
+  height: 46%;
   transform: none;
   object-fit: cover;
   object-position: center bottom;
+}
+
+.hero-band::after {
+  height: 46%;
 }
 
 .parent-summary {
