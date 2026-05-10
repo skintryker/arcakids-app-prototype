@@ -545,8 +545,8 @@ canvas {
   font-weight: 900;
 }
 
-.locked::after {
-  content: "Pedir ajuda";
+.story-card.locked::after {
+  content: "Adulto";
   display: inline-block;
   width: fit-content;
   margin-top: 8px;
@@ -1558,6 +1558,11 @@ canvas {
   scroll-snap-align: start;
 }
 
+.animal-collection-card::after {
+  display: none;
+  content: none;
+}
+
 .animal-collection-card img {
   width: 100%;
   aspect-ratio: 1;
@@ -1565,6 +1570,11 @@ canvas {
   object-fit: cover;
   background: #fff8e8;
   box-shadow: inset 0 0 0 1px rgba(23, 32, 51, 0.06);
+}
+
+.animal-collection-card:not(.locked) img {
+  background: #fff4d4;
+  box-shadow: var(--card-shadow);
 }
 
 .animal-collection-card small {
@@ -1580,7 +1590,11 @@ canvas {
 
 .animal-collection-card.locked img {
   filter: grayscale(1);
-  opacity: 0.36;
+  opacity: 0.28;
+}
+
+.animal-collection-card.locked small {
+  color: #94a3b8;
 }
 
 .parent-gate {

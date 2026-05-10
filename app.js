@@ -663,7 +663,7 @@ const screenEyebrow = document.querySelector("#screenEyebrow");
 const backButton = document.querySelector("#backButton");
 const navItems = [...document.querySelectorAll(".nav-item")];
 const soundButton = document.querySelector("#soundButton");
-const assetVersion = "23";
+const assetVersion = "24";
 const serviceWorkerPath = `./sw.js?v=${assetVersion}`;
 const trialStorageKey = "arcakidsTrialUntil";
 const membershipStorageKey = "arcakidsMembershipActive";
@@ -895,11 +895,14 @@ function renderMyArk() {
   const collection = document.querySelector("#animalCollection");
   collection.innerHTML = "";
 
-  const items = foundAnimals.length ? foundAnimals : animals.slice(0, 4).map((animal) => ({ ...animal, locked: true }));
+  const items = [...animals]
+    .sort((a, b) => Number(foundAnimalIds.has(b.id)) - Number(foundAnimalIds.has(a.id)))
+    .map((animal) => ({ ...animal, locked: !foundAnimalIds.has(animal.id) }));
   items.forEach((animal) => {
     const card = document.createElement("span");
     card.className = `animal-collection-card${animal.locked ? " locked" : ""}`;
-    card.innerHTML = `${imageTag(animal.image, animal.label, animal.label)}<small>${animal.locked ? "?" : animal.label}</small>`;
+    card.setAttribute("aria-label", animal.locked ? `${animal.label} ainda não encontrado` : `${animal.label} encontrado`);
+    card.innerHTML = `${imageTag(animal.image, animal.label, animal.label)}<small>${animal.locked ? "A encontrar" : animal.label}</small>`;
     collection.appendChild(card);
   });
 
@@ -946,9 +949,9 @@ function renderGameCards(container, items) {
     }
     card.innerHTML = `
       <span class="game-art">${imageTag(game.image, "", game.title)}</span>
-      <span class="game-level">${locked ? "Peça ajuda" : game.locked && hasCompleteAccess() ? "Liberado" : game.level}</span>
+      <span class="game-level">${locked ? "Adulto" : game.locked && hasCompleteAccess() ? "Liberado" : game.level}</span>
       <strong>${game.title}</strong>
-      <small>${locked ? "Peça para um adulto liberar esta aventura" : `${game.description} · ${game.age}`}</small>
+      <small>${locked ? "Aventura fechada na versão free" : `${game.description} · ${game.age}`}</small>
       <span class="progress-track"><i style="width:${game.progress}%"></i></span>
     `;
     container.appendChild(card);
@@ -1662,7 +1665,7 @@ function renderStoryList() {
       <span class="chapter-number">${String(index + 1).padStart(2, "0")}</span>
       <span>
         <strong>${story.title}</strong>
-        <small>${locked ? "Peça ajuda a um adulto" : story.tags}</small>
+        <small>${locked ? "História fechada na versão free" : story.tags}</small>
       </span>
     `;
     list.appendChild(card);
