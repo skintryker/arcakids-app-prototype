@@ -1766,6 +1766,41 @@ canvas {
   accent-color: var(--deep-aqua);
 }
 
+.daily-limit-card input[type="range"]:disabled {
+  opacity: 0.35;
+}
+
+.limit-toggle {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.limit-toggle input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--deep-aqua);
+}
+
+.limit-toggle span {
+  display: grid;
+  gap: 1px;
+}
+
+.limit-toggle strong {
+  font-size: 14px;
+}
+
+.limit-toggle small {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
 @media (max-width: 380px) {
   .brand-logo {
     width: min(198px, 50vw);

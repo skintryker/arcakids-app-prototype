@@ -667,11 +667,12 @@ const screenEyebrow = document.querySelector("#screenEyebrow");
 const backButton = document.querySelector("#backButton");
 const navItems = [...document.querySelectorAll(".nav-item")];
 const soundButton = document.querySelector("#soundButton");
-const assetVersion = "34";
+const assetVersion = "35";
 const serviceWorkerPath = `./sw.js?v=${assetVersion}`;
 const trialStorageKey = "arcakidsTrialUntil";
 const membershipStorageKey = "arcakidsMembershipActive";
 const dailyLimitStorageKey = "arcakidsDailyLimit";
+const dailyLimitUnlimitedStorageKey = "arcakidsDailyLimitUnlimited";
 const musicVolumeStorageKey = "arcakidsMusicVolume";
 const dailyUsageStorageKey = "arcakidsDailyUsage";
 const childAgeStorageKey = "arcakidsChildAge";
@@ -708,6 +709,7 @@ let trialUntil = Number(localStorage.getItem(trialStorageKey) || 0);
 let selectedPremiumActivity = null;
 let parentUnlocked = false;
 let dailyLimit = Number(localStorage.getItem(dailyLimitStorageKey) || 25);
+let dailyLimitUnlimited = localStorage.getItem(dailyLimitUnlimitedStorageKey) === "true";
 let dailyUsage = loadDailyUsage();
 let usageTimer = null;
 let childCanChooseAge = localStorage.getItem(childAgeChoiceStorageKey) !== "false";
@@ -815,6 +817,7 @@ function getDailyUsedMinutes() {
 }
 
 function isDailyLimitReached() {
+  if (dailyLimitUnlimited) return false;
   return dailyUsage.seconds >= dailyLimit * 60;
 }
 
@@ -2092,17 +2095,32 @@ function unlockParentArea() {
 
 function renderDailyLimit() {
   const slider = document.querySelector("#dailyLimitSlider");
+  const unlimited = document.querySelector("#dailyLimitUnlimited");
   const label = document.querySelector("#dailyLimitLabel");
   const summary = document.querySelector("#dailyLimitSummary");
-  if (!slider || !label || !summary) return;
+  if (!slider || !unlimited || !label || !summary) return;
   slider.value = String(dailyLimit);
-  label.textContent = `${getDailyUsedMinutes()} de ${dailyLimit} minutos usados hoje`;
-  summary.textContent = `${dailyLimit} min`;
+  slider.disabled = dailyLimitUnlimited;
+  unlimited.checked = dailyLimitUnlimited;
+  label.textContent = dailyLimitUnlimited
+    ? `${getDailyUsedMinutes()} minutos usados hoje · tempo livre`
+    : `${getDailyUsedMinutes()} de ${dailyLimit} minutos usados hoje`;
+  summary.textContent = dailyLimitUnlimited ? "Livre" : `${dailyLimit} min`;
 }
 
 function updateDailyLimit(value) {
   dailyLimit = Number(value);
   localStorage.setItem(dailyLimitStorageKey, String(dailyLimit));
+  renderDailyLimit();
+}
+
+function updateDailyLimitUnlimited(checked) {
+  dailyLimitUnlimited = checked;
+  localStorage.setItem(dailyLimitUnlimitedStorageKey, String(dailyLimitUnlimited));
+  if (dailyLimitUnlimited) {
+    const toast = document.querySelector("#timeLimitToast");
+    if (toast) toast.hidden = true;
+  }
   renderDailyLimit();
 }
 
@@ -2174,6 +2192,9 @@ document.querySelector("#gateAnswer").addEventListener("keydown", (event) => {
 });
 document.querySelector("#dailyLimitSlider").addEventListener("input", (event) => {
   updateDailyLimit(event.target.value);
+});
+document.querySelector("#dailyLimitUnlimited").addEventListener("change", (event) => {
+  updateDailyLimitUnlimited(event.target.checked);
 });
 document.querySelector("#musicVolumeSlider")?.addEventListener("input", (event) => {
   updateMusicVolume(event.target.value);

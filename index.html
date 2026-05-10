@@ -12,7 +12,7 @@
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="icon" href="assets/app-icon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="assets/app-icon.svg" />
-    <link rel="stylesheet" href="styles.css?v=34" />
+    <link rel="stylesheet" href="styles.css?v=35" />
   </head>
   <body>
     <main class="phone-shell" aria-label="Protótipo Arcakids">
@@ -20,7 +20,7 @@
         <header class="topbar">
           <button class="icon-button" id="backButton" aria-label="Voltar" title="Voltar">‹</button>
           <div class="brand-block">
-            <img class="brand-logo" src="assets/arcakids-logo-transparent.png?v=34" alt="Arcakids" />
+            <img class="brand-logo" src="assets/arcakids-logo-transparent.png?v=35" alt="Arcakids" />
             <p class="eyebrow brand-mark sr-only" id="screenEyebrow">Vamos brincar?</p>
             <h1 class="sr-only" id="screenTitle">Arcakids</h1>
           </div>
@@ -394,13 +394,20 @@
               <strong>Controle familiar</strong>
               <span>Assinatura, teste grátis, loja e links externos ficam protegidos aqui.</span>
             </div>
-            <label class="daily-limit-card">
+            <div class="daily-limit-card">
               <span>
                 <strong>Tempo diário de uso</strong>
                 <small id="dailyLimitLabel">25 minutos</small>
               </span>
+              <label class="limit-toggle">
+                <input id="dailyLimitUnlimited" type="checkbox" />
+                <span>
+                  <strong>Tempo livre</strong>
+                  <small>Sem bloqueio automático hoje.</small>
+                </span>
+              </label>
               <input id="dailyLimitSlider" type="range" min="10" max="60" value="25" />
-            </label>
+            </div>
             <div class="parent-list">
               <button class="parent-item parent-link" data-screen="membership">
                 <span>
@@ -495,6 +502,6 @@
         </div>
       </section>
     </main>
-    <script src="app.js?v=34"></script>
+    <script src="app.js?v=35"></script>
   </body>
 </html>
