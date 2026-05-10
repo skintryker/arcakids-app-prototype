@@ -650,7 +650,7 @@ const screenEyebrow = document.querySelector("#screenEyebrow");
 const backButton = document.querySelector("#backButton");
 const navItems = [...document.querySelectorAll(".nav-item")];
 const soundButton = document.querySelector("#soundButton");
-const serviceWorkerPath = "./sw.js?v=16";
+const serviceWorkerPath = "./sw.js?v=17";
 const trialStorageKey = "arcakidsTrialUntil";
 const membershipStorageKey = "arcakidsMembershipActive";
 const dailyLimitStorageKey = "arcakidsDailyLimit";
@@ -1635,15 +1635,21 @@ function toggleMusic() {
   }
 }
 
-function startFreeTrial() {
-  trialUntil = Date.now() + 7 * 86400000;
-  localStorage.setItem(trialStorageKey, String(trialUntil));
+function toggleFreeTrial() {
+  if (isTrialActive()) {
+    trialUntil = 0;
+    localStorage.removeItem(trialStorageKey);
+    playTryAgainSound();
+  } else {
+    trialUntil = Date.now() + 7 * 86400000;
+    localStorage.setItem(trialStorageKey, String(trialUntil));
+    playSuccessSound();
+  }
   refreshDailyAccess();
   renderTrialStatus();
   renderGameCards(document.querySelector("#allGames"), games);
   renderDailyHomeContent();
   renderStoryList();
-  playSuccessSound();
 }
 
 function renderTrialStatus() {
@@ -1652,13 +1658,14 @@ function renderTrialStatus() {
   if (!status || !button) return;
   if (isTrialActive()) {
     status.hidden = false;
-    status.innerHTML = `<strong>Teste grátis ativo</strong><span>${getTrialDaysLeft()} dia(s) restantes de acesso premium.</span>`;
-    button.textContent = "Teste grátis ativo";
-    button.disabled = true;
+    status.innerHTML = `<strong>Teste grátis ativo</strong><span>${getTrialDaysLeft()} dia(s) restantes. Toque no botão para voltar à versão free.</span>`;
+    button.textContent = "Desativar teste e ver versão free";
+    button.classList.add("trial-active");
   } else {
-    status.hidden = true;
-    button.textContent = "Iniciar teste grátis por 7 dias";
-    button.disabled = false;
+    status.hidden = false;
+    status.innerHTML = "<strong>Versão free ativa</strong><span>Mostrando apenas a seleção diária liberada.</span>";
+    button.textContent = "Ativar teste grátis por 7 dias";
+    button.classList.remove("trial-active");
   }
 }
 
@@ -1803,7 +1810,7 @@ document.addEventListener("click", (event) => {
   if (target) showScreen(target.dataset.screen);
 });
 
-document.querySelector("#freeTrialButton").addEventListener("click", startFreeTrial);
+document.querySelector("#freeTrialButton").addEventListener("click", toggleFreeTrial);
 document.querySelector("#gateSubmit").addEventListener("click", unlockParentArea);
 document.querySelector("#gateAnswer").addEventListener("keydown", (event) => {
   if (event.key === "Enter") unlockParentArea();

@@ -1174,6 +1174,12 @@ body {
   opacity: 1;
 }
 
+#freeTrialButton.trial-active {
+  background: #e8f7f4;
+  color: var(--deep-aqua);
+  box-shadow: inset 0 0 0 3px rgba(14, 119, 118, 0.16);
+}
+
 canvas {
   border-radius: 22px;
   background: #fffdf5;
