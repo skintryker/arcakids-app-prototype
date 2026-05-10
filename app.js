@@ -663,7 +663,8 @@ const screenEyebrow = document.querySelector("#screenEyebrow");
 const backButton = document.querySelector("#backButton");
 const navItems = [...document.querySelectorAll(".nav-item")];
 const soundButton = document.querySelector("#soundButton");
-const serviceWorkerPath = "./sw.js?v=22";
+const assetVersion = "23";
+const serviceWorkerPath = `./sw.js?v=${assetVersion}`;
 const trialStorageKey = "arcakidsTrialUntil";
 const membershipStorageKey = "arcakidsMembershipActive";
 const dailyLimitStorageKey = "arcakidsDailyLimit";
@@ -704,6 +705,56 @@ let dailyFreeGameTitles = new Set();
 let dailyFreeStoryTitles = new Set();
 let foundAnimalIds = new Set(JSON.parse(localStorage.getItem(foundAnimalsStorageKey) || "[]"));
 let completedStoryTitles = new Set(JSON.parse(localStorage.getItem(completedStoriesStorageKey) || "[]"));
+
+function escapeHtml(value = "") {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function assetUrl(path) {
+  if (!path) return "";
+  if (/^(data:|blob:|https?:)/.test(path)) return path;
+  return path.includes("?") ? path : `${path}?v=${assetVersion}`;
+}
+
+function fallbackSvg(label = "Arcakids") {
+  const safeLabel = escapeHtml(String(label).slice(0, 18));
+  const svg = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180">
+      <rect width="180" height="180" rx="34" fill="#FFF4D4"/>
+      <circle cx="90" cy="78" r="38" fill="#F7BE45"/>
+      <path d="M46 118c26 24 62 25 88 0" fill="none" stroke="#2AA7A5" stroke-width="14" stroke-linecap="round"/>
+      <path d="M62 80h56M72 64l-14 16 14 16M108 64l14 16-14 16" fill="none" stroke="#172033" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="90" y="154" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="800" fill="#172033">${safeLabel}</text>
+    </svg>`;
+  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+}
+
+function imageTag(src, alt = "", label = "") {
+  return `<img src="${assetUrl(src)}" alt="${escapeHtml(alt)}" data-fallback-label="${escapeHtml(label || alt || "Arcakids")}" />`;
+}
+
+function setImageSource(selector, src, label = "") {
+  const image = document.querySelector(selector);
+  if (!image) return;
+  image.dataset.fallbackLabel = label || image.alt || "Arcakids";
+  delete image.dataset.fallbackApplied;
+  image.src = assetUrl(src);
+}
+
+document.addEventListener(
+  "error",
+  (event) => {
+    const image = event.target;
+    if (!(image instanceof HTMLImageElement) || image.dataset.fallbackApplied === "true") return;
+    image.dataset.fallbackApplied = "true";
+    image.src = fallbackSvg(image.dataset.fallbackLabel || image.alt || "Arcakids");
+  },
+  true
+);
 
 if (localStorage.getItem(cacheStorageKey) !== "8") {
   localStorage.removeItem(dailyLimitStorageKey);
@@ -848,7 +899,7 @@ function renderMyArk() {
   items.forEach((animal) => {
     const card = document.createElement("span");
     card.className = `animal-collection-card${animal.locked ? " locked" : ""}`;
-    card.innerHTML = `<img src="${animal.image}" alt="${animal.label}" /><small>${animal.locked ? "?" : animal.label}</small>`;
+    card.innerHTML = `${imageTag(animal.image, animal.label, animal.label)}<small>${animal.locked ? "?" : animal.label}</small>`;
     collection.appendChild(card);
   });
 
@@ -894,7 +945,7 @@ function renderGameCards(container, items) {
       card.dataset.screen = "premiumActivity";
     }
     card.innerHTML = `
-      <span class="game-art"><img src="${game.image}" alt="" /></span>
+      <span class="game-art">${imageTag(game.image, "", game.title)}</span>
       <span class="game-level">${locked ? "Peça ajuda" : game.locked && hasCompleteAccess() ? "Liberado" : game.level}</span>
       <strong>${game.title}</strong>
       <small>${locked ? "Peça para um adulto liberar esta aventura" : `${game.description} · ${game.age}`}</small>
@@ -936,7 +987,7 @@ function renderDailyHomeContent() {
     card.dataset.screen = "stories";
     card.dataset.storyIndex = storyIndex;
     card.innerHTML = `
-      <span class="story-art" style="background-image:url('${firstPage.image}')"></span>
+      <span class="story-art" style="background-image:url('${assetUrl(firstPage.image)}')"></span>
       <span>
         <strong>${story.title}</strong>
         <small>${complete ? "Completo" : "Liberado hoje"} · ${story.tags}</small>
@@ -1026,7 +1077,7 @@ function renderAnimalRound() {
     const tile = document.createElement("button");
     tile.className = "animal-tile";
     tile.dataset.animalId = animal.id;
-    tile.innerHTML = `<img class="animal-image" src="${animal.image}" alt="" /><strong>${animal.label}</strong>`;
+    tile.innerHTML = `${imageTag(animal.image, "", animal.label).replace("<img", "<img class=\"animal-image\"")}<strong>${animal.label}</strong>`;
     tile.setAttribute("aria-label", animal.id);
     tile.addEventListener("click", () => {
       if (roundSolved) return;
@@ -1072,7 +1123,7 @@ function renderMemory() {
   screenTitle.textContent = game.title;
   document.querySelector("#memoryMastheadTitle").textContent = game.title;
   document.querySelector("#memoryMastheadCopy").textContent = game.description;
-  document.querySelector("#memoryMastheadImage").src = game.image;
+  setImageSource("#memoryMastheadImage", game.image, game.title);
   const board = document.querySelector("#memoryBoard");
   const cards = [...memoryItems, ...memoryItems].sort(() => Math.random() - 0.5);
   document.querySelector("#matchCount").textContent = "0";
@@ -1089,8 +1140,8 @@ function renderMemory() {
     card.className = "memory-card";
     card.dataset.value = item.id;
     card.dataset.label = item.label;
-    card.dataset.image = item.image;
-    card.innerHTML = `<span class="card-back">?</span><span class="card-face"><img src="${item.image}" alt="" /><small>${item.label}</small></span>`;
+    card.dataset.image = assetUrl(item.image);
+    card.innerHTML = `<span class="card-back">?</span><span class="card-face">${imageTag(item.image, "", item.label)}<small>${item.label}</small></span>`;
     card.addEventListener("click", () => flipMemoryCard(card));
     board.appendChild(card);
   });
@@ -1160,7 +1211,7 @@ function startQuiz() {
   screenTitle.textContent = game.title;
   document.querySelector("#quizMastheadTitle").textContent = game.title;
   document.querySelector("#quizMastheadCopy").textContent = game.description;
-  document.querySelector("#quizMastheadImage").src = game.image;
+  setImageSource("#quizMastheadImage", game.image, game.title);
   currentQuiz = 0;
   quizScore = 0;
   renderPhaseDots("#quizPath", quizItems.length);
@@ -1582,9 +1633,9 @@ function renderStory() {
   const page = story.pages[currentStoryPage];
   document.querySelector("#storyTitle").textContent = page.title;
   document.querySelector("#storyText").textContent = page.text;
-  document.querySelector("#storyScene").src = page.image;
+  setImageSource("#storyScene", page.image, page.alt || story.title);
   document.querySelector("#storyScene").alt = page.alt;
-  document.querySelector("#storyThumb").src = page.image;
+  setImageSource("#storyThumb", page.image, story.title);
   document.querySelector("#storyThumb").alt = "";
   document.querySelector("#storySubtitle").textContent = `${story.title} · página ${currentStoryPage + 1} de ${story.pages.length}`;
   document.querySelector("#storyPrev").disabled = currentStoryPage === 0;
@@ -1746,7 +1797,7 @@ function renderTrialStatus() {
 function renderPremiumActivity() {
   const activity = selectedPremiumActivity || games.find((game) => game.locked);
   if (!activity) return;
-  document.querySelector("#premiumPreviewImage").src = activity.image;
+  setImageSource("#premiumPreviewImage", activity.image, activity.title);
   document.querySelector("#premiumPreviewTitle").textContent = activity.title;
   document.querySelector("#premiumPreviewDescription").textContent =
     `${activity.description}. Atividade liberada durante o teste grátis de 7 dias.`;
@@ -1767,7 +1818,7 @@ function renderMiniGame() {
   document.querySelector(".app-screen").scrollTop = 0;
   document.querySelector("#miniGameScreen").dataset.title = game.title;
   screenTitle.textContent = game.title;
-  document.querySelector("#miniGameImage").src = content.image;
+  setImageSource("#miniGameImage", content.image, game.title);
   document.querySelector("#miniGameTitle").textContent = game.title;
   document.querySelector("#miniGamePrompt").textContent = content.prompt;
   document.querySelector("#miniGameFeedback").textContent = `Fase ${miniGameStage + 1} de ${stages.length}. Escolha uma opção.`;
