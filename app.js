@@ -147,48 +147,144 @@ const quizItems = [
 ];
 
 const miniGameContent = {
-  "Monte a História": {
-    prompt: "Coloque as cenas da história em ordem.",
-    options: ["Noé obedece", "A Arca fica pronta", "Os animais entram"],
-    answer: "Noé obedece",
-    success: "Muito bem. Primeiro Noé ouviu a Deus.",
-    image: "assets/story-noah-build.svg"
-  },
-  "Mapa dos Milagres": {
-    prompt: "Toque na cena que lembra um milagre de Jesus.",
-    options: ["Tempestade calma", "Coroa do rei", "Cesta vazia"],
-    answer: "Tempestade calma",
-    success: "Isso. Jesus acalmou a tempestade.",
-    image: "assets/story-rainbow.svg"
-  },
-  "Versículo Secreto": {
-    prompt: "Complete a frase: Deus é...",
-    options: ["amor", "medo", "pressa"],
-    answer: "amor",
-    success: "Acertou. Deus é amor.",
-    image: "assets/star-badge.svg"
-  },
-  "Triunfo Bíblico": {
-    prompt: "Escolha quem mostrou coragem diante de Golias.",
-    options: ["Davi", "Jonas", "Noé"],
-    answer: "Davi",
-    success: "Correto. Davi confiou em Deus.",
-    image: "assets/david.svg"
-  },
-  "Linha do Tempo": {
-    prompt: "Qual história vem primeiro na Bíblia?",
-    options: ["A criação", "Davi e Golias", "Daniel na cova"],
-    answer: "A criação",
-    success: "Muito bem. Deus criou todas as coisas.",
-    image: "assets/story-family.svg"
-  },
-  "Desafio dos Reis": {
-    prompt: "Quem pediu sabedoria a Deus?",
-    options: ["Salomão", "Golias", "Faraó"],
-    answer: "Salomão",
-    success: "Isso. Salomão pediu sabedoria.",
-    image: "assets/david.svg"
-  }
+  "Monte a História": [
+    {
+      prompt: "Qual cena vem primeiro na história de Noé?",
+      options: ["Noé obedece", "A Arca fica pronta", "Os animais entram"],
+      answer: "Noé obedece",
+      success: "Muito bem. Primeiro Noé ouviu a Deus.",
+      image: "assets/story-noah-build.svg"
+    },
+    {
+      prompt: "Depois que Noé obedeceu, o que ele construiu?",
+      options: ["Uma torre", "A Arca", "Um palácio"],
+      answer: "A Arca",
+      success: "Isso. Noé preparou a Arca com cuidado.",
+      image: "assets/ark-scene-wide.svg"
+    },
+    {
+      prompt: "Quem entrou na Arca em pares?",
+      options: ["Os animais", "As estrelas", "As pedras"],
+      answer: "Os animais",
+      success: "Parabéns. Você montou a história.",
+      image: "assets/story-animals-enter.svg"
+    }
+  ],
+  "Mapa dos Milagres": [
+    {
+      prompt: "Toque na cena que lembra um milagre de Jesus.",
+      options: ["Tempestade calma", "Coroa do rei", "Cesta vazia"],
+      answer: "Tempestade calma",
+      success: "Isso. Jesus acalmou a tempestade.",
+      image: "assets/story-rainbow.svg"
+    },
+    {
+      prompt: "Jesus cuidou das pessoas com...",
+      options: ["amor", "briga", "pressa"],
+      answer: "amor",
+      success: "Muito bem. Jesus cuidava com amor.",
+      image: "assets/story-family.svg"
+    },
+    {
+      prompt: "Quando sentimos medo, podemos confiar em...",
+      options: ["Jesus", "Golias", "uma coroa"],
+      answer: "Jesus",
+      success: "Acertou. Jesus está conosco.",
+      image: "assets/star-badge.svg"
+    }
+  ],
+  "Versículo Secreto": [
+    {
+      prompt: "Complete: Deus é...",
+      options: ["amor", "medo", "pressa"],
+      answer: "amor",
+      success: "Acertou. Deus é amor.",
+      image: "assets/star-badge.svg"
+    },
+    {
+      prompt: "Complete: O Senhor é meu...",
+      options: ["pastor", "barco", "escudo quebrado"],
+      answer: "pastor",
+      success: "Isso. O Senhor cuida de nós.",
+      image: "assets/sheep-animal.svg"
+    },
+    {
+      prompt: "Complete: Posso falar com Deus em...",
+      options: ["oração", "correria", "silêncio sem amor"],
+      answer: "oração",
+      success: "Parabéns. Você descobriu o versículo.",
+      image: "assets/guide-sheep.svg"
+    }
+  ],
+  "Triunfo Bíblico": [
+    {
+      prompt: "Quem mostrou coragem diante de Golias?",
+      options: ["Davi", "Jonas", "Noé"],
+      answer: "Davi",
+      success: "Correto. Davi confiou em Deus.",
+      image: "assets/david.svg"
+    },
+    {
+      prompt: "Quem preparou uma grande Arca?",
+      options: ["Noé", "Daniel", "Salomão"],
+      answer: "Noé",
+      success: "Isso. Noé foi obediente.",
+      image: "assets/noah.svg"
+    },
+    {
+      prompt: "Quem orava a Deus com fé?",
+      options: ["Daniel", "Golias", "Faraó"],
+      answer: "Daniel",
+      success: "Muito bem. Daniel confiava em Deus.",
+      image: "assets/lion.svg"
+    }
+  ],
+  "Linha do Tempo": [
+    {
+      prompt: "Qual história vem primeiro na Bíblia?",
+      options: ["A criação", "Davi e Golias", "Daniel na cova"],
+      answer: "A criação",
+      success: "Muito bem. Deus criou todas as coisas.",
+      image: "assets/story-family.svg"
+    },
+    {
+      prompt: "O que vem depois na história de Noé?",
+      options: ["A Arca", "Golias", "O grande peixe"],
+      answer: "A Arca",
+      success: "Isso. Noé preparou a Arca.",
+      image: "assets/story-noah-build.svg"
+    },
+    {
+      prompt: "Qual história fala de coragem?",
+      options: ["Davi e Golias", "A criação", "A Arca pronta"],
+      answer: "Davi e Golias",
+      success: "Parabéns. Você organizou a linha do tempo.",
+      image: "assets/david.svg"
+    }
+  ],
+  "Desafio dos Reis": [
+    {
+      prompt: "Quem pediu sabedoria a Deus?",
+      options: ["Salomão", "Golias", "Faraó"],
+      answer: "Salomão",
+      success: "Isso. Salomão pediu sabedoria.",
+      image: "assets/david.svg"
+    },
+    {
+      prompt: "Um bom rei deve cuidar do povo com...",
+      options: ["justiça", "medo", "egoísmo"],
+      answer: "justiça",
+      success: "Muito bem. Justiça é cuidar do que é certo.",
+      image: "assets/star-badge.svg"
+    },
+    {
+      prompt: "A sabedoria vem de...",
+      options: ["Deus", "orgulho", "barulho"],
+      answer: "Deus",
+      success: "Parabéns. Você completou o desafio.",
+      image: "assets/story-rainbow.svg"
+    }
+  ]
 };
 
 const stories = [
@@ -393,6 +489,8 @@ let selectedPremiumActivity = null;
 let parentUnlocked = false;
 let dailyLimit = Number(localStorage.getItem(dailyLimitStorageKey) || 25);
 let selectedGame = games[0];
+let miniGameStage = 0;
+let miniGameSolved = false;
 
 if (localStorage.getItem(cacheStorageKey) !== "8") {
   localStorage.removeItem(dailyLimitStorageKey);
@@ -1038,20 +1136,28 @@ function renderPremiumActivity() {
 
 function renderMiniGame() {
   const game = selectedGame || games.find((item) => item.screen === "miniGame");
-  const content = miniGameContent[game.title] || {
-    prompt: game.description,
-    options: ["Começar", "Tentar", "Continuar"],
-    answer: "Começar",
-    success: "Parabéns. Você completou a aventura.",
-    image: game.image
-  };
+  const stages = miniGameContent[game.title] || [
+    {
+      prompt: game.description,
+      options: ["Começar", "Tentar", "Continuar"],
+      answer: "Começar",
+      success: "Parabéns. Você completou a aventura.",
+      image: game.image
+    }
+  ];
+  const content = stages[miniGameStage] || stages[0];
+  document.querySelector(".app-screen").scrollTop = 0;
   document.querySelector("#miniGameScreen").dataset.title = game.title;
   screenTitle.textContent = game.title;
   document.querySelector("#miniGameImage").src = content.image;
   document.querySelector("#miniGameTitle").textContent = game.title;
   document.querySelector("#miniGamePrompt").textContent = content.prompt;
-  document.querySelector("#miniGameFeedback").textContent = "Escolha uma opção para completar a missão.";
-  document.querySelector("#miniGameReward").hidden = true;
+  document.querySelector("#miniGameFeedback").textContent = `Fase ${miniGameStage + 1} de ${stages.length}. Escolha uma opção.`;
+  document.querySelector("#miniGameNext").hidden = true;
+  document.querySelector("#miniGameReward").hidden = miniGameStage < stages.length - 1 || !miniGameSolved;
+  document.querySelector("#miniGameProgress").innerHTML = stages
+    .map((_, index) => `<span class="${index < miniGameStage ? "done" : index === miniGameStage ? "active" : ""}"></span>`)
+    .join("");
   const choices = document.querySelector("#miniGameChoices");
   choices.innerHTML = "";
   content.options.forEach((option) => {
@@ -1059,11 +1165,18 @@ function renderMiniGame() {
     button.className = "secondary-button";
     button.textContent = option;
     button.addEventListener("click", () => {
+      if (miniGameSolved) return;
       const isCorrect = option === content.answer;
       document.querySelector("#miniGameFeedback").textContent = isCorrect ? content.success : "Quase. Tente outra opção.";
       if (isCorrect) {
+        miniGameSolved = true;
         button.className = "primary-button";
-        document.querySelector("#miniGameReward").hidden = false;
+        document.querySelector("#miniGameNext").hidden = false;
+        document.querySelector("#miniGameNext").textContent =
+          miniGameStage === stages.length - 1 ? "Jogar de novo" : "Próxima fase";
+        if (miniGameStage === stages.length - 1) {
+          document.querySelector("#miniGameReward").hidden = false;
+        }
         playSuccessSound();
       } else {
         playTryAgainSound();
@@ -1071,6 +1184,18 @@ function renderMiniGame() {
     });
     choices.appendChild(button);
   });
+}
+
+function advanceMiniGame() {
+  const game = selectedGame || games.find((item) => item.screen === "miniGame");
+  const stages = miniGameContent[game.title] || [];
+  if (miniGameStage >= stages.length - 1) {
+    miniGameStage = 0;
+  } else {
+    miniGameStage += 1;
+  }
+  miniGameSolved = false;
+  renderMiniGame();
 }
 
 function renderParentArea() {
@@ -1116,6 +1241,8 @@ document.addEventListener("click", (event) => {
   const target = event.target.closest("[data-screen]");
   if (target?.dataset.gameTitle) {
     selectedGame = games.find((game) => game.title === target.dataset.gameTitle) || selectedGame;
+    miniGameStage = 0;
+    miniGameSolved = false;
   }
   if (target?.dataset.premiumActivity) {
     selectedPremiumActivity = games.find((game) => game.title === target.dataset.premiumActivity);
@@ -1131,6 +1258,7 @@ document.querySelector("#gateAnswer").addEventListener("keydown", (event) => {
 document.querySelector("#dailyLimitSlider").addEventListener("input", (event) => {
   updateDailyLimit(event.target.value);
 });
+document.querySelector("#miniGameNext").addEventListener("click", advanceMiniGame);
 
 soundButton.addEventListener("click", (event) => {
   event.stopPropagation();

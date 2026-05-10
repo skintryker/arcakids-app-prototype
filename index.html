@@ -12,7 +12,7 @@
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="icon" href="assets/app-icon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="assets/app-icon.svg" />
-    <link rel="stylesheet" href="styles.css?v=8" />
+    <link rel="stylesheet" href="styles.css?v=9" />
   </head>
   <body>
     <main class="phone-shell" aria-label="Protótipo Arcakids">
@@ -375,6 +375,7 @@
           <article class="play-panel premium-preview">
             <img class="premium-preview-art" id="miniGameImage" src="assets/star-badge.svg" alt="" />
             <h2 id="miniGameTitle">Aventura bíblica</h2>
+            <div class="round-path mini-game-path" id="miniGameProgress" aria-label="Fases do jogo"></div>
             <p id="miniGamePrompt">Escolha uma opção para completar a missão.</p>
             <div class="choice-row vertical" id="miniGameChoices"></div>
             <p class="feedback" id="miniGameFeedback">Escolha uma opção para completar a missão.</p>
@@ -385,6 +386,7 @@
                 <small>Parabéns! A Arca está ficando cheia.</small>
               </span>
             </div>
+            <button class="primary-button" id="miniGameNext" hidden>Próxima fase</button>
             <button class="primary-button" data-screen="games">Voltar aos jogos</button>
           </article>
         </section>
@@ -480,6 +482,6 @@
         </nav>
       </section>
     </main>
-    <script src="app.js?v=8"></script>
+    <script src="app.js?v=9"></script>
   </body>
 </html>

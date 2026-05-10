@@ -1786,6 +1786,10 @@ canvas {
   gap: 10px;
 }
 
+.mini-game-path {
+  margin: 0;
+}
+
 .round-play {
   display: grid;
   width: 46px;
