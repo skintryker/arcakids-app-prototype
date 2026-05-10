@@ -78,7 +78,7 @@ const games = [
     age: "6-8",
     description: "Cenas na ordem certa",
     icon: "H",
-    image: "assets/star-badge.svg",
+    image: "assets/story-order.svg",
     progress: 0,
     level: "Premium",
     screen: "miniGame",
@@ -89,7 +89,7 @@ const games = [
     age: "6-8",
     description: "Encontre cenas de Jesus",
     icon: "M",
-    image: "assets/story-rainbow.svg",
+    image: "assets/miracle-map.svg",
     progress: 0,
     level: "Premium",
     screen: "miniGame",
@@ -100,7 +100,7 @@ const games = [
     age: "6-8",
     description: "Complete palavras bíblicas",
     icon: "V",
-    image: "assets/star-badge.svg",
+    image: "assets/verse-scroll.svg",
     progress: 0,
     level: "Premium",
     screen: "miniGame",
@@ -111,7 +111,7 @@ const games = [
     age: "6-8",
     description: "Pares de virtudes bíblicas",
     icon: "S",
-    image: "assets/star-badge.svg",
+    image: "assets/seal-memory.svg",
     progress: 0,
     level: "Médio",
     screen: "memory"
@@ -131,7 +131,7 @@ const games = [
     age: "9-10",
     description: "Cartas de reis e profetas",
     icon: "T",
-    image: "assets/david.svg",
+    image: "assets/bible-triumph.svg",
     progress: 0,
     level: "Premium",
     screen: "miniGame",
@@ -142,7 +142,7 @@ const games = [
     age: "9-10",
     description: "Perguntas de conhecimento",
     icon: "Q",
-    image: "assets/noah.svg",
+    image: "assets/prophet-quiz.svg",
     progress: 12,
     level: "Médio",
     screen: "quiz",
@@ -173,7 +173,7 @@ const games = [
     age: "9-10",
     description: "Organize eventos bíblicos",
     icon: "L",
-    image: "assets/story-family.svg",
+    image: "assets/timeline-bible.svg",
     progress: 0,
     level: "Premium",
     screen: "miniGame",
@@ -184,7 +184,7 @@ const games = [
     age: "9-10",
     description: "Estratégia e perguntas",
     icon: "R",
-    image: "assets/david.svg",
+    image: "assets/kings-challenge.svg",
     progress: 0,
     level: "Premium",
     screen: "miniGame",
@@ -275,7 +275,7 @@ const miniGameContent = {
       options: ["Jesus", "Golias", "uma coroa"],
       answer: "Jesus",
       success: "Acertou. Jesus está conosco.",
-      image: "assets/star-badge.svg"
+      image: "assets/miracle-map.svg"
     }
   ],
   "Versículo Secreto": [
@@ -284,7 +284,7 @@ const miniGameContent = {
       options: ["amor", "medo", "pressa"],
       answer: "amor",
       success: "Acertou. Deus é amor.",
-      image: "assets/star-badge.svg"
+      image: "assets/verse-scroll.svg"
     },
     {
       prompt: "Complete: O Senhor é meu...",
@@ -360,7 +360,7 @@ const miniGameContent = {
       options: ["justiça", "medo", "egoísmo"],
       answer: "justiça",
       success: "Muito bem. Justiça é cuidar do que é certo.",
-      image: "assets/star-badge.svg"
+      image: "assets/kings-challenge.svg"
     },
     {
       prompt: "A sabedoria vem de...",
@@ -378,7 +378,7 @@ const bonusMiniStages = [
     options: ["obediência", "bagunça", "medo"],
     answer: "obediência",
     success: "Isso. Obedecer ajuda a cuidar da aventura.",
-    image: "assets/star-badge.svg"
+    image: "assets/story-order.svg"
   },
   {
     prompt: "Qual animal entrou na Arca?",
@@ -420,7 +420,7 @@ const bonusMiniStages = [
     options: ["Obrigado, Deus", "Não quero", "Estou bravo"],
     answer: "Obrigado, Deus",
     success: "Parabéns. Você completou as 10 fases.",
-    image: "assets/star-badge.svg"
+    image: "assets/guide-sheep.svg"
   }
 ];
 
@@ -663,7 +663,7 @@ const screenEyebrow = document.querySelector("#screenEyebrow");
 const backButton = document.querySelector("#backButton");
 const navItems = [...document.querySelectorAll(".nav-item")];
 const soundButton = document.querySelector("#soundButton");
-const serviceWorkerPath = "./sw.js?v=19";
+const serviceWorkerPath = "./sw.js?v=20";
 const trialStorageKey = "arcakidsTrialUntil";
 const membershipStorageKey = "arcakidsMembershipActive";
 const dailyLimitStorageKey = "arcakidsDailyLimit";
