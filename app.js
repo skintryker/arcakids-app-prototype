@@ -22,7 +22,7 @@ const games = [
     featured: true
   },
   {
-    title: "Verdade ou Brincadeira?",
+    title: "Verdade ou Falso",
     age: "6-8",
     description: "Quiz bíblico leve",
     icon: "?",
