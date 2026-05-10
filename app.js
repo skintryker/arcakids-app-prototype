@@ -727,53 +727,62 @@ function drawSheepTemplate(ctx) {
   ctx.strokeStyle = "#172033";
 
   ctx.beginPath();
-  ctx.moveTo(76, 146);
-  ctx.bezierCurveTo(42, 136, 44, 92, 82, 88);
-  ctx.bezierCurveTo(84, 54, 128, 45, 148, 72);
-  ctx.bezierCurveTo(172, 42, 220, 57, 221, 96);
-  ctx.bezierCurveTo(258, 103, 263, 151, 230, 165);
-  ctx.bezierCurveTo(216, 203, 143, 205, 121, 176);
-  ctx.bezierCurveTo(96, 188, 68, 174, 76, 146);
+  ctx.moveTo(73, 147);
+  ctx.bezierCurveTo(48, 144, 42, 111, 67, 98);
+  ctx.bezierCurveTo(62, 70, 96, 51, 119, 66);
+  ctx.bezierCurveTo(136, 39, 181, 39, 198, 66);
+  ctx.bezierCurveTo(224, 51, 256, 71, 250, 101);
+  ctx.bezierCurveTo(278, 114, 269, 151, 240, 150);
+  ctx.bezierCurveTo(230, 184, 184, 194, 158, 174);
+  ctx.bezierCurveTo(130, 195, 83, 183, 73, 147);
   ctx.closePath();
   ctx.stroke();
 
-  roundedRectPath(ctx, 186, 104, 56, 66, 24);
+  ctx.beginPath();
+  ctx.moveTo(120, 102);
+  ctx.bezierCurveTo(104, 80, 138, 68, 158, 86);
+  ctx.bezierCurveTo(178, 68, 212, 80, 196, 102);
+  ctx.stroke();
+
+  roundedRectPath(ctx, 118, 96, 82, 78, 34);
   ctx.stroke();
 
   ctx.beginPath();
-  ctx.moveTo(190, 122);
-  ctx.quadraticCurveTo(164, 112, 158, 136);
-  ctx.quadraticCurveTo(174, 146, 190, 135);
-  ctx.moveTo(238, 122);
-  ctx.quadraticCurveTo(262, 114, 270, 138);
-  ctx.quadraticCurveTo(254, 148, 240, 136);
+  ctx.moveTo(121, 122);
+  ctx.quadraticCurveTo(92, 113, 88, 140);
+  ctx.quadraticCurveTo(106, 151, 121, 137);
+  ctx.moveTo(197, 122);
+  ctx.quadraticCurveTo(226, 113, 230, 140);
+  ctx.quadraticCurveTo(212, 151, 197, 137);
   ctx.stroke();
 
   ctx.beginPath();
-  ctx.arc(204, 132, 4, 0, Math.PI * 2);
-  ctx.arc(226, 132, 4, 0, Math.PI * 2);
+  ctx.arc(143, 129, 4, 0, Math.PI * 2);
+  ctx.arc(176, 129, 4, 0, Math.PI * 2);
   ctx.stroke();
 
   ctx.beginPath();
-  ctx.moveTo(214, 147);
-  ctx.quadraticCurveTo(216, 154, 224, 147);
+  ctx.moveTo(156, 141);
+  ctx.quadraticCurveTo(160, 148, 164, 141);
+  ctx.moveTo(149, 153);
+  ctx.quadraticCurveTo(160, 162, 171, 153);
   ctx.stroke();
 
   ctx.beginPath();
-  ctx.moveTo(104, 176);
-  ctx.lineTo(104, 220);
-  ctx.lineTo(125, 220);
-  ctx.moveTo(174, 183);
-  ctx.lineTo(174, 220);
-  ctx.lineTo(195, 220);
-  ctx.moveTo(83, 128);
-  ctx.quadraticCurveTo(61, 132, 54, 110);
-  ctx.quadraticCurveTo(76, 110, 83, 128);
+  ctx.moveTo(108, 174);
+  ctx.lineTo(108, 218);
+  ctx.lineTo(130, 218);
+  ctx.moveTo(205, 174);
+  ctx.lineTo(205, 218);
+  ctx.lineTo(183, 218);
+  ctx.moveTo(68, 130);
+  ctx.quadraticCurveTo(45, 134, 39, 112);
+  ctx.quadraticCurveTo(61, 111, 68, 130);
   ctx.stroke();
 
   ctx.beginPath();
-  ctx.moveTo(58, 226);
-  ctx.lineTo(262, 226);
+  ctx.moveTo(52, 226);
+  ctx.lineTo(268, 226);
   ctx.stroke();
 }
 
