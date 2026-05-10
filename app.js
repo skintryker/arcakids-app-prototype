@@ -44,6 +44,36 @@ const games = [
     featured: true
   },
   {
+    title: "Memória dos Animais",
+    age: "3-5",
+    description: "Ache os pares da Arca",
+    icon: "A",
+    image: "assets/lion.svg",
+    progress: 10,
+    level: "Fácil",
+    screen: "memory"
+  },
+  {
+    title: "Charadas dos Animais",
+    age: "3-5",
+    description: "Descubra pela dica",
+    icon: "C",
+    image: "assets/giraffe.svg",
+    progress: 0,
+    level: "Fácil",
+    screen: "miniGame"
+  },
+  {
+    title: "Sons da Arca",
+    age: "3-5",
+    description: "Ouça a pista e escolha",
+    icon: "S",
+    image: "assets/rooster.svg",
+    progress: 0,
+    level: "Fácil",
+    screen: "miniGame"
+  },
+  {
     title: "Monte a História",
     age: "6-8",
     description: "Cenas na ordem certa",
@@ -77,6 +107,26 @@ const games = [
     locked: true
   },
   {
+    title: "Memória dos Selos",
+    age: "6-8",
+    description: "Pares de virtudes bíblicas",
+    icon: "S",
+    image: "assets/star-badge.svg",
+    progress: 0,
+    level: "Médio",
+    screen: "memory"
+  },
+  {
+    title: "Caminho da Obediência",
+    age: "6-8",
+    description: "Escolhas da história",
+    icon: "O",
+    image: "assets/noah.svg",
+    progress: 0,
+    level: "Médio",
+    screen: "miniGame"
+  },
+  {
     title: "Triunfo Bíblico",
     age: "9-10",
     description: "Cartas de reis e profetas",
@@ -97,6 +147,26 @@ const games = [
     level: "Médio",
     screen: "quiz",
     featured: true
+  },
+  {
+    title: "Quem Sou Eu?",
+    age: "9-10",
+    description: "Charadas bíblicas",
+    icon: "?",
+    image: "assets/guide-sheep.svg",
+    progress: 0,
+    level: "Médio",
+    screen: "miniGame"
+  },
+  {
+    title: "Missão dos Discípulos",
+    age: "9-10",
+    description: "Desafios de compreensão",
+    icon: "D",
+    image: "assets/story-family.svg",
+    progress: 0,
+    level: "Médio",
+    screen: "miniGame"
   },
   {
     title: "Linha do Tempo",
@@ -129,10 +199,10 @@ const animalRounds = [
   { prompt: "Toque no animal que tem casco.", answer: "tartaruga", praise: "Perfeito. A tartaruga chegou devagarinho." },
   { prompt: "Toque no animal que canta ao amanhecer.", answer: "galo", praise: "Muito bem. O galo cantou na Arca." },
   { prompt: "Toque no animal que dá lã.", answer: "ovelha", praise: "Isso. A ovelha entrou mansinha." },
-  { prompt: "Toque no animal grande e forte.", answer: "elefante", praise: "Acertou. O elefante ajudou a Arca ficar cheia." },
-  { prompt: "Toque no animal que ruge.", answer: "leao", praise: "Perfeito. O leão encontrou seu par." },
-  { prompt: "Toque no animal que vive perto da água.", answer: "sapo", praise: "Muito bem. O sapo pulou feliz." },
-  { prompt: "Toque no animal que anda devagar.", answer: "tartaruga", praise: "Parabéns. Você completou as 10 fases." }
+  { prompt: "Toque no animal que faz mu.", answer: "vaca", praise: "Acertou. A vaca entrou na Arca." },
+  { prompt: "Toque no animal que corre com crina.", answer: "cavalo", praise: "Muito bem. O cavalo encontrou seu lugar." },
+  { prompt: "Toque no animal de pescoço comprido.", answer: "girafa", praise: "Isso. A girafa viu a Arca lá de cima." },
+  { prompt: "Toque no animal que voa e lembra paz.", answer: "pomba", praise: "Parabéns. Você completou as 10 fases." }
 ];
 
 const animals = [
@@ -141,7 +211,11 @@ const animals = [
   { id: "sapo", label: "Sapo", image: "assets/frog.svg" },
   { id: "tartaruga", label: "Tartaruga", image: "assets/turtle.svg" },
   { id: "galo", label: "Galo", image: "assets/rooster.svg" },
-  { id: "ovelha", label: "Ovelha", image: "assets/sheep-animal.svg" }
+  { id: "ovelha", label: "Ovelha", image: "assets/sheep-animal.svg" },
+  { id: "vaca", label: "Vaca", image: "assets/cow.svg" },
+  { id: "cavalo", label: "Cavalo", image: "assets/horse.svg" },
+  { id: "girafa", label: "Girafa", image: "assets/giraffe.svg" },
+  { id: "pomba", label: "Pomba", image: "assets/dove.svg" }
 ];
 
 const quizItems = [
@@ -350,6 +424,50 @@ const bonusMiniStages = [
   }
 ];
 
+const extraMiniGames = {
+  "Charadas dos Animais": [
+    { prompt: "Sou alto e tenho pescoço comprido. Quem sou eu?", options: ["Girafa", "Sapo", "Galo"], answer: "Girafa", success: "Isso. A girafa é bem alta.", image: "assets/giraffe.svg" },
+    { prompt: "Tenho tromba e sou grandão. Quem sou eu?", options: ["Elefante", "Pomba", "Vaca"], answer: "Elefante", success: "Acertou. É o elefante.", image: "assets/elephant.svg" },
+    { prompt: "Tenho juba e rujo forte. Quem sou eu?", options: ["Leão", "Cavalo", "Ovelha"], answer: "Leão", success: "Muito bem. É o leão.", image: "assets/lion.svg" },
+    { prompt: "Pulo e vivo perto da água. Quem sou eu?", options: ["Sapo", "Girafa", "Galo"], answer: "Sapo", success: "Isso. O sapo pula feliz.", image: "assets/frog.svg" },
+    { prompt: "Ando devagar e tenho casco. Quem sou eu?", options: ["Tartaruga", "Leão", "Pomba"], answer: "Tartaruga", success: "Acertou. É a tartaruga.", image: "assets/turtle.svg" },
+    { prompt: "Dou lã macia. Quem sou eu?", options: ["Ovelha", "Cavalo", "Vaca"], answer: "Ovelha", success: "Muito bem. É a ovelha.", image: "assets/sheep-animal.svg" },
+    { prompt: "Canto quando o dia começa. Quem sou eu?", options: ["Galo", "Elefante", "Sapo"], answer: "Galo", success: "Isso. O galo canta cedo.", image: "assets/rooster.svg" },
+    { prompt: "Faço mu e dou leite. Quem sou eu?", options: ["Vaca", "Pomba", "Girafa"], answer: "Vaca", success: "Acertou. É a vaca.", image: "assets/cow.svg" },
+    { prompt: "Corro e tenho crina. Quem sou eu?", options: ["Cavalo", "Tartaruga", "Galo"], answer: "Cavalo", success: "Muito bem. É o cavalo.", image: "assets/horse.svg" },
+    { prompt: "Voo e lembro paz. Quem sou eu?", options: ["Pomba", "Leão", "Vaca"], answer: "Pomba", success: "Parabéns. Você completou as charadas.", image: "assets/dove.svg" }
+  ],
+  "Sons da Arca": [
+    { prompt: "Qual animal relincha na Arca?", options: ["Cavalo", "Galo", "Leão"], answer: "Cavalo", success: "Isso. O cavalo relincha.", image: "assets/horse.svg" },
+    { prompt: "Qual animal canta cocoricó?", options: ["Galo", "Sapo", "Vaca"], answer: "Galo", success: "Isso. Cocoricó é o galo.", image: "assets/rooster.svg" },
+    { prompt: "Qual animal faz mu?", options: ["Vaca", "Pomba", "Tartaruga"], answer: "Vaca", success: "Acertou. A vaca faz mu.", image: "assets/cow.svg" },
+    { prompt: "Qual animal ruge?", options: ["Leão", "Ovelha", "Sapo"], answer: "Leão", success: "Muito bem. O leão ruge.", image: "assets/lion.svg" },
+    { prompt: "Qual animal faz bééé?", options: ["Ovelha", "Galo", "Girafa"], answer: "Ovelha", success: "Isso. A ovelha faz bééé.", image: "assets/sheep-animal.svg" },
+    { prompt: "Qual animal relincha?", options: ["Cavalo", "Sapo", "Elefante"], answer: "Cavalo", success: "Acertou. O cavalo relincha.", image: "assets/horse.svg" },
+    { prompt: "Qual animal coaxaria perto da água?", options: ["Sapo", "Leão", "Vaca"], answer: "Sapo", success: "Isso. O sapo coaxaria.", image: "assets/frog.svg" },
+    { prompt: "Qual animal arrulha?", options: ["Pomba", "Girafa", "Galo"], answer: "Pomba", success: "Muito bem. A pomba arrulha.", image: "assets/dove.svg" },
+    { prompt: "Qual animal faz um som bem grave com a tromba?", options: ["Elefante", "Tartaruga", "Ovelha"], answer: "Elefante", success: "Acertou. É o elefante.", image: "assets/elephant.svg" },
+    { prompt: "Qual animal é mais silencioso e anda devagar?", options: ["Tartaruga", "Galo", "Leão"], answer: "Tartaruga", success: "Parabéns. Você ouviu a Arca toda.", image: "assets/turtle.svg" }
+  ],
+  "Caminho da Obediência": [
+    { prompt: "Noé ouviu Deus. O que ele fez?", options: ["Obedeceu", "Fugiu", "Riu"], answer: "Obedeceu", success: "Isso. Noé escolheu obedecer.", image: "assets/noah.svg" },
+    { prompt: "Quando a família ajuda, a Arca fica...", options: ["pronta", "quebrada", "vazia"], answer: "pronta", success: "Muito bem. A família ajudou.", image: "assets/story-family.svg" },
+    { prompt: "Os animais entraram...", options: ["dois a dois", "sozinhos", "correndo para longe"], answer: "dois a dois", success: "Acertou. Dois a dois.", image: "assets/story-animals-enter.svg" }
+  ],
+  "Quem Sou Eu?": [
+    { prompt: "Cuidei das ovelhas e confiei em Deus.", options: ["Davi", "Noé", "Jonas"], answer: "Davi", success: "Isso. É Davi.", image: "assets/david.svg" },
+    { prompt: "Construí uma Arca.", options: ["Noé", "Daniel", "Salomão"], answer: "Noé", success: "Acertou. É Noé.", image: "assets/noah.svg" },
+    { prompt: "Orei mesmo em perigo.", options: ["Daniel", "Golias", "Faraó"], answer: "Daniel", success: "Muito bem. É Daniel.", image: "assets/lion.svg" }
+  ],
+  "Missão dos Discípulos": [
+    { prompt: "Jesus chamou pessoas para segui-lo. Elas eram...", options: ["discípulos", "gigantes", "animais"], answer: "discípulos", success: "Isso. Eram discípulos.", image: "assets/story-family.svg" },
+    { prompt: "Uma missão de Jesus é amar o...", options: ["próximo", "medo", "barulho"], answer: "próximo", success: "Muito bem. Amar o próximo.", image: "assets/star-badge.svg" },
+    { prompt: "Quando aprendemos com Jesus, podemos...", options: ["servir", "empurrar", "desistir"], answer: "servir", success: "Acertou. Podemos servir.", image: "assets/guide-sheep.svg" }
+  ]
+};
+
+Object.assign(miniGameContent, extraMiniGames);
+
 Object.keys(miniGameContent).forEach((title) => {
   miniGameContent[title] = [...miniGameContent[title], ...bonusMiniStages].slice(0, 10);
 });
@@ -519,7 +637,11 @@ const memoryItems = [
   { id: "davi", label: "Davi", image: "assets/david.svg" },
   { id: "arca", label: "Arca", image: "assets/ark-hero.svg" },
   { id: "leao", label: "Leão", image: "assets/lion.svg" },
-  { id: "selo", label: "Selo", image: "assets/star-badge.svg" }
+  { id: "selo", label: "Selo", image: "assets/star-badge.svg" },
+  { id: "vaca", label: "Vaca", image: "assets/cow.svg" },
+  { id: "cavalo", label: "Cavalo", image: "assets/horse.svg" },
+  { id: "girafa", label: "Girafa", image: "assets/giraffe.svg" },
+  { id: "pomba", label: "Pomba", image: "assets/dove.svg" }
 ];
 
 const screens = [...document.querySelectorAll(".content")];
@@ -528,7 +650,7 @@ const screenEyebrow = document.querySelector("#screenEyebrow");
 const backButton = document.querySelector("#backButton");
 const navItems = [...document.querySelectorAll(".nav-item")];
 const soundButton = document.querySelector("#soundButton");
-const serviceWorkerPath = "./sw.js?v=8";
+const serviceWorkerPath = "./sw.js?v=12";
 const trialStorageKey = "arcakidsTrialUntil";
 const dailyLimitStorageKey = "arcakidsDailyLimit";
 const cacheStorageKey = "arcakidsCacheVersion";
@@ -729,6 +851,7 @@ function renderMemory() {
   const board = document.querySelector("#memoryBoard");
   const cards = [...memoryItems, ...memoryItems].sort(() => Math.random() - 0.5);
   document.querySelector("#matchCount").textContent = "0";
+  document.querySelector("#matchTotal").textContent = memoryItems.length;
   document.querySelector("#memoryFeedback").textContent = "Vire duas cartas para encontrar um par.";
   document.querySelector("#memoryReward").hidden = true;
   firstMemoryCard = null;

@@ -1,9 +1,9 @@
-const CACHE_NAME = "arcakids-v11";
+const CACHE_NAME = "arcakids-v12";
 const APP_SHELL = [
   "./",
   "./index.html",
-  "./styles.css?v=11",
-  "./app.js?v=11",
+  "./styles.css?v=12",
+  "./app.js?v=12",
   "./manifest.webmanifest",
   "./assets/app-icon.svg",
   "./assets/arcakids-logo.svg",
@@ -11,6 +11,10 @@ const APP_SHELL = [
   "./assets/ark-hero.svg",
   "./assets/david.svg",
   "./assets/elephant.svg",
+  "./assets/cow.svg",
+  "./assets/horse.svg",
+  "./assets/giraffe.svg",
+  "./assets/dove.svg",
   "./assets/frog.svg",
   "./assets/lion.svg",
   "./assets/noah.svg",
