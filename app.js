@@ -1,6 +1,6 @@
 const games = [
   {
-    title: "Quem Está na Arca?",
+    title: "Animais da Arca",
     age: "3-5",
     description: "Charadas com animais",
     icon: "A",
@@ -22,7 +22,7 @@ const games = [
     featured: true
   },
   {
-    title: "Fato ou Fake Kids",
+    title: "Verdade ou Brincadeira?",
     age: "6-8",
     description: "Quiz bíblico leve",
     icon: "?",
@@ -33,9 +33,9 @@ const games = [
     featured: true
   },
   {
-    title: "Colorindo com Jesus",
+    title: "Pintando a Arca",
     age: "3-5",
-    description: "Desenhos para pintar",
+    description: "Desenhos para colorir",
     icon: "C",
     image: "assets/noah.svg",
     progress: 35,
@@ -286,22 +286,22 @@ const stories = [
 
 const ageProfiles = {
   "3-5": {
-    title: "Arca Digital",
+    title: "Arcakids",
     pill: "3 a 5 anos",
-    hero: "Bem-vindo a Arca Digital.",
-    copy: "Atividades simples, narradas e com toque grande para crianças pequenas."
+    hero: "Continuar minha aventura",
+    copy: "Ajude Noé a encontrar os animais da Arca."
   },
   "6-8": {
-    title: "Arca Digital",
+    title: "Arcakids",
     pill: "6 a 8 anos",
-    hero: "Explore a Bíblia brincando.",
-    copy: "Quiz leve, memória, histórias interativas e missões semanais."
+    hero: "Vamos brincar e aprender?",
+    copy: "Missões bíblicas, memória e histórias interativas."
   },
   "9-10": {
-    title: "Arca Digital",
+    title: "Arcakids",
     pill: "9 a 10 anos",
     hero: "Missões da Arca para crescer na fé.",
-    copy: "Atividades com mais desafio, leitura e recompensas por progresso."
+    copy: "Desafios bíblicos com estrelas, selos e novas descobertas."
   }
 };
 
@@ -343,6 +343,7 @@ let musicStep = 0;
 let availableVoices = [];
 let trialUntil = Number(localStorage.getItem(trialStorageKey) || 0);
 let selectedPremiumActivity = null;
+let parentUnlocked = false;
 
 function isTrialActive() {
   return Date.now() < trialUntil;
@@ -379,6 +380,7 @@ function showScreen(name, push = true) {
   if (name === "stories") renderStory();
   if (name === "membership") renderTrialStatus();
   if (name === "premiumActivity") renderPremiumActivity();
+  if (name === "parent") renderParentArea();
 }
 
 function startAnimalGame() {
@@ -395,16 +397,16 @@ function renderGameCards(container, items) {
     const locked = Boolean(game.locked && !isTrialActive());
     const card = document.createElement("button");
     card.className = `game-card${locked ? " locked" : ""}`;
-    card.dataset.screen = locked ? "membership" : game.screen;
+    card.dataset.screen = locked ? "parent" : game.screen;
     if (game.locked && isTrialActive()) {
       card.dataset.premiumActivity = game.title;
       card.dataset.screen = "premiumActivity";
     }
     card.innerHTML = `
       <span class="game-art"><img src="${game.image}" alt="" /></span>
-      <span class="game-level">${game.locked && isTrialActive() ? "Liberado" : game.level}</span>
+      <span class="game-level">${locked ? "Peça ajuda" : game.locked && isTrialActive() ? "Liberado" : game.level}</span>
       <strong>${game.title}</strong>
-      <small>${game.description} · ${game.age}</small>
+      <small>${locked ? "Peça para um adulto liberar esta aventura" : `${game.description} · ${game.age}`}</small>
       <span class="progress-track"><i style="width:${game.progress}%"></i></span>
     `;
     container.appendChild(card);
@@ -726,7 +728,7 @@ function renderStoryList() {
       <span class="chapter-number">${String(index + 1).padStart(2, "0")}</span>
       <span>
         <strong>${story.title}</strong>
-        <small>${story.tags}</small>
+        <small>${locked ? "Peça ajuda a um adulto" : story.tags}</small>
       </span>
     `;
     list.appendChild(card);
@@ -858,6 +860,28 @@ function renderPremiumActivity() {
     `${activity.description}. Atividade liberada durante o teste grátis de 7 dias.`;
 }
 
+function renderParentArea() {
+  const gate = document.querySelector("#parentGate");
+  const dashboard = document.querySelector("#parentDashboard");
+  if (!gate || !dashboard) return;
+  gate.hidden = parentUnlocked;
+  dashboard.hidden = !parentUnlocked;
+}
+
+function unlockParentArea() {
+  const answer = document.querySelector("#gateAnswer").value.trim();
+  const feedback = document.querySelector("#gateFeedback");
+  if (answer === "11") {
+    parentUnlocked = true;
+    feedback.textContent = "";
+    renderParentArea();
+    playSuccessSound();
+    return;
+  }
+  feedback.textContent = "Quase. Tente de novo.";
+  playTryAgainSound();
+}
+
 document.addEventListener("click", (event) => {
   const target = event.target.closest("[data-screen]");
   if (target?.dataset.premiumActivity) {
@@ -867,6 +891,10 @@ document.addEventListener("click", (event) => {
 });
 
 document.querySelector("#freeTrialButton").addEventListener("click", startFreeTrial);
+document.querySelector("#gateSubmit").addEventListener("click", unlockParentArea);
+document.querySelector("#gateAnswer").addEventListener("keydown", (event) => {
+  if (event.key === "Enter") unlockParentArea();
+});
 
 soundButton.addEventListener("click", (event) => {
   event.stopPropagation();
@@ -962,7 +990,7 @@ document.querySelector("#storyList").addEventListener("click", (event) => {
   if (!card) return;
   const nextStory = stories[Number(card.dataset.storyIndex)];
   if (!nextStory.free && !isTrialActive()) {
-    showScreen("membership");
+    showScreen("parent");
     return;
   }
   currentStory = Number(card.dataset.storyIndex);

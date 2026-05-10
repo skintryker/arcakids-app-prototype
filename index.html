@@ -21,8 +21,8 @@
           <button class="icon-button" id="backButton" aria-label="Voltar" title="Voltar">‹</button>
           <div class="brand-block">
             <img class="brand-logo" src="assets/arcakids-logo.svg" alt="Arcakids" />
-            <p class="eyebrow brand-mark" id="screenEyebrow">Arca Digital</p>
-            <h1 class="sr-only" id="screenTitle">Arca Digital</h1>
+            <p class="eyebrow brand-mark" id="screenEyebrow">Vamos brincar?</p>
+            <h1 class="sr-only" id="screenTitle">Arcakids</h1>
           </div>
           <div class="top-actions">
             <button class="sound-button" id="soundButton" aria-label="Tocar música" title="Tocar música">♪</button>
@@ -30,32 +30,39 @@
           </div>
         </header>
 
-        <section class="content active" id="homeScreen" data-title="Arca Digital" data-eyebrow="Arcakids">
+        <section class="content active" id="homeScreen" data-title="Arcakids" data-eyebrow="Vamos brincar?">
           <div class="hero-band">
-            <div>
+            <div class="hero-copy-block">
+              <div class="guide-row">
+                <img class="guide-mascot" src="assets/guide-sheep.svg" alt="" />
+                <span>
+                  <strong>Oi!</strong>
+                  <small>Vamos brincar na Arca hoje?</small>
+                </span>
+              </div>
               <p class="pill" id="agePill">3 a 5 anos</p>
-              <h2 id="heroTitle">Bem-vindo a Arca Digital.</h2>
-              <p id="heroCopy">Jogos, histórias e atividades bíblicas para brincar e edificar.</p>
+              <h2 id="heroTitle">Continuar minha aventura</h2>
+              <p id="heroCopy">Ajude Noé a encontrar os animais da Arca.</p>
               <div class="hero-actions">
-                <button class="mini-button" data-screen="play">Jogar agora</button>
+                <button class="mini-button" data-screen="games">Continuar</button>
                 <button class="mini-button light" data-screen="stories">Ouvir história</button>
               </div>
             </div>
-            <img class="hero-illustration" src="assets/ark-hero.svg" alt="" />
+            <img class="hero-illustration" src="assets/ark-scene-wide.svg" alt="" />
           </div>
 
           <div class="daily-progress" aria-label="Progresso diário">
-            <span>
-              <strong>3</strong>
-              <small>atividades</small>
-            </span>
             <span>
               <strong>2</strong>
               <small>selos</small>
             </span>
             <span>
-              <strong>5 min</strong>
-              <small>história</small>
+              <strong>5</strong>
+              <small>animais</small>
+            </span>
+            <span>
+              <strong>3</strong>
+              <small>histórias</small>
             </span>
           </div>
 
@@ -77,11 +84,28 @@
           <button class="mission-card" data-screen="games">
             <span class="mission-icon">★</span>
             <span>
-              <strong>Trilha da semana</strong>
-              <small>Complete 4 atividades sobre Noé e ganhe um selo.</small>
+              <strong>Missão de hoje</strong>
+              <small>Ajude Noé a encontrar os animais da Arca.</small>
             </span>
             <b>2/4</b>
           </button>
+
+          <div class="quick-actions" aria-label="Atalhos principais">
+            <button class="quick-card" data-screen="games">
+              <img src="assets/lion.svg" alt="" />
+              <span>
+                <strong>Jogar</strong>
+                <small>Missões bíblicas</small>
+              </span>
+            </button>
+            <button class="quick-card" data-screen="stories">
+              <img src="assets/story-noah-build.svg" alt="" />
+              <span>
+                <strong>Ouvir</strong>
+                <small>Histórias da Bíblia</small>
+              </span>
+            </button>
+          </div>
 
           <section class="section">
             <div class="section-heading">
@@ -121,7 +145,7 @@
           <div class="game-grid" id="allGames"></div>
         </section>
 
-        <section class="content" id="playScreen" data-title="Quem Está na Arca?" data-eyebrow="Jogo">
+        <section class="content" id="playScreen" data-title="Animais da Arca" data-eyebrow="Jogo">
           <article class="play-panel">
             <div class="game-masthead">
               <img src="assets/ark-hero.svg" alt="" />
@@ -180,7 +204,7 @@
           </article>
         </section>
 
-        <section class="content" id="quizScreen" data-title="Fato ou Fake Kids" data-eyebrow="Jogo">
+        <section class="content" id="quizScreen" data-title="Verdade ou Brincadeira?" data-eyebrow="Jogo">
           <article class="play-panel quiz-panel">
             <div class="game-masthead">
               <img src="assets/david.svg" alt="" />
@@ -197,21 +221,21 @@
             </div>
             <p class="quiz-question" id="quizQuestion"></p>
             <div class="choice-row">
-              <button class="primary-button" data-answer="true">Fato</button>
-              <button class="secondary-button" data-answer="false">Fake</button>
+              <button class="primary-button" data-answer="true">Verdade</button>
+              <button class="secondary-button" data-answer="false">Brincadeira</button>
             </div>
             <p class="feedback" id="quizFeedback"></p>
             <div class="reward-card" id="quizReward" hidden>
               <img src="assets/star-badge.svg" alt="" />
               <span>
                 <strong>Selo do Conhecimento</strong>
-                <small>Você completou o desafio Fato ou Fake Kids.</small>
+                <small>Você completou o desafio Verdade ou Brincadeira.</small>
               </span>
             </div>
           </article>
         </section>
 
-        <section class="content" id="paintScreen" data-title="Colorindo com Jesus" data-eyebrow="Criatividade">
+        <section class="content" id="paintScreen" data-title="Pintando a Arca" data-eyebrow="Criatividade">
           <article class="play-panel">
             <div class="template-row" aria-label="Desenhos para colorir">
               <button class="template-button active" data-template="arca">Arca</button>
@@ -250,7 +274,7 @@
           <div class="story-list" id="storyList"></div>
         </section>
 
-        <section class="content" id="membershipScreen" data-title="Arcakids Premium" data-eyebrow="Assinatura">
+        <section class="content" id="membershipScreen" data-title="Assinatura Arcakids" data-eyebrow="Área dos pais">
           <div class="membership">
             <img class="premium-badge" src="assets/star-badge.svg" alt="" />
             <h2>Conteúdo novo toda semana</h2>
@@ -272,7 +296,66 @@
           </div>
         </section>
 
-        <section class="content" id="premiumActivityScreen" data-title="Atividade Premium" data-eyebrow="Teste grátis">
+        <section class="content" id="myArkScreen" data-title="Minha Arca" data-eyebrow="Conquistas">
+          <section class="myark-hero">
+            <img src="assets/guide-sheep.svg" alt="" />
+            <span>
+              <strong>A Arca está ficando cheia!</strong>
+              <small>Continue brincando para ganhar animais, estrelas e selos.</small>
+            </span>
+          </section>
+
+          <div class="ark-meter" aria-label="Progresso da Minha Arca">
+            <div>
+              <strong>5 animais</strong>
+              <small>encontrados</small>
+            </div>
+            <span><i style="width:62%"></i></span>
+          </div>
+
+          <section class="section">
+            <div class="section-heading">
+              <h3>Meus selos</h3>
+            </div>
+            <div class="badge-grid">
+              <article class="ark-badge earned">
+                <span>★</span>
+                <strong>Selo da Obediência</strong>
+                <small>Aprendi a ouvir e obedecer.</small>
+              </article>
+              <article class="ark-badge earned">
+                <span>◆</span>
+                <strong>Selo da Coragem</strong>
+                <small>Deus me ajuda a ser corajoso.</small>
+              </article>
+              <article class="ark-badge">
+                <span>✦</span>
+                <strong>Selo da Fé</strong>
+                <small>Continue para conquistar.</small>
+              </article>
+              <article class="ark-badge">
+                <span>♡</span>
+                <strong>Selo da Bondade</strong>
+                <small>Ajude nas próximas missões.</small>
+              </article>
+            </div>
+          </section>
+
+          <section class="section">
+            <div class="section-heading">
+              <h3>Animais na Arca</h3>
+            </div>
+            <div class="animal-collection">
+              <img src="assets/elephant.svg" alt="Elefante" />
+              <img src="assets/lion.svg" alt="Leão" />
+              <img src="assets/sheep-animal.svg" alt="Ovelha" />
+              <img src="assets/turtle.svg" alt="Tartaruga" />
+              <img src="assets/rooster.svg" alt="Galo" />
+            </div>
+          </section>
+        </section>
+
+        <section class="content" id="premiumActivityScreen" data-title="Aventura liberada" data-eyebrow="Teste grátis">
           <article class="play-panel premium-preview">
             <img class="premium-preview-art" id="premiumPreviewImage" src="assets/star-badge.svg" alt="" />
             <h2 id="premiumPreviewTitle">Atividade liberada</h2>
@@ -289,43 +372,85 @@
         </section>
 
         <section class="content" id="parentScreen" data-title="Área dos pais" data-eyebrow="Controle familiar">
-          <div class="parent-summary">
-            <span>
-              <strong>25 min</strong>
-              <small>tempo diário</small>
-            </span>
-            <span>
-              <strong>87%</strong>
-              <small>semana concluída</small>
-            </span>
+          <div class="parent-gate" id="parentGate">
+            <img src="assets/guide-sheep.svg" alt="" />
+            <h2>Área dos pais</h2>
+            <p>Para continuar, responda: quanto é 7 + 4?</p>
+            <label class="gate-field">
+              <span>Resposta</span>
+              <input id="gateAnswer" inputmode="numeric" autocomplete="off" />
+            </label>
+            <button class="primary-button" id="gateSubmit">Entrar</button>
+            <small id="gateFeedback" aria-live="polite"></small>
           </div>
-          <div class="install-note">
-            <strong>Pronto para testar no celular</strong>
-            <span>Abra pelo link publicado e use “Adicionar à Tela de Início” para testar como aplicativo.</span>
-          </div>
-          <div class="parent-list">
-            <label class="parent-item">
+
+          <div class="parent-dashboard" id="parentDashboard" hidden>
+            <div class="parent-summary">
               <span>
-                <strong>Tempo diário</strong>
-                <small>25 minutos</small>
+                <strong>25 min</strong>
+                <small>uso diário</small>
               </span>
-              <input type="range" min="10" max="60" value="25" />
-            </label>
-            <label class="parent-item">
               <span>
-                <strong>Conteúdo por idade</strong>
-                <small>automático pelo perfil</small>
+                <strong>3</strong>
+                <small>histórias concluídas</small>
               </span>
-              <input type="checkbox" checked />
-            </label>
-            <label class="parent-item">
               <span>
-                <strong>Links externos</strong>
-                <small>bloqueados por senha</small>
+                <strong>2</strong>
+                <small>selos conquistados</small>
               </span>
-              <input type="checkbox" checked />
-            </label>
-            <button class="secondary-button" data-screen="membership">Ver assinatura</button>
+            </div>
+            <div class="install-note">
+              <strong>Controle familiar</strong>
+              <span>Assinatura, teste grátis, loja e links externos ficam protegidos aqui.</span>
+            </div>
+            <div class="parent-list">
+              <button class="parent-item parent-link" data-screen="membership">
+                <span>
+                  <strong>Assinatura e teste grátis</strong>
+                  <small>7 dias grátis para liberar as aventuras premium.</small>
+                </span>
+                <b>›</b>
+              </button>
+              <label class="parent-item">
+                <span>
+                  <strong>Idade da criança</strong>
+                  <small>3 a 5 anos</small>
+                </span>
+                <select aria-label="Idade da criança">
+                  <option>3 a 5 anos</option>
+                  <option>6 a 8 anos</option>
+                  <option>9 a 10 anos</option>
+                </select>
+              </label>
+              <label class="parent-item">
+                <span>
+                  <strong>Tempo diário de uso</strong>
+                  <small>25 minutos</small>
+                </span>
+                <input type="range" min="10" max="60" value="25" />
+              </label>
+              <label class="parent-item">
+                <span>
+                  <strong>Áudio e narração</strong>
+                  <small>Música, efeitos e histórias narradas.</small>
+                </span>
+                <input type="checkbox" checked />
+              </label>
+              <label class="parent-item">
+                <span>
+                  <strong>Privacidade e segurança</strong>
+                  <small>Sem anúncios, compras ou links na área infantil.</small>
+                </span>
+                <input type="checkbox" checked />
+              </label>
+              <button class="parent-item parent-link" type="button">
+                <span>
+                  <strong>Loja Arcakids</strong>
+                  <small>Link futuro protegido para benefícios da família.</small>
+                </span>
+                <b>Adulto</b>
+              </button>
+            </div>
           </div>
         </section>
 
@@ -333,7 +458,7 @@
           <button class="nav-item active" data-screen="home"><span>⌂</span>Início</button>
           <button class="nav-item" data-screen="games"><span>▦</span>Jogos</button>
           <button class="nav-item" data-screen="stories"><span>◉</span>Histórias</button>
-          <button class="nav-item" data-screen="membership"><span>★</span>Premium</button>
+          <button class="nav-item" data-screen="myArk"><span>★</span>Minha Arca</button>
         </nav>
       </section>
     </main>

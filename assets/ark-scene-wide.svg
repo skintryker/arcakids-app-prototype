@@ -1,0 +1,22 @@
+<svg width="980" height="520" viewBox="0 0 980 520" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Arca de Noe no mar">
+  <rect width="980" height="520" fill="#DDF8F3"/>
+  <circle cx="850" cy="106" r="63" fill="#F7BE45"/>
+  <circle cx="790" cy="92" r="42" fill="#FFFDF5"/>
+  <circle cx="845" cy="98" r="36" fill="#FFFDF5"/>
+  <circle cx="173" cy="122" r="42" fill="#FFFDF5"/>
+  <circle cx="225" cy="118" r="54" fill="#FFFDF5"/>
+  <circle cx="282" cy="136" r="40" fill="#FFFDF5"/>
+  <path d="M0 382c88-47 161-10 230-20 77-11 121-66 218-28 91 36 121 22 214-10 108-36 175 9 318 14v182H0V382Z" fill="#76D3CD"/>
+  <path d="M0 430c78-30 142-12 204-18 98-9 143-54 241-14 89 36 155-2 240-18 106-21 184 30 295 24v116H0V430Z" fill="#25A9A8"/>
+  <path d="M202 358h588l-68 118H270l-68-118Z" fill="#B87333"/>
+  <path d="M248 388h496l-46 70H294l-46-70Z" fill="#C98742"/>
+  <path d="M344 282h292v79H344v-79Z" fill="#C98742"/>
+  <path d="M306 284l186-126 190 126H306Z" fill="#E9A83F"/>
+  <path d="M396 181h188l-44 34H396v-34Z" fill="#BF7B36"/>
+  <rect x="438" y="305" width="104" height="58" rx="13" fill="#FFF3C7"/>
+  <circle cx="354" cy="417" r="24" fill="#FFF3C7"/>
+  <circle cx="490" cy="417" r="24" fill="#FFF3C7"/>
+  <circle cx="626" cy="417" r="24" fill="#FFF3C7"/>
+  <path d="M213 481h574" stroke="#8A552C" stroke-width="20" stroke-linecap="round"/>
+  <path d="M0 494c92-25 154-25 245-1 91 24 157 23 248 0 91-24 151-26 242-1 91 24 160 23 245-1v29H0v-26Z" fill="#148E91"/>
+</svg>
