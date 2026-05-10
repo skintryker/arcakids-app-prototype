@@ -754,6 +754,11 @@ function drawColoringPage() {
   if (paintTemplate === "arca") drawArkTemplate(ctx);
   if (paintTemplate === "ovelha") drawSheepTemplate(ctx);
   if (paintTemplate === "estrela") drawBadgeTemplate(ctx);
+  if (paintTemplate === "peixe") drawFishTemplate(ctx);
+  if (paintTemplate === "leao") drawLionTemplate(ctx);
+  if (paintTemplate === "arcoiris") drawRainbowTemplate(ctx);
+  if (paintTemplate === "coracao") drawHeartTemplate(ctx);
+  if (paintTemplate === "pomba") drawDoveTemplate(ctx);
   canvas.dataset.ready = "true";
 }
 
@@ -914,6 +919,171 @@ function drawBadgeTemplate(ctx) {
   ctx.lineTo(178, 218);
   ctx.lineTo(220, 232);
   ctx.lineTo(196, 183);
+  ctx.stroke();
+}
+
+function drawFishTemplate(ctx) {
+  ctx.clearRect(0, 0, 320, 260);
+  ctx.strokeStyle = "#172033";
+
+  ctx.beginPath();
+  ctx.ellipse(150, 132, 78, 48, 0, 0, Math.PI * 2);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(222, 132);
+  ctx.lineTo(282, 90);
+  ctx.lineTo(282, 174);
+  ctx.closePath();
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.arc(118, 122, 5, 0, Math.PI * 2);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(154, 84);
+  ctx.quadraticCurveTo(180, 54, 204, 90);
+  ctx.moveTo(154, 180);
+  ctx.quadraticCurveTo(180, 210, 204, 174);
+  ctx.moveTo(88, 132);
+  ctx.quadraticCurveTo(102, 146, 122, 148);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(42, 220);
+  ctx.quadraticCurveTo(76, 202, 112, 220);
+  ctx.quadraticCurveTo(148, 238, 184, 220);
+  ctx.quadraticCurveTo(220, 202, 278, 220);
+  ctx.stroke();
+}
+
+function drawLionTemplate(ctx) {
+  ctx.clearRect(0, 0, 320, 260);
+  ctx.strokeStyle = "#172033";
+
+  ctx.beginPath();
+  ctx.arc(160, 122, 76, 0, Math.PI * 2);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.arc(160, 126, 48, 0, Math.PI * 2);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.arc(126, 84, 18, 0, Math.PI * 2);
+  ctx.arc(194, 84, 18, 0, Math.PI * 2);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.arc(144, 120, 4, 0, Math.PI * 2);
+  ctx.arc(176, 120, 4, 0, Math.PI * 2);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(153, 137);
+  ctx.quadraticCurveTo(160, 145, 167, 137);
+  ctx.moveTo(145, 154);
+  ctx.quadraticCurveTo(160, 166, 175, 154);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(160, 46);
+  ctx.lineTo(160, 72);
+  ctx.moveTo(102, 68);
+  ctx.lineTo(122, 88);
+  ctx.moveTo(218, 68);
+  ctx.lineTo(198, 88);
+  ctx.moveTo(84, 132);
+  ctx.lineTo(112, 132);
+  ctx.moveTo(236, 132);
+  ctx.lineTo(208, 132);
+  ctx.moveTo(110, 188);
+  ctx.lineTo(130, 166);
+  ctx.moveTo(210, 188);
+  ctx.lineTo(190, 166);
+  ctx.stroke();
+}
+
+function drawRainbowTemplate(ctx) {
+  ctx.clearRect(0, 0, 320, 260);
+  ctx.strokeStyle = "#172033";
+
+  [106, 78, 50].forEach((radius) => {
+    ctx.beginPath();
+    ctx.arc(160, 184, radius, Math.PI, 0);
+    ctx.stroke();
+  });
+
+  ctx.beginPath();
+  ctx.arc(64, 184, 26, Math.PI, 0);
+  ctx.arc(96, 184, 34, Math.PI, 0);
+  ctx.arc(134, 184, 24, Math.PI, 0);
+  ctx.moveTo(214, 184);
+  ctx.arc(228, 184, 26, Math.PI, 0);
+  ctx.arc(260, 184, 34, Math.PI, 0);
+  ctx.arc(298, 184, 24, Math.PI, 0);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.arc(274, 58, 20, 0, Math.PI * 2);
+  ctx.stroke();
+}
+
+function drawHeartTemplate(ctx) {
+  ctx.clearRect(0, 0, 320, 260);
+  ctx.strokeStyle = "#172033";
+
+  ctx.beginPath();
+  ctx.moveTo(160, 214);
+  ctx.bezierCurveTo(72, 150, 58, 88, 104, 68);
+  ctx.bezierCurveTo(132, 56, 154, 74, 160, 94);
+  ctx.bezierCurveTo(166, 74, 188, 56, 216, 68);
+  ctx.bezierCurveTo(262, 88, 248, 150, 160, 214);
+  ctx.closePath();
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(120, 132);
+  ctx.quadraticCurveTo(160, 164, 200, 132);
+  ctx.stroke();
+}
+
+function drawDoveTemplate(ctx) {
+  ctx.clearRect(0, 0, 320, 260);
+  ctx.strokeStyle = "#172033";
+
+  ctx.beginPath();
+  ctx.ellipse(166, 140, 58, 36, 0, 0, Math.PI * 2);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.arc(94, 112, 28, 0, Math.PI * 2);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(68, 112);
+  ctx.lineTo(34, 96);
+  ctx.lineTo(68, 88);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.arc(88, 106, 3, 0, Math.PI * 2);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(150, 112);
+  ctx.quadraticCurveTo(158, 54, 228, 78);
+  ctx.quadraticCurveTo(192, 104, 166, 140);
+  ctx.moveTo(220, 142);
+  ctx.lineTo(282, 104);
+  ctx.lineTo(258, 148);
+  ctx.lineTo(286, 184);
+  ctx.closePath();
+  ctx.moveTo(146, 172);
+  ctx.lineTo(132, 204);
+  ctx.moveTo(178, 174);
+  ctx.lineTo(194, 204);
   ctx.stroke();
 }
 
