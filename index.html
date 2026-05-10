@@ -387,7 +387,7 @@
           <div class="parent-dashboard" id="parentDashboard" hidden>
             <div class="parent-summary">
               <span>
-                <strong>25 min</strong>
+                <strong id="dailyLimitSummary">25 min</strong>
                 <small>uso diário</small>
               </span>
               <span>
@@ -425,9 +425,9 @@
               <label class="parent-item">
                 <span>
                   <strong>Tempo diário de uso</strong>
-                  <small>25 minutos</small>
+                  <small id="dailyLimitLabel">25 minutos</small>
                 </span>
-                <input type="range" min="10" max="60" value="25" />
+                <input id="dailyLimitSlider" type="range" min="10" max="60" value="25" />
               </label>
               <label class="parent-item">
                 <span>

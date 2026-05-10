@@ -322,6 +322,8 @@ const navItems = [...document.querySelectorAll(".nav-item")];
 const soundButton = document.querySelector("#soundButton");
 const serviceWorkerPath = "./sw.js";
 const trialStorageKey = "arcakidsTrialUntil";
+const dailyLimitStorageKey = "arcakidsDailyLimit";
+const cacheStorageKey = "arcakidsCacheVersion";
 let historyStack = ["home"];
 let currentAge = "3-5";
 let currentRound = 0;
@@ -344,6 +346,13 @@ let availableVoices = [];
 let trialUntil = Number(localStorage.getItem(trialStorageKey) || 0);
 let selectedPremiumActivity = null;
 let parentUnlocked = false;
+let dailyLimit = Number(localStorage.getItem(dailyLimitStorageKey) || 25);
+
+if (localStorage.getItem(cacheStorageKey) !== "5") {
+  localStorage.removeItem(dailyLimitStorageKey);
+  localStorage.setItem(cacheStorageKey, "5");
+  dailyLimit = 25;
+}
 
 function isTrialActive() {
   return Date.now() < trialUntil;
@@ -964,6 +973,7 @@ function renderParentArea() {
   if (!gate || !dashboard) return;
   gate.hidden = parentUnlocked;
   dashboard.hidden = !parentUnlocked;
+  renderDailyLimit();
 }
 
 function unlockParentArea() {
@@ -980,6 +990,22 @@ function unlockParentArea() {
   playTryAgainSound();
 }
 
+function renderDailyLimit() {
+  const slider = document.querySelector("#dailyLimitSlider");
+  const label = document.querySelector("#dailyLimitLabel");
+  const summary = document.querySelector("#dailyLimitSummary");
+  if (!slider || !label || !summary) return;
+  slider.value = String(dailyLimit);
+  label.textContent = `${dailyLimit} minutos`;
+  summary.textContent = `${dailyLimit} min`;
+}
+
+function updateDailyLimit(value) {
+  dailyLimit = Number(value);
+  localStorage.setItem(dailyLimitStorageKey, String(dailyLimit));
+  renderDailyLimit();
+}
+
 document.addEventListener("click", (event) => {
   const target = event.target.closest("[data-screen]");
   if (target?.dataset.premiumActivity) {
@@ -992,6 +1018,9 @@ document.querySelector("#freeTrialButton").addEventListener("click", startFreeTr
 document.querySelector("#gateSubmit").addEventListener("click", unlockParentArea);
 document.querySelector("#gateAnswer").addEventListener("keydown", (event) => {
   if (event.key === "Enter") unlockParentArea();
+});
+document.querySelector("#dailyLimitSlider").addEventListener("input", (event) => {
+  updateDailyLimit(event.target.value);
 });
 
 soundButton.addEventListener("click", (event) => {
