@@ -365,7 +365,7 @@ const screenEyebrow = document.querySelector("#screenEyebrow");
 const backButton = document.querySelector("#backButton");
 const navItems = [...document.querySelectorAll(".nav-item")];
 const soundButton = document.querySelector("#soundButton");
-const serviceWorkerPath = "./sw.js";
+const serviceWorkerPath = "./sw.js?v=8";
 const trialStorageKey = "arcakidsTrialUntil";
 const dailyLimitStorageKey = "arcakidsDailyLimit";
 const cacheStorageKey = "arcakidsCacheVersion";
@@ -394,9 +394,9 @@ let parentUnlocked = false;
 let dailyLimit = Number(localStorage.getItem(dailyLimitStorageKey) || 25);
 let selectedGame = games[0];
 
-if (localStorage.getItem(cacheStorageKey) !== "5") {
+if (localStorage.getItem(cacheStorageKey) !== "8") {
   localStorage.removeItem(dailyLimitStorageKey);
-  localStorage.setItem(cacheStorageKey, "5");
+  localStorage.setItem(cacheStorageKey, "8");
   dailyLimit = 25;
 }
 
@@ -1285,5 +1285,5 @@ renderTrialStatus();
 showScreen("home", false);
 
 if ("serviceWorker" in navigator && window.location.protocol.startsWith("http")) {
-  navigator.serviceWorker.register(serviceWorkerPath).catch(() => {});
+  navigator.serviceWorker.register(serviceWorkerPath).then((registration) => registration.update()).catch(() => {});
 }

@@ -1,9 +1,9 @@
-const CACHE_NAME = "arcakids-v7";
+const CACHE_NAME = "arcakids-v8";
 const APP_SHELL = [
   "./",
   "./index.html",
-  "./styles.css?v=7",
-  "./app.js?v=7",
+  "./styles.css?v=8",
+  "./app.js?v=8",
   "./manifest.webmanifest",
   "./assets/app-icon.svg",
   "./assets/arcakids-logo.svg",
@@ -44,6 +44,21 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
+  const shouldRefresh =
+    event.request.mode === "navigate" ||
+    ["document", "script", "style"].includes(event.request.destination);
+  if (shouldRefresh) {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+          return response;
+        })
+        .catch(() => caches.match(event.request))
+    );
+    return;
+  }
   event.respondWith(
     caches.match(event.request).then((cached) => {
       if (cached) return cached;
