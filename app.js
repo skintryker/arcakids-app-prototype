@@ -657,51 +657,49 @@ function drawSheepTemplate(ctx) {
   ctx.clearRect(0, 0, 320, 260);
   ctx.strokeStyle = "#172033";
 
-  const wool = [
-    [86, 112, 27],
-    [118, 90, 31],
-    [158, 84, 35],
-    [198, 94, 30],
-    [228, 122, 28],
-    [208, 154, 33],
-    [160, 164, 46],
-    [110, 150, 34]
-  ];
-  wool.forEach(([x, y, radius]) => {
-    ctx.beginPath();
-    ctx.arc(x, y, radius, 0, Math.PI * 2);
-    ctx.stroke();
-  });
+  ctx.beginPath();
+  ctx.moveTo(76, 146);
+  ctx.bezierCurveTo(42, 136, 44, 92, 82, 88);
+  ctx.bezierCurveTo(84, 54, 128, 45, 148, 72);
+  ctx.bezierCurveTo(172, 42, 220, 57, 221, 96);
+  ctx.bezierCurveTo(258, 103, 263, 151, 230, 165);
+  ctx.bezierCurveTo(216, 203, 143, 205, 121, 176);
+  ctx.bezierCurveTo(96, 188, 68, 174, 76, 146);
+  ctx.closePath();
+  ctx.stroke();
 
-  roundedRectPath(ctx, 112, 100, 96, 82, 36);
+  roundedRectPath(ctx, 186, 104, 56, 66, 24);
   ctx.stroke();
 
   ctx.beginPath();
-  ctx.moveTo(116, 124);
-  ctx.quadraticCurveTo(84, 116, 78, 146);
-  ctx.quadraticCurveTo(94, 154, 112, 143);
-  ctx.moveTo(204, 124);
-  ctx.quadraticCurveTo(236, 116, 242, 146);
-  ctx.quadraticCurveTo(226, 154, 208, 143);
+  ctx.moveTo(190, 122);
+  ctx.quadraticCurveTo(164, 112, 158, 136);
+  ctx.quadraticCurveTo(174, 146, 190, 135);
+  ctx.moveTo(238, 122);
+  ctx.quadraticCurveTo(262, 114, 270, 138);
+  ctx.quadraticCurveTo(254, 148, 240, 136);
   ctx.stroke();
 
   ctx.beginPath();
-  ctx.arc(140, 132, 4, 0, Math.PI * 2);
-  ctx.arc(180, 132, 4, 0, Math.PI * 2);
+  ctx.arc(204, 132, 4, 0, Math.PI * 2);
+  ctx.arc(226, 132, 4, 0, Math.PI * 2);
   ctx.stroke();
 
   ctx.beginPath();
-  ctx.moveTo(150, 152);
-  ctx.quadraticCurveTo(160, 162, 172, 152);
+  ctx.moveTo(214, 147);
+  ctx.quadraticCurveTo(216, 154, 224, 147);
   ctx.stroke();
 
   ctx.beginPath();
-  ctx.moveTo(110, 178);
-  ctx.lineTo(110, 224);
-  ctx.lineTo(132, 224);
-  ctx.moveTo(210, 178);
-  ctx.lineTo(210, 224);
-  ctx.lineTo(188, 224);
+  ctx.moveTo(104, 176);
+  ctx.lineTo(104, 220);
+  ctx.lineTo(125, 220);
+  ctx.moveTo(174, 183);
+  ctx.lineTo(174, 220);
+  ctx.lineTo(195, 220);
+  ctx.moveTo(83, 128);
+  ctx.quadraticCurveTo(61, 132, 54, 110);
+  ctx.quadraticCurveTo(76, 110, 83, 128);
   ctx.stroke();
 
   ctx.beginPath();
