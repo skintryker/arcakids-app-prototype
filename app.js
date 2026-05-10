@@ -663,7 +663,7 @@ const screenEyebrow = document.querySelector("#screenEyebrow");
 const backButton = document.querySelector("#backButton");
 const navItems = [...document.querySelectorAll(".nav-item")];
 const soundButton = document.querySelector("#soundButton");
-const serviceWorkerPath = "./sw.js?v=20";
+const serviceWorkerPath = "./sw.js?v=21";
 const trialStorageKey = "arcakidsTrialUntil";
 const membershipStorageKey = "arcakidsMembershipActive";
 const dailyLimitStorageKey = "arcakidsDailyLimit";
@@ -809,6 +809,10 @@ function renderPhaseDots(selector, total) {
   const path = document.querySelector(selector);
   if (!path) return;
   path.innerHTML = Array.from({ length: total }, () => "<span></span>").join("");
+}
+
+function getWrongAnswerText(answer) {
+  return `Não foi essa. Resposta correta: ${answer}.`;
 }
 
 function persistProgress() {
@@ -1046,8 +1050,7 @@ function renderAnimalRound() {
         document.querySelector("#animalFeedback").textContent = round.praise;
         addFoundAnimal(round.answer);
       } else {
-        document.querySelector("#animalFeedback").textContent =
-          `Não. O correto era ${answer.label}. Agora vamos para a próxima.`;
+        document.querySelector("#animalFeedback").textContent = getWrongAnswerText(answer.label);
       }
       if (playScore === animalRounds.length) {
         document.querySelector("#animalFeedback").textContent =
@@ -1791,7 +1794,7 @@ function renderMiniGame() {
       });
       document.querySelector("#miniGameFeedback").textContent = isCorrect
         ? content.success
-        : `Não. O correto era "${content.answer}". ${content.success}`;
+        : getWrongAnswerText(content.answer);
       document.querySelector("#miniGameNext").hidden = false;
       document.querySelector("#miniGameNext").textContent =
         miniGameStage === stages.length - 1 ? "Jogar de novo" : "Próxima fase";
@@ -1957,7 +1960,7 @@ document.querySelectorAll("[data-answer]").forEach((button) => {
     button.classList.toggle("choice-wrong", !correct);
     document.querySelector("#quizFeedback").textContent = correct
       ? item.note
-      : `Não. O correto era "${rightText}". ${item.note}`;
+      : getWrongAnswerText(rightText);
     if (correct) {
       playSuccessSound();
     } else {
