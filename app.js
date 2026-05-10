@@ -579,8 +579,9 @@ function drawColoringPage() {
   const ctx = canvas.getContext("2d");
   if (canvas.dataset.ready) return;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.lineWidth = 5;
+  ctx.lineWidth = 6;
   ctx.lineCap = "round";
+  ctx.lineJoin = "round";
   ctx.strokeStyle = "#172033";
   if (paintTemplate === "arca") drawArkTemplate(ctx);
   if (paintTemplate === "ovelha") drawSheepTemplate(ctx);
@@ -588,58 +589,156 @@ function drawColoringPage() {
   canvas.dataset.ready = "true";
 }
 
-function drawArkTemplate(ctx) {
-  ctx.strokeRect(48, 108, 224, 94);
+function roundedRectPath(ctx, x, y, width, height, radius) {
   ctx.beginPath();
-  ctx.moveTo(64, 108);
-  ctx.lineTo(160, 46);
-  ctx.lineTo(256, 108);
+  ctx.moveTo(x + radius, y);
+  ctx.lineTo(x + width - radius, y);
+  ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+  ctx.lineTo(x + width, y + height - radius);
+  ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+  ctx.lineTo(x + radius, y + height);
+  ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+  ctx.lineTo(x, y + radius);
+  ctx.quadraticCurveTo(x, y, x + radius, y);
+}
+
+function drawArkTemplate(ctx) {
+  ctx.clearRect(0, 0, 320, 260);
+  ctx.strokeStyle = "#172033";
+
+  ctx.beginPath();
+  ctx.arc(260, 42, 20, 0, Math.PI * 2);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.arc(70, 56, 18, Math.PI, 0);
+  ctx.arc(100, 56, 24, Math.PI, 0);
+  ctx.arc(136, 56, 18, Math.PI, 0);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(40, 138);
+  ctx.lineTo(160, 54);
+  ctx.lineTo(280, 138);
   ctx.closePath();
   ctx.stroke();
-  ctx.strokeRect(126, 142, 68, 60);
+
+  roundedRectPath(ctx, 104, 128, 112, 52, 8);
+  ctx.stroke();
+
+  roundedRectPath(ctx, 130, 144, 60, 36, 8);
+  ctx.stroke();
+
   ctx.beginPath();
-  ctx.arc(102, 82, 24, 0, Math.PI * 2);
-  ctx.arc(218, 82, 24, 0, Math.PI * 2);
+  ctx.moveTo(32, 178);
+  ctx.lineTo(288, 178);
+  ctx.lineTo(258, 228);
+  ctx.lineTo(62, 228);
+  ctx.closePath();
+  ctx.stroke();
+
+  [86, 160, 234].forEach((x) => {
+    ctx.beginPath();
+    ctx.arc(x, 204, 13, 0, Math.PI * 2);
+    ctx.stroke();
+  });
+
+  ctx.beginPath();
+  ctx.moveTo(16, 238);
+  ctx.quadraticCurveTo(46, 222, 78, 238);
+  ctx.quadraticCurveTo(110, 254, 142, 238);
+  ctx.quadraticCurveTo(174, 222, 206, 238);
+  ctx.quadraticCurveTo(238, 254, 304, 238);
   ctx.stroke();
 }
 
 function drawSheepTemplate(ctx) {
-  ctx.beginPath();
-  ctx.arc(90, 118, 34, 0, Math.PI * 2);
-  ctx.arc(135, 98, 42, 0, Math.PI * 2);
-  ctx.arc(184, 120, 35, 0, Math.PI * 2);
+  ctx.clearRect(0, 0, 320, 260);
+  ctx.strokeStyle = "#172033";
+
+  const wool = [
+    [86, 112, 27],
+    [118, 90, 31],
+    [158, 84, 35],
+    [198, 94, 30],
+    [228, 122, 28],
+    [208, 154, 33],
+    [160, 164, 46],
+    [110, 150, 34]
+  ];
+  wool.forEach(([x, y, radius]) => {
+    ctx.beginPath();
+    ctx.arc(x, y, radius, 0, Math.PI * 2);
+    ctx.stroke();
+  });
+
+  roundedRectPath(ctx, 112, 100, 96, 82, 36);
   ctx.stroke();
+
   ctx.beginPath();
-  ctx.arc(160, 135, 31, 0, Math.PI * 2);
+  ctx.moveTo(116, 124);
+  ctx.quadraticCurveTo(84, 116, 78, 146);
+  ctx.quadraticCurveTo(94, 154, 112, 143);
+  ctx.moveTo(204, 124);
+  ctx.quadraticCurveTo(236, 116, 242, 146);
+  ctx.quadraticCurveTo(226, 154, 208, 143);
   ctx.stroke();
+
   ctx.beginPath();
-  ctx.arc(148, 132, 3, 0, Math.PI * 2);
-  ctx.arc(172, 132, 3, 0, Math.PI * 2);
+  ctx.arc(140, 132, 4, 0, Math.PI * 2);
+  ctx.arc(180, 132, 4, 0, Math.PI * 2);
   ctx.stroke();
+
   ctx.beginPath();
-  ctx.moveTo(103, 153);
-  ctx.lineTo(103, 207);
-  ctx.moveTo(202, 153);
-  ctx.lineTo(202, 207);
+  ctx.moveTo(150, 152);
+  ctx.quadraticCurveTo(160, 162, 172, 152);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(110, 178);
+  ctx.lineTo(110, 224);
+  ctx.lineTo(132, 224);
+  ctx.moveTo(210, 178);
+  ctx.lineTo(210, 224);
+  ctx.lineTo(188, 224);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(58, 226);
+  ctx.lineTo(262, 226);
   ctx.stroke();
 }
 
 function drawBadgeTemplate(ctx) {
+  ctx.clearRect(0, 0, 320, 260);
+  ctx.strokeStyle = "#172033";
+
   ctx.beginPath();
-  ctx.arc(160, 130, 78, 0, Math.PI * 2);
+  ctx.arc(160, 116, 74, 0, Math.PI * 2);
   ctx.stroke();
+
   ctx.beginPath();
   ctx.moveTo(160, 55);
-  ctx.lineTo(179, 104);
-  ctx.lineTo(232, 107);
-  ctx.lineTo(190, 140);
-  ctx.lineTo(204, 192);
-  ctx.lineTo(160, 162);
-  ctx.lineTo(116, 192);
-  ctx.lineTo(130, 140);
-  ctx.lineTo(88, 107);
-  ctx.lineTo(141, 104);
+  ctx.lineTo(179, 96);
+  ctx.lineTo(224, 101);
+  ctx.lineTo(191, 132);
+  ctx.lineTo(200, 176);
+  ctx.lineTo(160, 154);
+  ctx.lineTo(120, 176);
+  ctx.lineTo(129, 132);
+  ctx.lineTo(96, 101);
+  ctx.lineTo(141, 96);
   ctx.closePath();
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(124, 183);
+  ctx.lineTo(100, 232);
+  ctx.lineTo(142, 218);
+  ctx.lineTo(160, 246);
+  ctx.lineTo(178, 218);
+  ctx.lineTo(220, 232);
+  ctx.lineTo(196, 183);
   ctx.stroke();
 }
 
