@@ -663,7 +663,7 @@ const screenEyebrow = document.querySelector("#screenEyebrow");
 const backButton = document.querySelector("#backButton");
 const navItems = [...document.querySelectorAll(".nav-item")];
 const soundButton = document.querySelector("#soundButton");
-const assetVersion = "24";
+const assetVersion = "25";
 const serviceWorkerPath = `./sw.js?v=${assetVersion}`;
 const trialStorageKey = "arcakidsTrialUntil";
 const membershipStorageKey = "arcakidsMembershipActive";
@@ -1782,7 +1782,7 @@ function playMusicStep() {
   ];
   const notes = melody[musicStep % melody.length];
   notes.forEach((note, index) => {
-    window.setTimeout(() => playTone(note, 0.34, 0.026, "triangle"), index * 90);
+    window.setTimeout(() => playTone(note, 0.46, 0.085, "triangle"), index * 90);
   });
   musicStep += 1;
 }
@@ -1794,7 +1794,7 @@ function toggleMusic() {
   soundButton.textContent = musicOn ? "♫" : "♪";
   if (musicOn) {
     playMusicStep();
-    musicTimer = window.setInterval(playMusicStep, 620);
+    musicTimer = window.setInterval(playMusicStep, 560);
   } else {
     window.clearInterval(musicTimer);
     musicTimer = null;
