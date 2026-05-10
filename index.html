@@ -12,7 +12,7 @@
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="icon" href="assets/app-icon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="assets/app-icon.svg" />
-    <link rel="stylesheet" href="styles.css?v=15" />
+    <link rel="stylesheet" href="styles.css?v=16" />
   </head>
   <body>
     <main class="phone-shell" aria-label="Protótipo Arcakids">
@@ -421,6 +421,13 @@
               <strong>Controle familiar</strong>
               <span>Assinatura, teste grátis, loja e links externos ficam protegidos aqui.</span>
             </div>
+            <label class="daily-limit-card">
+              <span>
+                <strong>Tempo diário de uso</strong>
+                <small id="dailyLimitLabel">25 minutos</small>
+              </span>
+              <input id="dailyLimitSlider" type="range" min="10" max="60" value="25" />
+            </label>
             <div class="parent-list">
               <button class="parent-item parent-link" data-screen="membership">
                 <span>
@@ -439,13 +446,6 @@
                   <option>6 a 8 anos</option>
                   <option>9 a 10 anos</option>
                 </select>
-              </label>
-              <label class="parent-item">
-                <span>
-                  <strong>Tempo diário de uso</strong>
-                  <small id="dailyLimitLabel">25 minutos</small>
-                </span>
-                <input id="dailyLimitSlider" type="range" min="10" max="60" value="25" />
               </label>
               <label class="parent-item">
                 <span>
@@ -480,6 +480,6 @@
         </nav>
       </section>
     </main>
-    <script src="app.js?v=15"></script>
+    <script src="app.js?v=16"></script>
   </body>
 </html>
