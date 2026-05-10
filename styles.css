@@ -1045,12 +1045,22 @@ body {
 }
 
 .play-score strong {
-  display: grid;
-  min-width: 56px;
+  display: inline-flex;
+  min-width: 72px;
   min-height: 42px;
-  place-items: center;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 0 12px;
   border-radius: 14px;
   background: white;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.play-score strong span {
+  display: inline;
+  white-space: nowrap;
 }
 
 .animal-board {
@@ -1824,6 +1834,7 @@ canvas {
 .mission-card b {
   min-height: 42px;
   font-size: 14px;
+  white-space: nowrap;
 }
 
 .library-intro {
