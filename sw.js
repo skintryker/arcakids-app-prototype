@@ -1,12 +1,12 @@
-const CACHE_NAME = "arcakids-v21";
+const CACHE_NAME = "arcakids-v22";
 const APP_SHELL = [
   "./",
   "./index.html",
-  "./styles.css?v=21",
-  "./app.js?v=21",
+  "./styles.css?v=22",
+  "./app.js?v=22",
   "./manifest.webmanifest",
   "./assets/app-icon.svg",
-  "./assets/arcakids-logo.svg",
+  "./assets/arcakids-logo-official.webp",
   "./assets/ark-scene-wide.svg",
   "./assets/ark-hero.svg",
   "./assets/david.svg",
