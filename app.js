@@ -127,7 +127,12 @@ const animalRounds = [
   { prompt: "Toque no animal que tem juba.", answer: "leao", praise: "Isso. O leão achou seu lugar." },
   { prompt: "Toque no animal que pula alto.", answer: "sapo", praise: "Acertou. O sapo pulou para dentro." },
   { prompt: "Toque no animal que tem casco.", answer: "tartaruga", praise: "Perfeito. A tartaruga chegou devagarinho." },
-  { prompt: "Toque no animal que canta ao amanhecer.", answer: "galo", praise: "Parabéns. O galo completou a fase." }
+  { prompt: "Toque no animal que canta ao amanhecer.", answer: "galo", praise: "Muito bem. O galo cantou na Arca." },
+  { prompt: "Toque no animal que dá lã.", answer: "ovelha", praise: "Isso. A ovelha entrou mansinha." },
+  { prompt: "Toque no animal grande e forte.", answer: "elefante", praise: "Acertou. O elefante ajudou a Arca ficar cheia." },
+  { prompt: "Toque no animal que ruge.", answer: "leao", praise: "Perfeito. O leão encontrou seu par." },
+  { prompt: "Toque no animal que vive perto da água.", answer: "sapo", praise: "Muito bem. O sapo pulou feliz." },
+  { prompt: "Toque no animal que anda devagar.", answer: "tartaruga", praise: "Parabéns. Você completou as 10 fases." }
 ];
 
 const animals = [
@@ -143,7 +148,13 @@ const quizItems = [
   { text: "Noé construiu uma arca.", answer: true, note: "Isso mesmo." },
   { text: "Davi venceu Golias com uma coroa.", answer: false, note: "Foi com uma pedra e sua funda." },
   { text: "Daniel orava a Deus.", answer: true, note: "Muito bem." },
-  { text: "Jonas foi engolido por um grande peixe.", answer: true, note: "Acertou." }
+  { text: "Jonas foi engolido por um grande peixe.", answer: true, note: "Acertou." },
+  { text: "Jesus acalmou uma tempestade.", answer: true, note: "Isso. Jesus trouxe paz." },
+  { text: "A Arca de Noé era um castelo.", answer: false, note: "Não. Era uma grande arca." },
+  { text: "Daniel parou de orar a Deus.", answer: false, note: "Não. Daniel continuou orando." },
+  { text: "Deus criou os animais.", answer: true, note: "Muito bem." },
+  { text: "Davi era gigante como Golias.", answer: false, note: "Não. Davi era jovem e confiou em Deus." },
+  { text: "Podemos falar com Deus em oração.", answer: true, note: "Parabéns. Isso é verdade." }
 ];
 
 const miniGameContent = {
@@ -286,6 +297,62 @@ const miniGameContent = {
     }
   ]
 };
+
+const bonusMiniStages = [
+  {
+    prompt: "Qual palavra combina com uma boa escolha?",
+    options: ["obediência", "bagunça", "medo"],
+    answer: "obediência",
+    success: "Isso. Obedecer ajuda a cuidar da aventura.",
+    image: "assets/star-badge.svg"
+  },
+  {
+    prompt: "Qual animal entrou na Arca?",
+    options: ["Leão", "Carrinho", "Cadeira"],
+    answer: "Leão",
+    success: "Muito bem. O leão entrou na Arca.",
+    image: "assets/lion.svg"
+  },
+  {
+    prompt: "Quem cuida da criação de Deus?",
+    options: ["Nós cuidamos", "Ninguém", "Só Golias"],
+    answer: "Nós cuidamos",
+    success: "Acertou. Podemos cuidar do que Deus fez.",
+    image: "assets/story-rainbow.svg"
+  },
+  {
+    prompt: "Quando alguém precisa de ajuda, o que fazemos?",
+    options: ["Ajudamos", "Viramos as costas", "Rimos"],
+    answer: "Ajudamos",
+    success: "Isso. Bondade deixa a Arca mais bonita.",
+    image: "assets/story-family.svg"
+  },
+  {
+    prompt: "Qual atitude combina com Daniel?",
+    options: ["oração", "desobediência", "mentira"],
+    answer: "oração",
+    success: "Muito bem. Daniel falava com Deus.",
+    image: "assets/guide-sheep.svg"
+  },
+  {
+    prompt: "Qual presente Deus colocou no céu depois da chuva?",
+    options: ["Arco-íris", "Pedra", "Coroa"],
+    answer: "Arco-íris",
+    success: "Acertou. O arco-íris lembra o cuidado de Deus.",
+    image: "assets/story-rainbow.svg"
+  },
+  {
+    prompt: "Para terminar, escolha uma palavra de gratidão.",
+    options: ["Obrigado, Deus", "Não quero", "Estou bravo"],
+    answer: "Obrigado, Deus",
+    success: "Parabéns. Você completou as 10 fases.",
+    image: "assets/star-badge.svg"
+  }
+];
+
+Object.keys(miniGameContent).forEach((title) => {
+  miniGameContent[title] = [...miniGameContent[title], ...bonusMiniStages].slice(0, 10);
+});
 
 const stories = [
   {
@@ -537,10 +604,18 @@ function showScreen(name, push = true) {
   if (name === "parent") renderParentArea();
 }
 
+function renderPhaseDots(selector, total) {
+  const path = document.querySelector(selector);
+  if (!path) return;
+  path.innerHTML = Array.from({ length: total }, () => "<span></span>").join("");
+}
+
 function startAnimalGame() {
   selectedGame = games.find((game) => game.screen === "play") || selectedGame;
   currentRound = 0;
   playScore = 0;
+  renderPhaseDots("#animalPath", animalRounds.length);
+  document.querySelector("#playTotal").textContent = animalRounds.length;
   document.querySelector("#animalReward").hidden = true;
   document.querySelector("#nextRound").textContent = "Próxima charada";
   renderAnimalRound();
@@ -605,7 +680,7 @@ function renderAnimalRound() {
   document.querySelector("#playScore").textContent = playScore;
   document.querySelector("#animalFeedback").textContent = "Olhe com calma e escolha um animal.";
   document.querySelector("#animalReward").hidden = true;
-  document.querySelectorAll(".round-path span").forEach((step, index) => {
+  document.querySelectorAll("#animalPath span").forEach((step, index) => {
     step.classList.toggle("active", index === currentRound);
     step.classList.toggle("done", index < playScore);
   });
@@ -626,10 +701,10 @@ function renderAnimalRound() {
       }
       if (correct) {
         roundSolved = true;
-        playScore = Math.min(5, playScore + 1);
+        playScore = Math.min(animalRounds.length, playScore + 1);
         document.querySelector("#playScore").textContent = playScore;
         document.querySelector("#animalFeedback").textContent = round.praise;
-        document.querySelectorAll(".round-path span").forEach((step, index) => {
+        document.querySelectorAll("#animalPath span").forEach((step, index) => {
           step.classList.toggle("done", index < playScore);
         });
         if (playScore === animalRounds.length) {
@@ -714,7 +789,7 @@ function renderQuiz() {
   document.querySelector("#quizReward").hidden = true;
   document.querySelector("#quizQuestion").textContent = item.text;
   document.querySelector("#quizFeedback").textContent = `Pergunta ${currentQuiz + 1} de ${quizItems.length}`;
-  document.querySelectorAll(".quiz-path span").forEach((step, index) => {
+  document.querySelectorAll("#quizPath span").forEach((step, index) => {
     step.classList.toggle("active", index === currentQuiz);
     step.classList.toggle("done", index < currentQuiz);
   });
@@ -729,6 +804,7 @@ function startQuiz() {
   document.querySelector("#quizMastheadImage").src = game.image;
   currentQuiz = 0;
   quizScore = 0;
+  renderPhaseDots("#quizPath", quizItems.length);
   renderQuiz();
 }
 
@@ -736,7 +812,7 @@ function finishQuiz() {
   document.querySelector("#quizQuestion").textContent = `Você acertou ${quizScore} de ${quizItems.length}.`;
   document.querySelector("#quizFeedback").textContent = "Desafio completo.";
   document.querySelector("#quizReward").hidden = false;
-  document.querySelectorAll(".quiz-path span").forEach((step) => {
+  document.querySelectorAll("#quizPath span").forEach((step) => {
     step.classList.add("done");
     step.classList.remove("active");
   });

@@ -12,7 +12,7 @@
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="icon" href="assets/app-icon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="assets/app-icon.svg" />
-    <link rel="stylesheet" href="styles.css?v=10" />
+    <link rel="stylesheet" href="styles.css?v=11" />
   </head>
   <body>
     <main class="phone-shell" aria-label="Protótipo Arcakids">
@@ -154,7 +154,7 @@
                 <small>Escute a dica e encontre o animal.</small>
               </span>
             </div>
-            <div class="round-path" aria-label="Fases do jogo">
+            <div class="round-path" id="animalPath" aria-label="Fases do jogo">
               <span class="active"></span>
               <span></span>
               <span></span>
@@ -163,7 +163,7 @@
             </div>
             <div class="play-score">
               <span id="playPrompt">Toque no animal que tem tromba.</span>
-              <strong><span id="playScore">0</span>/5</strong>
+              <strong><span id="playScore">0</span>/<span id="playTotal">10</span></strong>
             </div>
             <div class="animal-board" id="animalBoard"></div>
             <p class="game-feedback" id="animalFeedback">A Arca está esperando o primeiro animal.</p>
@@ -213,7 +213,7 @@
                 <small id="quizMastheadCopy">Responda e ganhe selos de conhecimento.</small>
               </span>
             </div>
-            <div class="round-path quiz-path" aria-label="Perguntas do quiz">
+            <div class="round-path quiz-path" id="quizPath" aria-label="Perguntas do quiz">
               <span class="active"></span>
               <span></span>
               <span></span>
@@ -487,6 +487,6 @@
         </nav>
       </section>
     </main>
-    <script src="app.js?v=10"></script>
+    <script src="app.js?v=11"></script>
   </body>
 </html>
