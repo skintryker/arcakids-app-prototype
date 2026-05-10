@@ -1637,7 +1637,8 @@ canvas {
 }
 
 .gate-field input,
-.parent-item select {
+.parent-item select,
+.parent-field input {
   width: 100%;
   min-height: 48px;
   border: 0;
@@ -1648,6 +1649,10 @@ canvas {
   font: inherit;
   font-weight: 900;
   box-shadow: inset 0 0 0 1px rgba(23, 32, 51, 0.1);
+}
+
+.parent-field {
+  grid-template-columns: minmax(0, 1fr);
 }
 
 #gateFeedback {

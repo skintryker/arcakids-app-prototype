@@ -12,7 +12,7 @@
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="icon" href="assets/app-icon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="assets/app-icon.svg" />
-    <link rel="stylesheet" href="styles.css?v=28" />
+    <link rel="stylesheet" href="styles.css?v=29" />
   </head>
   <body>
     <main class="phone-shell" aria-label="Protótipo Arcakids">
@@ -36,8 +36,8 @@
               <div class="guide-row">
                 <img class="guide-mascot" src="assets/guide-sheep.svg?v=24" alt="" />
                 <span>
-                  <strong>Oi!</strong>
-                  <small>Vamos brincar na Arca hoje?</small>
+                  <strong id="childGreeting">Oi!</strong>
+                  <small id="childGreetingCopy">Vamos brincar na Arca hoje?</small>
                 </span>
               </div>
               <p class="pill" id="agePill">3 a 5 anos</p>
@@ -409,6 +409,30 @@
                 </span>
                 <b>›</b>
               </button>
+              <label class="parent-item parent-field">
+                <span>
+                  <strong>Nome da criança 1</strong>
+                  <small>Usado na saudação da tela inicial.</small>
+                </span>
+                <input id="childNameOne" type="text" maxlength="18" placeholder="Ex.: Lucas" autocomplete="off" />
+              </label>
+              <label class="parent-item parent-field">
+                <span>
+                  <strong>Nome da criança 2</strong>
+                  <small>Opcional, para famílias com mais de um filho.</small>
+                </span>
+                <input id="childNameTwo" type="text" maxlength="18" placeholder="Ex.: Sofia" autocomplete="off" />
+              </label>
+              <label class="parent-item">
+                <span>
+                  <strong>Perfil ativo</strong>
+                  <small id="activeChildLabel">Saudação geral.</small>
+                </span>
+                <select id="activeChildSelect" aria-label="Perfil infantil ativo">
+                  <option value="0">Criança 1</option>
+                  <option value="1">Criança 2</option>
+                </select>
+              </label>
               <label class="parent-item">
                 <span>
                   <strong>Idade da criança</strong>
@@ -467,6 +491,6 @@
         </nav>
       </section>
     </main>
-    <script src="app.js?v=28"></script>
+    <script src="app.js?v=29"></script>
   </body>
 </html>

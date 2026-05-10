@@ -667,13 +667,15 @@ const screenEyebrow = document.querySelector("#screenEyebrow");
 const backButton = document.querySelector("#backButton");
 const navItems = [...document.querySelectorAll(".nav-item")];
 const soundButton = document.querySelector("#soundButton");
-const assetVersion = "28";
+const assetVersion = "29";
 const serviceWorkerPath = `./sw.js?v=${assetVersion}`;
 const trialStorageKey = "arcakidsTrialUntil";
 const membershipStorageKey = "arcakidsMembershipActive";
 const dailyLimitStorageKey = "arcakidsDailyLimit";
 const childAgeStorageKey = "arcakidsChildAge";
 const childAgeChoiceStorageKey = "arcakidsChildAgeChoice";
+const childNamesStorageKey = "arcakidsChildNames";
+const activeChildStorageKey = "arcakidsActiveChild";
 const cacheStorageKey = "arcakidsCacheVersion";
 const foundAnimalsStorageKey = "arcakidsFoundAnimals";
 const completedStoriesStorageKey = "arcakidsCompletedStories";
@@ -704,6 +706,8 @@ let selectedPremiumActivity = null;
 let parentUnlocked = false;
 let dailyLimit = Number(localStorage.getItem(dailyLimitStorageKey) || 25);
 let childCanChooseAge = localStorage.getItem(childAgeChoiceStorageKey) !== "false";
+let childNames = JSON.parse(localStorage.getItem(childNamesStorageKey) || "[\"\",\"\"]").slice(0, 2);
+let activeChildIndex = Number(localStorage.getItem(activeChildStorageKey) || 0);
 let selectedGame = games[0];
 let miniGameStage = 0;
 let miniGameSolved = false;
@@ -1011,6 +1015,51 @@ function renderGameCards(container, items) {
   });
 }
 
+function cleanChildName(name = "") {
+  return name.replace(/[^\p{L}\p{M}\s'-]/gu, "").replace(/\s+/g, " ").trim().slice(0, 18);
+}
+
+function getActiveChildName() {
+  const index = activeChildIndex === 1 ? 1 : 0;
+  return cleanChildName(childNames[index] || childNames.find(Boolean) || "");
+}
+
+function updateHomeGreeting() {
+  const name = getActiveChildName();
+  const greeting = document.querySelector("#childGreeting");
+  const copy = document.querySelector("#childGreetingCopy");
+  if (greeting) greeting.textContent = name ? `Oi, ${name}!` : "Oi!";
+  if (copy) copy.textContent = name ? "Vamos brincar na Arca hoje?" : "Vamos brincar na Arca hoje?";
+}
+
+function persistChildNames() {
+  localStorage.setItem(childNamesStorageKey, JSON.stringify(childNames.map(cleanChildName)));
+  localStorage.setItem(activeChildStorageKey, String(activeChildIndex));
+}
+
+function renderChildNameSettings() {
+  const nameOne = document.querySelector("#childNameOne");
+  const nameTwo = document.querySelector("#childNameTwo");
+  const activeSelect = document.querySelector("#activeChildSelect");
+  const activeLabel = document.querySelector("#activeChildLabel");
+
+  if (nameOne) nameOne.value = childNames[0] || "";
+  if (nameTwo) nameTwo.value = childNames[1] || "";
+
+  if (activeSelect) {
+    activeSelect.value = String(activeChildIndex);
+    activeSelect.options[0].textContent = childNames[0] ? childNames[0] : "Criança 1";
+    activeSelect.options[1].textContent = childNames[1] ? childNames[1] : "Criança 2";
+  }
+
+  if (activeLabel) {
+    const activeName = getActiveChildName();
+    activeLabel.textContent = activeName ? `A tela inicial mostra: Oi, ${activeName}!` : "Saudação geral.";
+  }
+
+  updateHomeGreeting();
+}
+
 function applyAgeChoiceState() {
   document.querySelectorAll(".profile").forEach((profile) => {
     const active = profile.dataset.age === currentAge;
@@ -1044,6 +1093,7 @@ function updateHomeForProfile(age, persist = true) {
   document.querySelector("#agePill").textContent = profile.pill;
   document.querySelector("#heroTitle").textContent = profile.hero;
   document.querySelector("#heroCopy").textContent = profile.copy;
+  updateHomeGreeting();
   if (document.querySelector("#homeScreen").classList.contains("active")) {
     screenTitle.textContent = profile.title;
   }
@@ -1968,6 +2018,7 @@ function renderParentArea() {
   dashboard.hidden = !parentUnlocked;
   renderDailyLimit();
   renderParentProgressSummary();
+  renderChildNameSettings();
   applyAgeChoiceState();
 }
 
@@ -2059,6 +2110,24 @@ document.querySelector("#childAgeChoiceToggle")?.addEventListener("change", (eve
   childCanChooseAge = event.target.checked;
   localStorage.setItem(childAgeChoiceStorageKey, String(childCanChooseAge));
   applyAgeChoiceState();
+});
+
+document.querySelector("#childNameOne")?.addEventListener("input", (event) => {
+  childNames[0] = cleanChildName(event.target.value);
+  persistChildNames();
+  renderChildNameSettings();
+});
+
+document.querySelector("#childNameTwo")?.addEventListener("input", (event) => {
+  childNames[1] = cleanChildName(event.target.value);
+  persistChildNames();
+  renderChildNameSettings();
+});
+
+document.querySelector("#activeChildSelect")?.addEventListener("change", (event) => {
+  activeChildIndex = Number(event.target.value) === 1 ? 1 : 0;
+  persistChildNames();
+  renderChildNameSettings();
 });
 
 document.querySelectorAll(".tab").forEach((tab) => {
