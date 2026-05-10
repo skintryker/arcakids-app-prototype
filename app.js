@@ -663,7 +663,7 @@ const screenEyebrow = document.querySelector("#screenEyebrow");
 const backButton = document.querySelector("#backButton");
 const navItems = [...document.querySelectorAll(".nav-item")];
 const soundButton = document.querySelector("#soundButton");
-const assetVersion = "25";
+const assetVersion = "26";
 const serviceWorkerPath = `./sw.js?v=${assetVersion}`;
 const trialStorageKey = "arcakidsTrialUntil";
 const membershipStorageKey = "arcakidsMembershipActive";
@@ -885,6 +885,14 @@ function renderProgressSummary() {
   document.querySelector("#homeAnimalCount").textContent = String(animalCount);
   document.querySelector("#homeStoryCount").textContent = String(completedStoryTitles.size);
   document.querySelector("#homeBadgeCount").textContent = String(earnedBadgeCount);
+  renderParentProgressSummary();
+}
+
+function renderParentProgressSummary() {
+  const storyCount = document.querySelector("#parentStoryCount");
+  const badgeCount = document.querySelector("#parentBadgeCount");
+  if (storyCount) storyCount.textContent = String(completedStoryTitles.size);
+  if (badgeCount) badgeCount.textContent = String(badges.filter((badge) => badge.unlock()).length);
 }
 
 function getMyArkHeroMessage(count) {
@@ -1926,6 +1934,7 @@ function renderParentArea() {
   gate.hidden = parentUnlocked;
   dashboard.hidden = !parentUnlocked;
   renderDailyLimit();
+  renderParentProgressSummary();
 }
 
 function unlockParentArea() {
