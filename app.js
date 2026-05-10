@@ -51,7 +51,7 @@ const games = [
     image: "assets/star-badge.svg",
     progress: 0,
     level: "Premium",
-    screen: "membership",
+    screen: "stories",
     locked: true
   },
   {
@@ -62,7 +62,7 @@ const games = [
     image: "assets/story-rainbow.svg",
     progress: 0,
     level: "Premium",
-    screen: "membership",
+    screen: "quiz",
     locked: true
   },
   {
@@ -73,7 +73,7 @@ const games = [
     image: "assets/star-badge.svg",
     progress: 0,
     level: "Premium",
-    screen: "membership",
+    screen: "quiz",
     locked: true
   },
   {
@@ -84,7 +84,7 @@ const games = [
     image: "assets/david.svg",
     progress: 0,
     level: "Premium",
-    screen: "membership",
+    screen: "memory",
     locked: true
   },
   {
@@ -106,7 +106,7 @@ const games = [
     image: "assets/story-family.svg",
     progress: 0,
     level: "Premium",
-    screen: "membership",
+    screen: "quiz",
     locked: true
   },
   {
@@ -117,7 +117,7 @@ const games = [
     image: "assets/david.svg",
     progress: 0,
     level: "Premium",
-    screen: "membership",
+    screen: "quiz",
     locked: true
   }
 ];
@@ -398,7 +398,8 @@ function renderGameCards(container, items) {
     const card = document.createElement("button");
     card.className = `game-card${locked ? " locked" : ""}`;
     card.dataset.screen = locked ? "parent" : game.screen;
-    if (game.locked && isTrialActive()) {
+    card.dataset.gameTitle = game.title;
+    if (game.locked && isTrialActive() && game.screen === "membership") {
       card.dataset.premiumActivity = game.title;
       card.dataset.screen = "premiumActivity";
     }
