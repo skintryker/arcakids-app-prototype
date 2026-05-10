@@ -1,4 +1,4 @@
-const CACHE_NAME = "arcakids-v5";
+const CACHE_NAME = "arcakids-v6";
 const APP_SHELL = [
   "./",
   "./index.html",

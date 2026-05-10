@@ -51,7 +51,7 @@ const games = [
     image: "assets/star-badge.svg",
     progress: 0,
     level: "Premium",
-    screen: "stories",
+    screen: "miniGame",
     locked: true
   },
   {
@@ -62,7 +62,7 @@ const games = [
     image: "assets/story-rainbow.svg",
     progress: 0,
     level: "Premium",
-    screen: "quiz",
+    screen: "miniGame",
     locked: true
   },
   {
@@ -73,7 +73,7 @@ const games = [
     image: "assets/star-badge.svg",
     progress: 0,
     level: "Premium",
-    screen: "quiz",
+    screen: "miniGame",
     locked: true
   },
   {
@@ -84,7 +84,7 @@ const games = [
     image: "assets/david.svg",
     progress: 0,
     level: "Premium",
-    screen: "memory",
+    screen: "miniGame",
     locked: true
   },
   {
@@ -106,7 +106,7 @@ const games = [
     image: "assets/story-family.svg",
     progress: 0,
     level: "Premium",
-    screen: "quiz",
+    screen: "miniGame",
     locked: true
   },
   {
@@ -117,7 +117,7 @@ const games = [
     image: "assets/david.svg",
     progress: 0,
     level: "Premium",
-    screen: "quiz",
+    screen: "miniGame",
     locked: true
   }
 ];
@@ -145,6 +145,51 @@ const quizItems = [
   { text: "Daniel orava a Deus.", answer: true, note: "Muito bem." },
   { text: "Jonas foi engolido por um grande peixe.", answer: true, note: "Acertou." }
 ];
+
+const miniGameContent = {
+  "Monte a História": {
+    prompt: "Coloque as cenas da história em ordem.",
+    options: ["Noé obedece", "A Arca fica pronta", "Os animais entram"],
+    answer: "Noé obedece",
+    success: "Muito bem. Primeiro Noé ouviu a Deus.",
+    image: "assets/story-noah-build.svg"
+  },
+  "Mapa dos Milagres": {
+    prompt: "Toque na cena que lembra um milagre de Jesus.",
+    options: ["Tempestade calma", "Coroa do rei", "Cesta vazia"],
+    answer: "Tempestade calma",
+    success: "Isso. Jesus acalmou a tempestade.",
+    image: "assets/story-rainbow.svg"
+  },
+  "Versículo Secreto": {
+    prompt: "Complete a frase: Deus é...",
+    options: ["amor", "medo", "pressa"],
+    answer: "amor",
+    success: "Acertou. Deus é amor.",
+    image: "assets/star-badge.svg"
+  },
+  "Triunfo Bíblico": {
+    prompt: "Escolha quem mostrou coragem diante de Golias.",
+    options: ["Davi", "Jonas", "Noé"],
+    answer: "Davi",
+    success: "Correto. Davi confiou em Deus.",
+    image: "assets/david.svg"
+  },
+  "Linha do Tempo": {
+    prompt: "Qual história vem primeiro na Bíblia?",
+    options: ["A criação", "Davi e Golias", "Daniel na cova"],
+    answer: "A criação",
+    success: "Muito bem. Deus criou todas as coisas.",
+    image: "assets/story-family.svg"
+  },
+  "Desafio dos Reis": {
+    prompt: "Quem pediu sabedoria a Deus?",
+    options: ["Salomão", "Golias", "Faraó"],
+    answer: "Salomão",
+    success: "Isso. Salomão pediu sabedoria.",
+    image: "assets/david.svg"
+  }
+};
 
 const stories = [
   {
@@ -347,6 +392,7 @@ let trialUntil = Number(localStorage.getItem(trialStorageKey) || 0);
 let selectedPremiumActivity = null;
 let parentUnlocked = false;
 let dailyLimit = Number(localStorage.getItem(dailyLimitStorageKey) || 25);
+let selectedGame = games[0];
 
 if (localStorage.getItem(cacheStorageKey) !== "5") {
   localStorage.removeItem(dailyLimitStorageKey);
@@ -386,6 +432,7 @@ function showScreen(name, push = true) {
   if (name === "memory") renderMemory();
   if (name === "quiz") startQuiz();
   if (name === "paint") drawColoringPage();
+  if (name === "miniGame") renderMiniGame();
   if (name === "stories") renderStory();
   if (name === "membership") renderTrialStatus();
   if (name === "premiumActivity") renderPremiumActivity();
@@ -393,6 +440,7 @@ function showScreen(name, push = true) {
 }
 
 function startAnimalGame() {
+  selectedGame = games.find((game) => game.screen === "play") || selectedGame;
   currentRound = 0;
   playScore = 0;
   document.querySelector("#animalReward").hidden = true;
@@ -499,6 +547,12 @@ function renderAnimalRound() {
 }
 
 function renderMemory() {
+  const game = selectedGame?.screen === "memory" ? selectedGame : games.find((item) => item.screen === "memory");
+  document.querySelector("#memoryScreen").dataset.title = game.title;
+  screenTitle.textContent = game.title;
+  document.querySelector("#memoryMastheadTitle").textContent = game.title;
+  document.querySelector("#memoryMastheadCopy").textContent = game.description;
+  document.querySelector("#memoryMastheadImage").src = game.image;
   const board = document.querySelector("#memoryBoard");
   const cards = [...memoryItems, ...memoryItems].sort(() => Math.random() - 0.5);
   document.querySelector("#matchCount").textContent = "0";
@@ -569,6 +623,12 @@ function renderQuiz() {
 }
 
 function startQuiz() {
+  const game = selectedGame?.screen === "quiz" ? selectedGame : games.find((item) => item.title === "Verdade ou Falso");
+  document.querySelector("#quizScreen").dataset.title = game.title;
+  screenTitle.textContent = game.title;
+  document.querySelector("#quizMastheadTitle").textContent = game.title;
+  document.querySelector("#quizMastheadCopy").textContent = game.description;
+  document.querySelector("#quizMastheadImage").src = game.image;
   currentQuiz = 0;
   quizScore = 0;
   renderQuiz();
@@ -967,6 +1027,43 @@ function renderPremiumActivity() {
     `${activity.description}. Atividade liberada durante o teste grátis de 7 dias.`;
 }
 
+function renderMiniGame() {
+  const game = selectedGame || games.find((item) => item.screen === "miniGame");
+  const content = miniGameContent[game.title] || {
+    prompt: game.description,
+    options: ["Começar", "Tentar", "Continuar"],
+    answer: "Começar",
+    success: "Parabéns. Você completou a aventura.",
+    image: game.image
+  };
+  document.querySelector("#miniGameScreen").dataset.title = game.title;
+  screenTitle.textContent = game.title;
+  document.querySelector("#miniGameImage").src = content.image;
+  document.querySelector("#miniGameTitle").textContent = game.title;
+  document.querySelector("#miniGamePrompt").textContent = content.prompt;
+  document.querySelector("#miniGameFeedback").textContent = "Escolha uma opção para completar a missão.";
+  document.querySelector("#miniGameReward").hidden = true;
+  const choices = document.querySelector("#miniGameChoices");
+  choices.innerHTML = "";
+  content.options.forEach((option) => {
+    const button = document.createElement("button");
+    button.className = "secondary-button";
+    button.textContent = option;
+    button.addEventListener("click", () => {
+      const isCorrect = option === content.answer;
+      document.querySelector("#miniGameFeedback").textContent = isCorrect ? content.success : "Quase. Tente outra opção.";
+      if (isCorrect) {
+        button.className = "primary-button";
+        document.querySelector("#miniGameReward").hidden = false;
+        playSuccessSound();
+      } else {
+        playTryAgainSound();
+      }
+    });
+    choices.appendChild(button);
+  });
+}
+
 function renderParentArea() {
   const gate = document.querySelector("#parentGate");
   const dashboard = document.querySelector("#parentDashboard");
@@ -1008,6 +1105,9 @@ function updateDailyLimit(value) {
 
 document.addEventListener("click", (event) => {
   const target = event.target.closest("[data-screen]");
+  if (target?.dataset.gameTitle) {
+    selectedGame = games.find((game) => game.title === target.dataset.gameTitle) || selectedGame;
+  }
   if (target?.dataset.premiumActivity) {
     selectedPremiumActivity = games.find((game) => game.title === target.dataset.premiumActivity);
   }

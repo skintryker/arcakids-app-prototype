@@ -181,10 +181,10 @@
         <section class="content" id="memoryScreen" data-title="Memória da Bíblia" data-eyebrow="Jogo">
           <article class="play-panel">
             <div class="game-masthead">
-              <img src="assets/sheep.svg" alt="" />
+              <img id="memoryMastheadImage" src="assets/sheep.svg" alt="" />
               <span>
-                <strong>Cartas da Arca</strong>
-                <small>Combine personagens e objetos bíblicos.</small>
+                <strong id="memoryMastheadTitle">Memória da Bíblia</strong>
+                <small id="memoryMastheadCopy">Combine personagens e objetos bíblicos.</small>
               </span>
             </div>
             <div class="play-score">
@@ -207,10 +207,10 @@
         <section class="content" id="quizScreen" data-title="Verdade ou Falso" data-eyebrow="Jogo">
           <article class="play-panel quiz-panel">
             <div class="game-masthead">
-              <img src="assets/david.svg" alt="" />
+              <img id="quizMastheadImage" src="assets/david.svg" alt="" />
               <span>
-                <strong>Verdade ou falso?</strong>
-                <small>Responda e ganhe selos de conhecimento.</small>
+                <strong id="quizMastheadTitle">Verdade ou Falso</strong>
+                <small id="quizMastheadCopy">Responda e ganhe selos de conhecimento.</small>
               </span>
             </div>
             <div class="round-path quiz-path" aria-label="Perguntas do quiz">
@@ -365,6 +365,24 @@
               <span>
                 <strong>Teste grátis ativo</strong>
                 <small>Acesso premium liberado para validação do protótipo.</small>
+              </span>
+            </div>
+            <button class="primary-button" data-screen="games">Voltar aos jogos</button>
+          </article>
+        </section>
+
+        <section class="content" id="miniGameScreen" data-title="Aventura bíblica" data-eyebrow="Jogo liberado">
+          <article class="play-panel premium-preview">
+            <img class="premium-preview-art" id="miniGameImage" src="assets/star-badge.svg" alt="" />
+            <h2 id="miniGameTitle">Aventura bíblica</h2>
+            <p id="miniGamePrompt">Escolha uma opção para completar a missão.</p>
+            <div class="choice-row vertical" id="miniGameChoices"></div>
+            <p class="feedback" id="miniGameFeedback">Escolha uma opção para completar a missão.</p>
+            <div class="reward-card" id="miniGameReward" hidden>
+              <img src="assets/star-badge.svg" alt="" />
+              <span>
+                <strong>Novo selo conquistado</strong>
+                <small>Parabéns! A Arca está ficando cheia.</small>
               </span>
             </div>
             <button class="primary-button" data-screen="games">Voltar aos jogos</button>

@@ -1780,6 +1780,12 @@ canvas {
   gap: 10px;
 }
 
+.choice-row.vertical {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
 .round-play {
   display: grid;
   width: 46px;
