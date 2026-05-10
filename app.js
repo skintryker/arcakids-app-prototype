@@ -667,7 +667,7 @@ const screenEyebrow = document.querySelector("#screenEyebrow");
 const backButton = document.querySelector("#backButton");
 const navItems = [...document.querySelectorAll(".nav-item")];
 const soundButton = document.querySelector("#soundButton");
-const assetVersion = "32";
+const assetVersion = "33";
 const serviceWorkerPath = `./sw.js?v=${assetVersion}`;
 const trialStorageKey = "arcakidsTrialUntil";
 const membershipStorageKey = "arcakidsMembershipActive";
@@ -1199,20 +1199,15 @@ function setButtonTarget(button, target) {
 }
 
 function configureHomeActions(missionGame, dailyStories, complete) {
-  const firstStory = dailyStories[0];
-  const firstStoryIndex = stories.findIndex((story) => story.title === firstStory?.title);
-
   setButtonTarget(document.querySelector("#heroContinueButton"), {
-    screen: missionGame?.screen || "games",
-    gameTitle: missionGame?.title || ""
+    screen: "games"
   });
   setButtonTarget(document.querySelector("#missionButton"), {
     screen: missionGame?.screen || "games",
     gameTitle: missionGame?.title || ""
   });
   setButtonTarget(document.querySelector("#heroStoryButton"), {
-    screen: "stories",
-    storyIndex: String(Math.max(0, firstStoryIndex))
+    screen: "stories"
   });
 
   [
