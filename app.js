@@ -650,7 +650,7 @@ const screenEyebrow = document.querySelector("#screenEyebrow");
 const backButton = document.querySelector("#backButton");
 const navItems = [...document.querySelectorAll(".nav-item")];
 const soundButton = document.querySelector("#soundButton");
-const serviceWorkerPath = "./sw.js?v=14";
+const serviceWorkerPath = "./sw.js?v=15";
 const trialStorageKey = "arcakidsTrialUntil";
 const membershipStorageKey = "arcakidsMembershipActive";
 const dailyLimitStorageKey = "arcakidsDailyLimit";
@@ -850,6 +850,7 @@ function renderDailyHomeContent() {
   const dailyGames = getDailyGames(currentAge, complete);
   const dailyStories = getDailyStories(complete);
   renderGameCards(document.querySelector("#featuredGames"), dailyGames);
+  configureHomeActions(dailyGames, dailyStories, complete);
 
   const storyList = document.querySelector("#dailyStories");
   storyList.innerHTML = "";
@@ -869,6 +870,52 @@ function renderDailyHomeContent() {
       <b>›</b>
     `;
     storyList.appendChild(card);
+  });
+}
+
+function setButtonTarget(button, target) {
+  if (!button) return;
+  ["screen", "gameTitle", "storyIndex"].forEach((key) => {
+    delete button.dataset[key];
+  });
+  Object.entries(target).forEach(([key, value]) => {
+    button.dataset[key] = value;
+  });
+}
+
+function configureHomeActions(dailyGames, dailyStories, complete) {
+  const firstGame = dailyGames[0];
+  const firstStory = dailyStories[0];
+  const firstStoryIndex = stories.findIndex((story) => story.title === firstStory?.title);
+
+  setButtonTarget(document.querySelector("#heroContinueButton"), {
+    screen: firstGame?.screen || "games",
+    gameTitle: firstGame?.title || ""
+  });
+  setButtonTarget(document.querySelector("#missionButton"), {
+    screen: firstGame?.screen || "games",
+    gameTitle: firstGame?.title || ""
+  });
+  setButtonTarget(document.querySelector("#heroStoryButton"), {
+    screen: "stories",
+    storyIndex: String(Math.max(0, firstStoryIndex))
+  });
+
+  [
+    ["#quickGamesButton", "games", complete ? "Missões bíblicas" : "Peça a um adulto"],
+    ["#quickStoriesButton", "stories", complete ? "Histórias da Bíblia" : "Peça a um adulto"],
+    ["#seeAllGamesButton", "games", complete ? "Ver todos" : "Liberar mais"],
+    ["#seeAllStoriesButton", "stories", complete ? "Abrir" : "Liberar mais"]
+  ].forEach(([selector, screen, label]) => {
+    const button = document.querySelector(selector);
+    setButtonTarget(button, { screen: complete ? screen : "parent" });
+    button?.classList.toggle("locked-action", !complete);
+    if (selector.startsWith("#quick")) {
+      const small = button?.querySelector("small");
+      if (small) small.textContent = label;
+    } else if (button) {
+      button.textContent = label;
+    }
   });
 }
 

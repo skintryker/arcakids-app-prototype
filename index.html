@@ -12,7 +12,7 @@
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="icon" href="assets/app-icon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="assets/app-icon.svg" />
-    <link rel="stylesheet" href="styles.css?v=14" />
+    <link rel="stylesheet" href="styles.css?v=15" />
   </head>
   <body>
     <main class="phone-shell" aria-label="Protótipo Arcakids">
@@ -44,8 +44,8 @@
               <h2 id="heroTitle">Continuar minha aventura</h2>
               <p id="heroCopy">Ajude Noé a encontrar os animais da Arca.</p>
               <div class="hero-actions">
-                <button class="mini-button" data-screen="games">Continuar</button>
-                <button class="mini-button light" data-screen="stories">Ouvir história</button>
+                <button class="mini-button" id="heroContinueButton">Continuar</button>
+                <button class="mini-button light" id="heroStoryButton">Ouvir história</button>
               </div>
             </div>
             <img class="hero-illustration" src="assets/ark-scene-wide.svg" alt="" />
@@ -81,7 +81,7 @@
             </button>
           </div>
 
-          <button class="mission-card" data-screen="games">
+          <button class="mission-card" id="missionButton">
             <span class="mission-icon">★</span>
             <span>
               <strong>Missão de hoje</strong>
@@ -91,14 +91,14 @@
           </button>
 
           <div class="quick-actions" aria-label="Atalhos principais">
-            <button class="quick-card" data-screen="games">
+            <button class="quick-card" id="quickGamesButton">
               <img src="assets/lion.svg" alt="" />
               <span>
                 <strong>Jogar</strong>
                 <small>Missões bíblicas</small>
               </span>
             </button>
-            <button class="quick-card" data-screen="stories">
+            <button class="quick-card" id="quickStoriesButton">
               <img src="assets/story-noah-build.svg" alt="" />
               <span>
                 <strong>Ouvir</strong>
@@ -110,7 +110,7 @@
           <section class="section">
             <div class="section-heading">
               <h3>Jogos de hoje</h3>
-              <button class="text-button" data-screen="games">Ver todos</button>
+              <button class="text-button" id="seeAllGamesButton">Ver todos</button>
             </div>
             <div class="game-grid compact" id="featuredGames"></div>
           </section>
@@ -118,7 +118,7 @@
           <section class="section">
             <div class="section-heading">
               <h3>Histórias</h3>
-              <button class="text-button" data-screen="stories">Abrir</button>
+              <button class="text-button" id="seeAllStoriesButton">Abrir</button>
             </div>
             <div class="daily-story-list" id="dailyStories"></div>
           </section>
@@ -480,6 +480,6 @@
         </nav>
       </section>
     </main>
-    <script src="app.js?v=14"></script>
+    <script src="app.js?v=15"></script>
   </body>
 </html>
