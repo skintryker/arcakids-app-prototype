@@ -887,9 +887,47 @@ function renderProgressSummary() {
   document.querySelector("#homeBadgeCount").textContent = String(earnedBadgeCount);
 }
 
+function getMyArkHeroMessage(count) {
+  if (count === 0) {
+    return {
+      title: "Vamos começar a encher a Arca?",
+      copy: "Jogue para encontrar o primeiro animal."
+    };
+  }
+
+  if (count === 1) {
+    return {
+      title: "Primeiro animal encontrado!",
+      copy: "Muito bem. Continue jogando para trazer novos amigos para a Arca."
+    };
+  }
+
+  if (count < 4) {
+    return {
+      title: "A Arca está ganhando vida!",
+      copy: `Você já encontrou ${count} animais. Faltam novas descobertas.`
+    };
+  }
+
+  if (count < animals.length) {
+    return {
+      title: "A Arca está ficando cheia!",
+      copy: `${count} animais já chegaram. Continue para completar a coleção.`
+    };
+  }
+
+  return {
+    title: "A Arca está completa!",
+    copy: "Parabéns! Todos os animais foram encontrados."
+  };
+}
+
 function renderMyArk() {
   const foundAnimals = animals.filter((animal) => foundAnimalIds.has(animal.id));
   const count = foundAnimals.length;
+  const heroMessage = getMyArkHeroMessage(count);
+  document.querySelector("#myArkHeroTitle").textContent = heroMessage.title;
+  document.querySelector("#myArkHeroCopy").textContent = heroMessage.copy;
   document.querySelector("#myArkAnimalCount").textContent = `${count} ${count === 1 ? "animal" : "animais"}`;
   document.querySelector("#myArkAnimalMeter").style.width = `${Math.min(100, Math.round((count / animals.length) * 100))}%`;
   const collection = document.querySelector("#animalCollection");
