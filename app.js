@@ -650,11 +650,13 @@ const screenEyebrow = document.querySelector("#screenEyebrow");
 const backButton = document.querySelector("#backButton");
 const navItems = [...document.querySelectorAll(".nav-item")];
 const soundButton = document.querySelector("#soundButton");
-const serviceWorkerPath = "./sw.js?v=17";
+const serviceWorkerPath = "./sw.js?v=18";
 const trialStorageKey = "arcakidsTrialUntil";
 const membershipStorageKey = "arcakidsMembershipActive";
 const dailyLimitStorageKey = "arcakidsDailyLimit";
 const cacheStorageKey = "arcakidsCacheVersion";
+const foundAnimalsStorageKey = "arcakidsFoundAnimals";
+const completedStoriesStorageKey = "arcakidsCompletedStories";
 let historyStack = ["home"];
 let currentAge = "3-5";
 let currentRound = 0;
@@ -687,6 +689,8 @@ let miniGameSolved = false;
 let miniGameScore = 0;
 let dailyFreeGameTitles = new Set();
 let dailyFreeStoryTitles = new Set();
+let foundAnimalIds = new Set(JSON.parse(localStorage.getItem(foundAnimalsStorageKey) || "[]"));
+let completedStoryTitles = new Set(JSON.parse(localStorage.getItem(completedStoriesStorageKey) || "[]"));
 
 if (localStorage.getItem(cacheStorageKey) !== "8") {
   localStorage.removeItem(dailyLimitStorageKey);
@@ -785,12 +789,49 @@ function showScreen(name, push = true) {
   if (name === "membership") renderTrialStatus();
   if (name === "premiumActivity") renderPremiumActivity();
   if (name === "parent") renderParentArea();
+  if (name === "myArk") renderMyArk();
 }
 
 function renderPhaseDots(selector, total) {
   const path = document.querySelector(selector);
   if (!path) return;
   path.innerHTML = Array.from({ length: total }, () => "<span></span>").join("");
+}
+
+function persistProgress() {
+  localStorage.setItem(foundAnimalsStorageKey, JSON.stringify([...foundAnimalIds]));
+  localStorage.setItem(completedStoriesStorageKey, JSON.stringify([...completedStoryTitles]));
+}
+
+function addFoundAnimal(animalId) {
+  if (!animalId) return;
+  foundAnimalIds.add(animalId);
+  persistProgress();
+  renderProgressSummary();
+}
+
+function renderProgressSummary() {
+  const animalCount = foundAnimalIds.size;
+  document.querySelector("#homeAnimalCount").textContent = String(animalCount);
+  document.querySelector("#homeStoryCount").textContent = String(completedStoryTitles.size);
+  document.querySelector("#homeBadgeCount").textContent = String(Math.max(2, Math.min(7, Math.ceil(animalCount / 2))));
+}
+
+function renderMyArk() {
+  const foundAnimals = animals.filter((animal) => foundAnimalIds.has(animal.id));
+  const count = foundAnimals.length;
+  document.querySelector("#myArkAnimalCount").textContent = `${count} ${count === 1 ? "animal" : "animais"}`;
+  document.querySelector("#myArkAnimalMeter").style.width = `${Math.min(100, Math.round((count / animals.length) * 100))}%`;
+  const collection = document.querySelector("#animalCollection");
+  collection.innerHTML = "";
+
+  const items = foundAnimals.length ? foundAnimals : animals.slice(0, 4).map((animal) => ({ ...animal, locked: true }));
+  items.forEach((animal) => {
+    const card = document.createElement("span");
+    card.className = `animal-collection-card${animal.locked ? " locked" : ""}`;
+    card.innerHTML = `<img src="${animal.image}" alt="${animal.label}" /><small>${animal.locked ? "?" : animal.label}</small>`;
+    collection.appendChild(card);
+  });
 }
 
 function startAnimalGame() {
@@ -974,6 +1015,7 @@ function renderAnimalRound() {
       });
       if (correct) {
         document.querySelector("#animalFeedback").textContent = round.praise;
+        addFoundAnimal(round.answer);
       } else {
         document.querySelector("#animalFeedback").textContent =
           `Não. O correto era ${answer.label}. Agora vamos para a próxima.`;
@@ -1911,6 +1953,11 @@ document.querySelector("#storyPrev").addEventListener("click", () => {
 
 document.querySelector("#storyNext").addEventListener("click", () => {
   const story = stories[currentStory];
+  if (currentStoryPage === story.pages.length - 1) {
+    completedStoryTitles.add(story.title);
+    persistProgress();
+    renderProgressSummary();
+  }
   currentStoryPage = currentStoryPage === story.pages.length - 1 ? 0 : currentStoryPage + 1;
   renderStory();
   playTone(587.33, 0.12);
@@ -1978,6 +2025,8 @@ paintCanvas.addEventListener("pointerleave", () => {
 
 renderGameCards(document.querySelector("#allGames"), games);
 updateHomeForProfile(currentAge);
+renderProgressSummary();
+renderMyArk();
 renderTrialStatus();
 showScreen("home", false);
 
