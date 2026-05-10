@@ -12,7 +12,7 @@
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="icon" href="assets/app-icon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="assets/app-icon.svg" />
-    <link rel="stylesheet" href="styles.css?v=12" />
+    <link rel="stylesheet" href="styles.css?v=13" />
   </head>
   <body>
     <main class="phone-shell" aria-label="Protótipo Arcakids">
@@ -170,8 +170,8 @@
             <div class="reward-card" id="animalReward" hidden>
               <img src="assets/star-badge.svg" alt="" />
               <span>
-                <strong>Selo da Arca desbloqueado</strong>
-                <small>Você encontrou todos os animais desta fase.</small>
+                <strong id="animalRewardTitle">Selo da Arca desbloqueado</strong>
+                <small id="animalRewardText">Você encontrou todos os animais desta fase.</small>
               </span>
             </div>
             <button class="primary-button" id="nextRound">Próxima charada</button>
@@ -197,7 +197,7 @@
               <img src="assets/star-badge.svg" alt="" />
               <span>
                 <strong>Selo da Memória desbloqueado</strong>
-                <small>Você encontrou todos os pares bíblicos.</small>
+                <small id="memoryRewardText">Você encontrou todos os pares bíblicos.</small>
               </span>
             </div>
             <button class="primary-button" id="resetMemory">Recomeçar</button>
@@ -388,7 +388,7 @@
               <img src="assets/star-badge.svg" alt="" />
               <span>
                 <strong>Novo selo conquistado</strong>
-                <small>Parabéns! A Arca está ficando cheia.</small>
+                <small id="miniGameRewardText">Parabéns! A Arca está ficando cheia.</small>
               </span>
             </div>
             <button class="primary-button" id="miniGameNext" hidden>Próxima fase</button>
@@ -487,6 +487,6 @@
         </nav>
       </section>
     </main>
-    <script src="app.js?v=12"></script>
+    <script src="app.js?v=13"></script>
   </body>
 </html>

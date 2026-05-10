@@ -1153,6 +1153,22 @@ body {
   opacity: 0.48;
 }
 
+.primary-button.choice-correct,
+.secondary-button.choice-correct {
+  background: #dff8e7;
+  color: #174c2a;
+  box-shadow: inset 0 0 0 3px #4f8d45;
+  opacity: 1;
+}
+
+.primary-button.choice-wrong,
+.secondary-button.choice-wrong {
+  background: #ffe6e0;
+  color: #7a271a;
+  box-shadow: inset 0 0 0 3px #ee6b4d;
+  opacity: 1;
+}
+
 canvas {
   border-radius: 22px;
   background: #fffdf5;

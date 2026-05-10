@@ -650,7 +650,7 @@ const screenEyebrow = document.querySelector("#screenEyebrow");
 const backButton = document.querySelector("#backButton");
 const navItems = [...document.querySelectorAll(".nav-item")];
 const soundButton = document.querySelector("#soundButton");
-const serviceWorkerPath = "./sw.js?v=12";
+const serviceWorkerPath = "./sw.js?v=13";
 const trialStorageKey = "arcakidsTrialUntil";
 const dailyLimitStorageKey = "arcakidsDailyLimit";
 const cacheStorageKey = "arcakidsCacheVersion";
@@ -658,9 +658,11 @@ let historyStack = ["home"];
 let currentAge = "3-5";
 let currentRound = 0;
 let playScore = 0;
+let animalCorrectScore = 0;
 let roundSolved = false;
 let currentQuiz = 0;
 let quizScore = 0;
+let quizAnswered = false;
 let currentStory = 0;
 let currentStoryPage = 0;
 let chosenColor = "#ef4444";
@@ -668,6 +670,7 @@ let paintTemplate = "arca";
 let drawing = false;
 let firstMemoryCard = null;
 let lockMemory = false;
+let memoryMistakes = 0;
 let audioContext = null;
 let musicTimer = null;
 let musicOn = false;
@@ -680,6 +683,7 @@ let dailyLimit = Number(localStorage.getItem(dailyLimitStorageKey) || 25);
 let selectedGame = games[0];
 let miniGameStage = 0;
 let miniGameSolved = false;
+let miniGameScore = 0;
 
 if (localStorage.getItem(cacheStorageKey) !== "8") {
   localStorage.removeItem(dailyLimitStorageKey);
@@ -736,9 +740,12 @@ function startAnimalGame() {
   selectedGame = games.find((game) => game.screen === "play") || selectedGame;
   currentRound = 0;
   playScore = 0;
+  animalCorrectScore = 0;
   renderPhaseDots("#animalPath", animalRounds.length);
   document.querySelector("#playTotal").textContent = animalRounds.length;
   document.querySelector("#animalReward").hidden = true;
+  document.querySelector("#animalRewardTitle").textContent = "Selo da Arca desbloqueado";
+  document.querySelector("#animalRewardText").textContent = "Você encontrou todos os animais desta fase.";
   document.querySelector("#nextRound").textContent = "Próxima charada";
   renderAnimalRound();
 }
@@ -787,8 +794,12 @@ function renderAnimalRound() {
   const round = animalRounds[currentRound % animalRounds.length];
   const isComplete = playScore >= animalRounds.length;
   if (isComplete) {
-    document.querySelector("#animalFeedback").textContent = "Fase completa. Que aventura bonita.";
+    document.querySelector("#animalFeedback").textContent =
+      `Fase completa. Você acertou ${animalCorrectScore} de ${animalRounds.length}.`;
     document.querySelector("#animalReward").hidden = false;
+    document.querySelector("#animalRewardTitle").textContent = "Selo da Arca desbloqueado";
+    document.querySelector("#animalRewardText").textContent =
+      `Você terminou a aventura e acertou ${animalCorrectScore} de ${animalRounds.length}.`;
     document.querySelector("#nextRound").textContent = "Jogar de novo";
     return;
   }
@@ -810,31 +821,41 @@ function renderAnimalRound() {
   options.forEach((animal) => {
     const tile = document.createElement("button");
     tile.className = "animal-tile";
+    tile.dataset.animalId = animal.id;
     tile.innerHTML = `<img class="animal-image" src="${animal.image}" alt="" /><strong>${animal.label}</strong>`;
     tile.setAttribute("aria-label", animal.id);
     tile.addEventListener("click", () => {
       if (roundSolved) return;
       const correct = animal.id === round.answer;
+      roundSolved = true;
       tile.classList.add(correct ? "correct" : "wrong");
+      const correctTile = board.querySelector(`[data-animal-id="${round.answer}"]`);
+      correctTile?.classList.add("correct");
       if (correct) {
         playSuccessSound();
       } else {
         playTryAgainSound();
       }
+      if (correct) animalCorrectScore += 1;
+      playScore = Math.min(animalRounds.length, playScore + 1);
+      document.querySelector("#playScore").textContent = playScore;
+      document.querySelectorAll("#animalPath span").forEach((step, index) => {
+        step.classList.toggle("done", index < playScore);
+      });
       if (correct) {
-        roundSolved = true;
-        playScore = Math.min(animalRounds.length, playScore + 1);
-        document.querySelector("#playScore").textContent = playScore;
         document.querySelector("#animalFeedback").textContent = round.praise;
-        document.querySelectorAll("#animalPath span").forEach((step, index) => {
-          step.classList.toggle("done", index < playScore);
-        });
-        if (playScore === animalRounds.length) {
-          document.querySelector("#animalReward").hidden = false;
-          document.querySelector("#nextRound").textContent = "Jogar de novo";
-        }
       } else {
-        document.querySelector("#animalFeedback").textContent = "Quase. Tente outro animal.";
+        document.querySelector("#animalFeedback").textContent =
+          `Não. O correto era ${answer.label}. Agora vamos para a próxima.`;
+      }
+      if (playScore === animalRounds.length) {
+        document.querySelector("#animalFeedback").textContent =
+          `Fim do jogo. Você acertou ${animalCorrectScore} de ${animalRounds.length}.`;
+        document.querySelector("#animalReward").hidden = false;
+        document.querySelector("#animalRewardTitle").textContent = "Selo da Arca desbloqueado";
+        document.querySelector("#animalRewardText").textContent =
+          `Placar final: ${animalCorrectScore} de ${animalRounds.length} respostas certas.`;
+        document.querySelector("#nextRound").textContent = "Jogar de novo";
       }
     });
     board.appendChild(tile);
@@ -854,8 +875,10 @@ function renderMemory() {
   document.querySelector("#matchTotal").textContent = memoryItems.length;
   document.querySelector("#memoryFeedback").textContent = "Vire duas cartas para encontrar um par.";
   document.querySelector("#memoryReward").hidden = true;
+  document.querySelector("#memoryRewardText").textContent = "Você encontrou todos os pares bíblicos.";
   firstMemoryCard = null;
   lockMemory = false;
+  memoryMistakes = 0;
   board.innerHTML = "";
   cards.forEach((item) => {
     const card = document.createElement("button");
@@ -889,12 +912,16 @@ function flipMemoryCard(card) {
     document.querySelector("#memoryFeedback").textContent = "Par encontrado. Muito bem.";
     playSuccessSound();
     if (pairs === memoryItems.length) {
-      document.querySelector("#memoryFeedback").textContent = "Todos os pares encontrados.";
+      document.querySelector("#memoryFeedback").textContent =
+        `Todos os pares encontrados. Erros: ${memoryMistakes}.`;
+      document.querySelector("#memoryRewardText").textContent =
+        `Você encontrou ${pairs} de ${memoryItems.length} pares. Erros: ${memoryMistakes}.`;
       document.querySelector("#memoryReward").hidden = false;
     }
     return;
   }
 
+  memoryMistakes += 1;
   document.querySelector("#memoryFeedback").textContent = "Essas cartas são diferentes. Tente de novo.";
   playTryAgainSound();
   lockMemory = true;
@@ -909,9 +936,14 @@ function flipMemoryCard(card) {
 
 function renderQuiz() {
   const item = quizItems[currentQuiz];
+  quizAnswered = false;
   document.querySelector("#quizReward").hidden = true;
   document.querySelector("#quizQuestion").textContent = item.text;
   document.querySelector("#quizFeedback").textContent = `Pergunta ${currentQuiz + 1} de ${quizItems.length}`;
+  document.querySelectorAll("[data-answer]").forEach((button) => {
+    button.disabled = false;
+    button.classList.remove("choice-correct", "choice-wrong");
+  });
   document.querySelectorAll("#quizPath span").forEach((step, index) => {
     step.classList.toggle("active", index === currentQuiz);
     step.classList.toggle("done", index < currentQuiz);
@@ -933,8 +965,12 @@ function startQuiz() {
 
 function finishQuiz() {
   document.querySelector("#quizQuestion").textContent = `Você acertou ${quizScore} de ${quizItems.length}.`;
-  document.querySelector("#quizFeedback").textContent = "Desafio completo.";
+  document.querySelector("#quizFeedback").textContent = `Desafio completo. Placar final: ${quizScore} de ${quizItems.length}.`;
   document.querySelector("#quizReward").hidden = false;
+  document.querySelectorAll("[data-answer]").forEach((button) => {
+    button.disabled = true;
+    button.classList.remove("choice-correct", "choice-wrong");
+  });
   document.querySelectorAll("#quizPath span").forEach((step) => {
     step.classList.add("done");
     step.classList.remove("active");
@@ -1332,8 +1368,8 @@ function playSuccessSound() {
 
 function playTryAgainSound() {
   ensureAudio();
-  [246.94, 196.0].forEach((note, index) => {
-    window.setTimeout(() => playTone(note, 0.12, 0.06, "sine"), index * 90);
+  [220.0, 164.81].forEach((note, index) => {
+    window.setTimeout(() => playTone(note, 0.16, 0.08, "square"), index * 120);
   });
 }
 
@@ -1524,6 +1560,7 @@ function renderMiniGame() {
   document.querySelector("#miniGameFeedback").textContent = `Fase ${miniGameStage + 1} de ${stages.length}. Escolha uma opção.`;
   document.querySelector("#miniGameNext").hidden = true;
   document.querySelector("#miniGameReward").hidden = miniGameStage < stages.length - 1 || !miniGameSolved;
+  document.querySelector("#miniGameRewardText").textContent = "Parabéns! A Arca está ficando cheia.";
   document.querySelector("#miniGameProgress").innerHTML = stages
     .map((_, index) => `<span class="${index < miniGameStage ? "done" : index === miniGameStage ? "active" : ""}"></span>`)
     .join("");
@@ -1536,19 +1573,28 @@ function renderMiniGame() {
     button.addEventListener("click", () => {
       if (miniGameSolved) return;
       const isCorrect = option === content.answer;
-      document.querySelector("#miniGameFeedback").textContent = isCorrect ? content.success : "Quase. Tente outra opção.";
+      miniGameSolved = true;
+      button.classList.add(isCorrect ? "choice-correct" : "choice-wrong");
+      [...choices.children].forEach((choice) => {
+        choice.disabled = true;
+        if (choice.textContent === content.answer) choice.classList.add("choice-correct");
+      });
+      document.querySelector("#miniGameFeedback").textContent = isCorrect
+        ? content.success
+        : `Não. O correto era "${content.answer}". ${content.success}`;
+      document.querySelector("#miniGameNext").hidden = false;
+      document.querySelector("#miniGameNext").textContent =
+        miniGameStage === stages.length - 1 ? "Jogar de novo" : "Próxima fase";
       if (isCorrect) {
-        miniGameSolved = true;
-        button.className = "primary-button";
-        document.querySelector("#miniGameNext").hidden = false;
-        document.querySelector("#miniGameNext").textContent =
-          miniGameStage === stages.length - 1 ? "Jogar de novo" : "Próxima fase";
-        if (miniGameStage === stages.length - 1) {
-          document.querySelector("#miniGameReward").hidden = false;
-        }
+        miniGameScore += 1;
         playSuccessSound();
       } else {
         playTryAgainSound();
+      }
+      if (miniGameStage === stages.length - 1) {
+        document.querySelector("#miniGameReward").hidden = false;
+        document.querySelector("#miniGameRewardText").textContent =
+          `Placar final: você acertou ${miniGameScore} de ${stages.length}.`;
       }
     });
     choices.appendChild(button);
@@ -1560,6 +1606,7 @@ function advanceMiniGame() {
   const stages = miniGameContent[game.title] || [];
   if (miniGameStage >= stages.length - 1) {
     miniGameStage = 0;
+    miniGameScore = 0;
   } else {
     miniGameStage += 1;
   }
@@ -1612,6 +1659,7 @@ document.addEventListener("click", (event) => {
     selectedGame = games.find((game) => game.title === target.dataset.gameTitle) || selectedGame;
     miniGameStage = 0;
     miniGameSolved = false;
+    miniGameScore = 0;
   }
   if (target?.dataset.premiumActivity) {
     selectedPremiumActivity = games.find((game) => game.title === target.dataset.premiumActivity);
@@ -1677,6 +1725,7 @@ document.querySelector("#resetMemory").addEventListener("click", renderMemory);
 
 document.querySelectorAll("[data-answer]").forEach((button) => {
   button.addEventListener("click", () => {
+    if (quizAnswered) return;
     if (currentQuiz >= quizItems.length) {
       startQuiz();
       return;
@@ -1684,23 +1733,31 @@ document.querySelectorAll("[data-answer]").forEach((button) => {
     const item = quizItems[currentQuiz];
     const answer = button.dataset.answer === "true";
     const correct = answer === item.answer;
-    document.querySelector("#quizFeedback").textContent = correct ? item.note : "Tente outra vez.";
+    const rightText = item.answer ? "Verdade" : "Falso";
+    quizAnswered = true;
+    document.querySelectorAll("[data-answer]").forEach((choice) => {
+      const isRightChoice = (choice.dataset.answer === "true") === item.answer;
+      choice.disabled = true;
+      choice.classList.toggle("choice-correct", isRightChoice);
+    });
+    button.classList.toggle("choice-wrong", !correct);
+    document.querySelector("#quizFeedback").textContent = correct
+      ? item.note
+      : `Não. O correto era "${rightText}". ${item.note}`;
     if (correct) {
       playSuccessSound();
     } else {
       playTryAgainSound();
     }
     if (correct) quizScore += 1;
-    if (answer === item.answer) {
-      setTimeout(() => {
-        currentQuiz += 1;
-        if (currentQuiz >= quizItems.length) {
-          finishQuiz();
-        } else {
-          renderQuiz();
-        }
-      }, 900);
-    }
+    setTimeout(() => {
+      currentQuiz += 1;
+      if (currentQuiz >= quizItems.length) {
+        finishQuiz();
+      } else {
+        renderQuiz();
+      }
+    }, correct ? 1400 : 2600);
   });
 });
 
