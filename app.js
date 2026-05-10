@@ -610,6 +610,19 @@ const stories = [
   }
 ];
 
+const badges = [
+  { title: "Selo da Obediência", icon: "★", text: "Aprendi a ouvir e obedecer.", unlock: () => foundAnimalIds.size >= 1 },
+  { title: "Selo do Cuidado", icon: "✚", text: "Cuidei dos animais da Arca.", unlock: () => foundAnimalIds.size >= 2 },
+  { title: "Selo da Coragem", icon: "◆", text: "Deus me ajuda a ser corajoso.", unlock: () => foundAnimalIds.size >= 3 },
+  { title: "Selo da Gratidão", icon: "☀", text: "Aprendi a agradecer a Deus.", unlock: () => foundAnimalIds.size >= 4 },
+  { title: "Selo da Fé", icon: "✦", text: "Confiei no cuidado de Deus.", unlock: () => foundAnimalIds.size >= 5 },
+  { title: "Selo da Bondade", icon: "♡", text: "Pratiquei bondade nas missões.", unlock: () => foundAnimalIds.size >= 6 },
+  { title: "Selo da Oração", icon: "●", text: "Ouvi uma história sobre oração.", unlock: () => completedStoryTitles.size >= 1 },
+  { title: "Selo da Palavra", icon: "▣", text: "Completei histórias bíblicas.", unlock: () => completedStoryTitles.size >= 2 },
+  { title: "Selo da Alegria", icon: "✿", text: "A Arca ficou mais alegre.", unlock: () => foundAnimalIds.size >= 8 },
+  { title: "Selo da Arca Cheia", icon: "▲", text: "Encontrei todos os animais.", unlock: () => foundAnimalIds.size >= animals.length }
+];
+
 const ageProfiles = {
   "3-5": {
     title: "Arcakids",
@@ -650,7 +663,7 @@ const screenEyebrow = document.querySelector("#screenEyebrow");
 const backButton = document.querySelector("#backButton");
 const navItems = [...document.querySelectorAll(".nav-item")];
 const soundButton = document.querySelector("#soundButton");
-const serviceWorkerPath = "./sw.js?v=18";
+const serviceWorkerPath = "./sw.js?v=19";
 const trialStorageKey = "arcakidsTrialUntil";
 const membershipStorageKey = "arcakidsMembershipActive";
 const dailyLimitStorageKey = "arcakidsDailyLimit";
@@ -808,13 +821,15 @@ function addFoundAnimal(animalId) {
   foundAnimalIds.add(animalId);
   persistProgress();
   renderProgressSummary();
+  if (document.querySelector("#myArkScreen").classList.contains("active")) renderMyArk();
 }
 
 function renderProgressSummary() {
   const animalCount = foundAnimalIds.size;
+  const earnedBadgeCount = badges.filter((badge) => badge.unlock()).length;
   document.querySelector("#homeAnimalCount").textContent = String(animalCount);
   document.querySelector("#homeStoryCount").textContent = String(completedStoryTitles.size);
-  document.querySelector("#homeBadgeCount").textContent = String(Math.max(2, Math.min(7, Math.ceil(animalCount / 2))));
+  document.querySelector("#homeBadgeCount").textContent = String(earnedBadgeCount);
 }
 
 function renderMyArk() {
@@ -831,6 +846,20 @@ function renderMyArk() {
     card.className = `animal-collection-card${animal.locked ? " locked" : ""}`;
     card.innerHTML = `<img src="${animal.image}" alt="${animal.label}" /><small>${animal.locked ? "?" : animal.label}</small>`;
     collection.appendChild(card);
+  });
+
+  const badgeGrid = document.querySelector("#badgeGrid");
+  badgeGrid.innerHTML = "";
+  badges.forEach((badge) => {
+    const earned = badge.unlock();
+    const card = document.createElement("article");
+    card.className = `ark-badge${earned ? " earned" : ""}`;
+    card.innerHTML = `
+      <span>${badge.icon}</span>
+      <strong>${badge.title}</strong>
+      <small>${earned ? badge.text : "Continue brincando para conquistar."}</small>
+    `;
+    badgeGrid.appendChild(card);
   });
 }
 
@@ -1957,6 +1986,7 @@ document.querySelector("#storyNext").addEventListener("click", () => {
     completedStoryTitles.add(story.title);
     persistProgress();
     renderProgressSummary();
+    if (document.querySelector("#myArkScreen").classList.contains("active")) renderMyArk();
   }
   currentStoryPage = currentStoryPage === story.pages.length - 1 ? 0 : currentStoryPage + 1;
   renderStory();
