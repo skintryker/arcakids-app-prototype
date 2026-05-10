@@ -667,11 +667,12 @@ const screenEyebrow = document.querySelector("#screenEyebrow");
 const backButton = document.querySelector("#backButton");
 const navItems = [...document.querySelectorAll(".nav-item")];
 const soundButton = document.querySelector("#soundButton");
-const assetVersion = "31";
+const assetVersion = "32";
 const serviceWorkerPath = `./sw.js?v=${assetVersion}`;
 const trialStorageKey = "arcakidsTrialUntil";
 const membershipStorageKey = "arcakidsMembershipActive";
 const dailyLimitStorageKey = "arcakidsDailyLimit";
+const musicVolumeStorageKey = "arcakidsMusicVolume";
 const dailyUsageStorageKey = "arcakidsDailyUsage";
 const childAgeStorageKey = "arcakidsChildAge";
 const childAgeChoiceStorageKey = "arcakidsChildAgeChoice";
@@ -701,6 +702,7 @@ let audioContext = null;
 let musicTimer = null;
 let musicOn = false;
 let musicStep = 0;
+let musicVolume = Number(localStorage.getItem(musicVolumeStorageKey) || 80);
 let availableVoices = [];
 let trialUntil = Number(localStorage.getItem(trialStorageKey) || 0);
 let selectedPremiumActivity = null;
@@ -1929,7 +1931,7 @@ function playMusicStep() {
   ];
   const notes = melody[musicStep % melody.length];
   notes.forEach((note, index) => {
-    window.setTimeout(() => playTone(note, 0.46, 0.085, "triangle"), index * 90);
+    window.setTimeout(() => playTone(note, 0.48, getMusicGain(), "triangle"), index * 90);
   });
   musicStep += 1;
 }
@@ -2073,6 +2075,7 @@ function renderParentArea() {
   gate.hidden = parentUnlocked;
   dashboard.hidden = !parentUnlocked;
   renderDailyLimit();
+  renderMusicVolume();
   renderParentProgressSummary();
   renderChildNameSettings();
   applyAgeChoiceState();
@@ -2106,6 +2109,25 @@ function updateDailyLimit(value) {
   dailyLimit = Number(value);
   localStorage.setItem(dailyLimitStorageKey, String(dailyLimit));
   renderDailyLimit();
+}
+
+function getMusicGain() {
+  const normalized = Math.max(0, Math.min(100, musicVolume)) / 100;
+  return 0.035 + normalized * 0.155;
+}
+
+function renderMusicVolume() {
+  const slider = document.querySelector("#musicVolumeSlider");
+  const label = document.querySelector("#musicVolumeLabel");
+  if (!slider || !label) return;
+  slider.value = String(musicVolume);
+  label.textContent = `Volume da música: ${musicVolume}%`;
+}
+
+function updateMusicVolume(value) {
+  musicVolume = Math.max(0, Math.min(100, Number(value)));
+  localStorage.setItem(musicVolumeStorageKey, String(musicVolume));
+  renderMusicVolume();
 }
 
 function trackDailyUsage() {
@@ -2157,6 +2179,9 @@ document.querySelector("#gateAnswer").addEventListener("keydown", (event) => {
 });
 document.querySelector("#dailyLimitSlider").addEventListener("input", (event) => {
   updateDailyLimit(event.target.value);
+});
+document.querySelector("#musicVolumeSlider")?.addEventListener("input", (event) => {
+  updateMusicVolume(event.target.value);
 });
 document.querySelector("#miniGameNext").addEventListener("click", advanceMiniGame);
 
@@ -2360,6 +2385,7 @@ renderMyArk();
 renderTrialStatus();
 showScreen("home", false);
 renderDailyLimit();
+renderMusicVolume();
 startDailyUsageTracking();
 
 if ("serviceWorker" in navigator && window.location.protocol.startsWith("http")) {

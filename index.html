@@ -12,7 +12,7 @@
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="icon" href="assets/app-icon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="assets/app-icon.svg" />
-    <link rel="stylesheet" href="styles.css?v=31" />
+    <link rel="stylesheet" href="styles.css?v=32" />
   </head>
   <body>
     <main class="phone-shell" aria-label="Protótipo Arcakids">
@@ -20,7 +20,7 @@
         <header class="topbar">
           <button class="icon-button" id="backButton" aria-label="Voltar" title="Voltar">‹</button>
           <div class="brand-block">
-            <img class="brand-logo" src="assets/arcakids-logo-transparent.png?v=31" alt="Arcakids" />
+            <img class="brand-logo" src="assets/arcakids-logo-transparent.png?v=32" alt="Arcakids" />
             <p class="eyebrow brand-mark sr-only" id="screenEyebrow">Vamos brincar?</p>
             <h1 class="sr-only" id="screenTitle">Arcakids</h1>
           </div>
@@ -454,9 +454,9 @@
               <label class="parent-item">
                 <span>
                   <strong>Áudio e narração</strong>
-                  <small>Música, efeitos e histórias narradas.</small>
+                  <small id="musicVolumeLabel">Volume da música: 80%</small>
                 </span>
-                <input type="checkbox" checked />
+                <input id="musicVolumeSlider" type="range" min="0" max="100" value="80" />
               </label>
               <label class="parent-item">
                 <span>
@@ -495,6 +495,6 @@
         </div>
       </section>
     </main>
-    <script src="app.js?v=31"></script>
+    <script src="app.js?v=32"></script>
   </body>
 </html>
