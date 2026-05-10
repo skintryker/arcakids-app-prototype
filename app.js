@@ -644,6 +644,10 @@ const ageProfiles = {
   }
 };
 
+function getAgeLabel(age) {
+  return ageProfiles[age]?.pill || ageProfiles["3-5"].pill;
+}
+
 const memoryItems = [
   { id: "noe", label: "Noé", image: "assets/noah.svg" },
   { id: "ovelha", label: "Ovelha", image: "assets/sheep-animal.svg" },
@@ -663,16 +667,18 @@ const screenEyebrow = document.querySelector("#screenEyebrow");
 const backButton = document.querySelector("#backButton");
 const navItems = [...document.querySelectorAll(".nav-item")];
 const soundButton = document.querySelector("#soundButton");
-const assetVersion = "26";
+const assetVersion = "27";
 const serviceWorkerPath = `./sw.js?v=${assetVersion}`;
 const trialStorageKey = "arcakidsTrialUntil";
 const membershipStorageKey = "arcakidsMembershipActive";
 const dailyLimitStorageKey = "arcakidsDailyLimit";
+const childAgeStorageKey = "arcakidsChildAge";
+const childAgeChoiceStorageKey = "arcakidsChildAgeChoice";
 const cacheStorageKey = "arcakidsCacheVersion";
 const foundAnimalsStorageKey = "arcakidsFoundAnimals";
 const completedStoriesStorageKey = "arcakidsCompletedStories";
 let historyStack = ["home"];
-let currentAge = "3-5";
+let currentAge = ageProfiles[localStorage.getItem(childAgeStorageKey)] ? localStorage.getItem(childAgeStorageKey) : "3-5";
 let currentRound = 0;
 let playScore = 0;
 let animalCorrectScore = 0;
@@ -697,6 +703,7 @@ let trialUntil = Number(localStorage.getItem(trialStorageKey) || 0);
 let selectedPremiumActivity = null;
 let parentUnlocked = false;
 let dailyLimit = Number(localStorage.getItem(dailyLimitStorageKey) || 25);
+let childCanChooseAge = localStorage.getItem(childAgeChoiceStorageKey) !== "false";
 let selectedGame = games[0];
 let miniGameStage = 0;
 let miniGameSolved = false;
@@ -1004,9 +1011,34 @@ function renderGameCards(container, items) {
   });
 }
 
-function updateHomeForProfile(age) {
-  const profile = ageProfiles[age];
+function applyAgeChoiceState() {
+  document.querySelectorAll(".profile").forEach((profile) => {
+    const active = profile.dataset.age === currentAge;
+    profile.classList.toggle("active", active);
+    profile.classList.toggle("locked", !childCanChooseAge && !active);
+    profile.disabled = !childCanChooseAge && !active;
+    profile.setAttribute("aria-disabled", String(!childCanChooseAge && !active));
+  });
+
+  const parentAgeSelect = document.querySelector("#parentAgeSelect");
+  const parentAgeLabel = document.querySelector("#parentAgeLabel");
+  const childAgeChoiceToggle = document.querySelector("#childAgeChoiceToggle");
+  const ageChoiceLabel = document.querySelector("#ageChoiceLabel");
+
+  if (parentAgeSelect) parentAgeSelect.value = currentAge;
+  if (parentAgeLabel) parentAgeLabel.textContent = getAgeLabel(currentAge);
+  if (childAgeChoiceToggle) childAgeChoiceToggle.checked = childCanChooseAge;
+  if (ageChoiceLabel) {
+    ageChoiceLabel.textContent = childCanChooseAge
+      ? "Liberada para a criança."
+      : `Travada pelos pais em ${getAgeLabel(currentAge)}.`;
+  }
+}
+
+function updateHomeForProfile(age, persist = true) {
+  const profile = ageProfiles[age] || ageProfiles["3-5"];
   currentAge = age;
+  if (persist) localStorage.setItem(childAgeStorageKey, currentAge);
   refreshDailyAccess();
   document.querySelector("#homeScreen").dataset.title = profile.title;
   document.querySelector("#agePill").textContent = profile.pill;
@@ -1015,6 +1047,7 @@ function updateHomeForProfile(age) {
   if (document.querySelector("#homeScreen").classList.contains("active")) {
     screenTitle.textContent = profile.title;
   }
+  applyAgeChoiceState();
   renderDailyHomeContent();
   renderGameCards(document.querySelector("#allGames"), games);
 }
@@ -1935,6 +1968,7 @@ function renderParentArea() {
   dashboard.hidden = !parentUnlocked;
   renderDailyLimit();
   renderParentProgressSummary();
+  applyAgeChoiceState();
 }
 
 function unlockParentArea() {
@@ -2008,10 +2042,23 @@ backButton.addEventListener("click", () => {
 
 document.querySelectorAll(".profile").forEach((profile) => {
   profile.addEventListener("click", () => {
-    document.querySelectorAll(".profile").forEach((item) => item.classList.remove("active"));
-    profile.classList.add("active");
+    if (!childCanChooseAge) {
+      playTryAgainSound();
+      return;
+    }
     updateHomeForProfile(profile.dataset.age);
   });
+});
+
+document.querySelector("#parentAgeSelect")?.addEventListener("change", (event) => {
+  updateHomeForProfile(event.target.value);
+  renderParentArea();
+});
+
+document.querySelector("#childAgeChoiceToggle")?.addEventListener("change", (event) => {
+  childCanChooseAge = event.target.checked;
+  localStorage.setItem(childAgeChoiceStorageKey, String(childCanChooseAge));
+  applyAgeChoiceState();
 });
 
 document.querySelectorAll(".tab").forEach((tab) => {
