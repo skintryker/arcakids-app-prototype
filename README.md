@@ -8,7 +8,7 @@ Protótipo navegavel mobile-first para validar o aplicativo Arcakids antes da et
 - Biblioteca de jogos bíblicos.
 - Jogo "Quem Está na Arca?" com charadas simples.
 - Jogo de memoria biblica.
-- Quiz "Fato ou Fake Kids".
+- Quiz "Fato ou Falso Kids".
 - Tela de colorir com canvas.
 - Histórias bíblicas com itens premium.
 - Tela de assinatura familiar.
@@ -22,7 +22,7 @@ Protótipo navegavel mobile-first para validar o aplicativo Arcakids antes da et
 - Faixas corrigidas para 3-5, 6-8 e 9-10.
 - Mais jogos planejados para 6-8 e 9-10.
 - Memória da Bíblia com cartas ilustradas e recompensa final.
-- Fato ou Fake Kids com progresso, pontuação e recompensa final.
+- Fato ou Falso Kids com progresso, pontuação e recompensa final.
 - Histórias com leitor página a página e toque sonoro.
 - Colorir com três modelos: Arca, Ovelha e Selo.
 - Manifest e service worker para teste como PWA instalável no celular.
