@@ -667,11 +667,12 @@ const screenEyebrow = document.querySelector("#screenEyebrow");
 const backButton = document.querySelector("#backButton");
 const navItems = [...document.querySelectorAll(".nav-item")];
 const soundButton = document.querySelector("#soundButton");
-const assetVersion = "29";
+const assetVersion = "31";
 const serviceWorkerPath = `./sw.js?v=${assetVersion}`;
 const trialStorageKey = "arcakidsTrialUntil";
 const membershipStorageKey = "arcakidsMembershipActive";
 const dailyLimitStorageKey = "arcakidsDailyLimit";
+const dailyUsageStorageKey = "arcakidsDailyUsage";
 const childAgeStorageKey = "arcakidsChildAge";
 const childAgeChoiceStorageKey = "arcakidsChildAgeChoice";
 const childNamesStorageKey = "arcakidsChildNames";
@@ -705,6 +706,8 @@ let trialUntil = Number(localStorage.getItem(trialStorageKey) || 0);
 let selectedPremiumActivity = null;
 let parentUnlocked = false;
 let dailyLimit = Number(localStorage.getItem(dailyLimitStorageKey) || 25);
+let dailyUsage = loadDailyUsage();
+let usageTimer = null;
 let childCanChooseAge = localStorage.getItem(childAgeChoiceStorageKey) !== "false";
 let childNames = JSON.parse(localStorage.getItem(childNamesStorageKey) || "[\"\",\"\"]").slice(0, 2);
 let activeChildIndex = Number(localStorage.getItem(activeChildStorageKey) || 0);
@@ -791,6 +794,42 @@ function getTodayKey() {
   return `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
 }
 
+function loadDailyUsage() {
+  try {
+    const usage = JSON.parse(localStorage.getItem(dailyUsageStorageKey) || "{}");
+    if (usage.date === getTodayKey()) return { date: usage.date, seconds: Number(usage.seconds) || 0 };
+  } catch {
+    return { date: getTodayKey(), seconds: 0 };
+  }
+  return { date: getTodayKey(), seconds: 0 };
+}
+
+function persistDailyUsage() {
+  localStorage.setItem(dailyUsageStorageKey, JSON.stringify(dailyUsage));
+}
+
+function getDailyUsedMinutes() {
+  return Math.floor(dailyUsage.seconds / 60);
+}
+
+function isDailyLimitReached() {
+  return dailyUsage.seconds >= dailyLimit * 60;
+}
+
+function isChildScreen(name) {
+  return !["home", "parent", "membership"].includes(name);
+}
+
+function showTimeLimitMessage() {
+  const toast = document.querySelector("#timeLimitToast");
+  if (!toast) return;
+  toast.hidden = false;
+  window.clearTimeout(showTimeLimitMessage.timer);
+  showTimeLimitMessage.timer = window.setTimeout(() => {
+    toast.hidden = true;
+  }, 3800);
+}
+
 function seededNumber(seedText) {
   let seed = 2166136261;
   for (let index = 0; index < seedText.length; index += 1) {
@@ -817,6 +856,15 @@ function getDailyGames(age, complete = hasCompleteAccess()) {
     .slice(0, complete ? 6 : 2);
 }
 
+function getDailyPlan(age, complete = hasCompleteAccess()) {
+  const pool = games.filter((game) => game.age === age);
+  const ordered = shuffleForDay(pool, `${getTodayKey()}-${age}-${complete ? "complete" : "free"}-games`);
+  const mission = ordered[0];
+  const shelfCount = complete ? 6 : 2;
+  const shelf = ordered.filter((game) => game.title !== mission?.title).slice(0, shelfCount);
+  return { mission, games: shelf };
+}
+
 function getDailyStories(complete = hasCompleteAccess()) {
   const pool = complete ? stories : stories.filter((story) => story.free);
   return shuffleForDay(pool, `${getTodayKey()}-${complete ? "complete" : "free"}-stories`)
@@ -824,7 +872,8 @@ function getDailyStories(complete = hasCompleteAccess()) {
 }
 
 function refreshDailyAccess() {
-  dailyFreeGameTitles = new Set(getDailyGames(currentAge, false).map((game) => game.title));
+  const freePlan = getDailyPlan(currentAge, false);
+  dailyFreeGameTitles = new Set([freePlan.mission, ...freePlan.games].filter(Boolean).map((game) => game.title));
   dailyFreeStoryTitles = new Set(getDailyStories(false).map((story) => story.title));
 }
 
@@ -837,6 +886,12 @@ function isStoryUnlocked(story) {
 }
 
 function showScreen(name, push = true) {
+  if (isChildScreen(name) && isDailyLimitReached()) {
+    showTimeLimitMessage();
+    if (!document.querySelector("#homeScreen").classList.contains("active")) showScreen("home", true);
+    return;
+  }
+
   const target = document.querySelector(`#${name}Screen`);
   if (!target) return;
 
@@ -1104,10 +1159,11 @@ function updateHomeForProfile(age, persist = true) {
 
 function renderDailyHomeContent() {
   const complete = hasCompleteAccess();
-  const dailyGames = getDailyGames(currentAge, complete);
+  const dailyPlan = getDailyPlan(currentAge, complete);
+  const dailyGames = dailyPlan.games;
   const dailyStories = getDailyStories(complete);
   renderGameCards(document.querySelector("#featuredGames"), dailyGames);
-  configureHomeActions(dailyGames, dailyStories, complete);
+  configureHomeActions(dailyPlan.mission, dailyStories, complete);
 
   const storyList = document.querySelector("#dailyStories");
   storyList.innerHTML = "";
@@ -1140,18 +1196,17 @@ function setButtonTarget(button, target) {
   });
 }
 
-function configureHomeActions(dailyGames, dailyStories, complete) {
-  const firstGame = dailyGames[0];
+function configureHomeActions(missionGame, dailyStories, complete) {
   const firstStory = dailyStories[0];
   const firstStoryIndex = stories.findIndex((story) => story.title === firstStory?.title);
 
   setButtonTarget(document.querySelector("#heroContinueButton"), {
-    screen: firstGame?.screen || "games",
-    gameTitle: firstGame?.title || ""
+    screen: missionGame?.screen || "games",
+    gameTitle: missionGame?.title || ""
   });
   setButtonTarget(document.querySelector("#missionButton"), {
-    screen: firstGame?.screen || "games",
-    gameTitle: firstGame?.title || ""
+    screen: missionGame?.screen || "games",
+    gameTitle: missionGame?.title || ""
   });
   setButtonTarget(document.querySelector("#heroStoryButton"), {
     screen: "stories",
@@ -1162,11 +1217,12 @@ function configureHomeActions(dailyGames, dailyStories, complete) {
     ["#quickGamesButton", "games", complete ? "Missões bíblicas" : "Peça a um adulto"],
     ["#quickStoriesButton", "stories", complete ? "Histórias da Bíblia" : "Peça a um adulto"],
     ["#seeAllGamesButton", "games", complete ? "Ver todos" : "Liberar mais"],
-    ["#seeAllStoriesButton", "stories", complete ? "Abrir" : "Liberar mais"]
+    ["#seeAllStoriesButton", "stories", "Ver todos"]
   ].forEach(([selector, screen, label]) => {
     const button = document.querySelector(selector);
-    setButtonTarget(button, { screen: complete ? screen : "parent" });
-    button?.classList.toggle("locked-action", !complete);
+    const isStoriesList = selector === "#seeAllStoriesButton";
+    setButtonTarget(button, { screen: complete || isStoriesList ? screen : "parent" });
+    button?.classList.toggle("locked-action", !complete && !isStoriesList);
     if (selector.startsWith("#quick")) {
       const small = button?.querySelector("small");
       if (small) small.textContent = label;
@@ -2042,7 +2098,7 @@ function renderDailyLimit() {
   const summary = document.querySelector("#dailyLimitSummary");
   if (!slider || !label || !summary) return;
   slider.value = String(dailyLimit);
-  label.textContent = `${dailyLimit} minutos`;
+  label.textContent = `${getDailyUsedMinutes()} de ${dailyLimit} minutos usados hoje`;
   summary.textContent = `${dailyLimit} min`;
 }
 
@@ -2050,6 +2106,30 @@ function updateDailyLimit(value) {
   dailyLimit = Number(value);
   localStorage.setItem(dailyLimitStorageKey, String(dailyLimit));
   renderDailyLimit();
+}
+
+function trackDailyUsage() {
+  if (dailyUsage.date !== getTodayKey()) {
+    dailyUsage = { date: getTodayKey(), seconds: 0 };
+  }
+
+  const active = document.querySelector(".content.active");
+  const activeName = active?.id?.replace("Screen", "");
+  if (document.visibilityState === "visible" && activeName && isChildScreen(activeName) && !isDailyLimitReached()) {
+    dailyUsage.seconds += 15;
+    persistDailyUsage();
+    renderDailyLimit();
+  }
+
+  if (activeName && isChildScreen(activeName) && isDailyLimitReached()) {
+    showScreen("home", true);
+    showTimeLimitMessage();
+  }
+}
+
+function startDailyUsageTracking() {
+  window.clearInterval(usageTimer);
+  usageTimer = window.setInterval(trackDailyUsage, 15000);
 }
 
 document.addEventListener("click", (event) => {
@@ -2279,6 +2359,8 @@ renderProgressSummary();
 renderMyArk();
 renderTrialStatus();
 showScreen("home", false);
+renderDailyLimit();
+startDailyUsageTracking();
 
 if ("serviceWorker" in navigator && window.location.protocol.startsWith("http")) {
   navigator.serviceWorker.register(serviceWorkerPath).then((registration) => registration.update()).catch(() => {});

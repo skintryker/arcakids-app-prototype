@@ -12,7 +12,7 @@
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="icon" href="assets/app-icon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="assets/app-icon.svg" />
-    <link rel="stylesheet" href="styles.css?v=29" />
+    <link rel="stylesheet" href="styles.css?v=31" />
   </head>
   <body>
     <main class="phone-shell" aria-label="Protótipo Arcakids">
@@ -20,7 +20,7 @@
         <header class="topbar">
           <button class="icon-button" id="backButton" aria-label="Voltar" title="Voltar">‹</button>
           <div class="brand-block">
-            <img class="brand-logo" src="assets/arcakids-logo-official.webp?v=24" alt="Arcakids" />
+            <img class="brand-logo" src="assets/arcakids-logo-transparent.png?v=31" alt="Arcakids" />
             <p class="eyebrow brand-mark sr-only" id="screenEyebrow">Vamos brincar?</p>
             <h1 class="sr-only" id="screenTitle">Arcakids</h1>
           </div>
@@ -118,7 +118,7 @@
           <section class="section">
             <div class="section-heading">
               <h3>Histórias</h3>
-              <button class="text-button" id="seeAllStoriesButton">Abrir</button>
+              <button class="text-button" id="seeAllStoriesButton">Ver todos</button>
             </div>
             <div class="daily-story-list" id="dailyStories"></div>
           </section>
@@ -489,8 +489,12 @@
           <button class="nav-item" data-screen="stories"><span>◉</span>Histórias</button>
           <button class="nav-item" data-screen="myArk"><span>★</span>Minha Arca</button>
         </nav>
+        <div class="time-limit-toast" id="timeLimitToast" hidden>
+          <strong>Tempo de hoje terminou.</strong>
+          <small>Peça para seus pais liberarem mais tempo na Área dos Pais.</small>
+        </div>
       </section>
     </main>
-    <script src="app.js?v=29"></script>
+    <script src="app.js?v=31"></script>
   </body>
 </html>

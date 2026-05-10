@@ -658,6 +658,35 @@ canvas {
   box-shadow: 0 -8px 26px rgba(23, 32, 51, 0.08);
 }
 
+.time-limit-toast {
+  position: absolute;
+  left: 22px;
+  right: 22px;
+  bottom: 108px;
+  z-index: 20;
+  display: grid;
+  gap: 4px;
+  padding: 16px 18px;
+  border-radius: 22px;
+  background: #172033;
+  color: #ffffff;
+  box-shadow: var(--shadow);
+}
+
+.time-limit-toast strong,
+.time-limit-toast small {
+  display: block;
+}
+
+.time-limit-toast small {
+  color: rgba(255, 255, 255, 0.78);
+  font-weight: 850;
+}
+
+.time-limit-toast[hidden] {
+  display: none;
+}
+
 .nav-item {
   min-height: 46px;
   border: 0;
@@ -2172,14 +2201,14 @@ canvas {
 /* Official logo framing */
 .topbar {
   grid-template-columns: minmax(0, 1fr) auto;
-  min-height: 162px;
-  padding: 14px 18px 10px;
+  min-height: 136px;
+  padding: 12px 18px 8px;
 }
 
 .brand-block {
   justify-self: center;
-  width: min(340px, 70vw);
-  min-height: 136px;
+  width: min(282px, 58vw);
+  min-height: 112px;
   display: grid;
   place-items: center;
   padding: 0;
@@ -2192,23 +2221,23 @@ canvas {
   display: block;
   width: 100%;
   height: auto;
-  max-height: 136px;
+  max-height: 112px;
   object-fit: contain;
   object-position: center;
 }
 
 @media (max-width: 380px) {
   .topbar {
-    min-height: 142px;
+    min-height: 126px;
   }
 
   .brand-block {
-    width: min(286px, 68vw);
-    min-height: 116px;
+    width: min(246px, 58vw);
+    min-height: 102px;
   }
 
   .brand-logo {
-    max-height: 116px;
+    max-height: 102px;
   }
 }
 
