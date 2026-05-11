@@ -667,13 +667,14 @@ const screenEyebrow = document.querySelector("#screenEyebrow");
 const backButton = document.querySelector("#backButton");
 const navItems = [...document.querySelectorAll(".nav-item")];
 const soundButton = document.querySelector("#soundButton");
-const assetVersion = "36";
+const assetVersion = "37";
 const serviceWorkerPath = `./sw.js?v=${assetVersion}`;
 const trialStorageKey = "arcakidsTrialUntil";
 const membershipStorageKey = "arcakidsMembershipActive";
 const dailyLimitStorageKey = "arcakidsDailyLimit";
 const dailyLimitUnlimitedStorageKey = "arcakidsDailyLimitUnlimited";
 const musicVolumeStorageKey = "arcakidsMusicVolume";
+const narrationRateStorageKey = "arcakidsNarrationRate";
 const dailyUsageStorageKey = "arcakidsDailyUsage";
 const childAgeStorageKey = "arcakidsChildAge";
 const childAgeChoiceStorageKey = "arcakidsChildAgeChoice";
@@ -704,6 +705,7 @@ let musicTimer = null;
 let musicOn = false;
 let musicStep = 0;
 let musicVolume = Number(localStorage.getItem(musicVolumeStorageKey) || 80);
+let narrationRate = Number(localStorage.getItem(narrationRateStorageKey) || 88);
 let availableVoices = [];
 let trialUntil = Number(localStorage.getItem(trialStorageKey) || 0);
 let selectedPremiumActivity = null;
@@ -1864,35 +1866,58 @@ function refreshVoices() {
 
 function chooseNarratorVoice() {
   refreshVoices();
+  const preferredVoice = localStorage.getItem("arcakidsNarratorVoice");
+  if (preferredVoice) {
+    const saved = availableVoices.find((voice) => voice.name === preferredVoice);
+    if (saved) return saved;
+  }
   const preferredNames = [
-    "Luciana",
     "Google português do Brasil",
     "Google português",
     "Microsoft Francisca",
+    "Microsoft Maria",
+    "Francisca",
+    "Maria",
+    "Leticia",
+    "Letícia",
+    "Luciana",
     "Microsoft Daniel",
     "Joana",
     "Felipe"
   ];
-  return (
-    preferredNames
-      .map((name) => availableVoices.find((voice) => voice.name.toLowerCase().includes(name.toLowerCase())))
-      .find(Boolean) ||
-    availableVoices.find((voice) => voice.lang.toLowerCase() === "pt-br") ||
-    availableVoices.find((voice) => voice.lang.toLowerCase().startsWith("pt")) ||
-    null
-  );
+  const namedVoice = preferredNames
+    .map((name) => availableVoices.find((voice) => voice.name.toLowerCase().includes(name.toLowerCase())))
+    .find(Boolean);
+  if (namedVoice) return namedVoice;
+
+  const portugueseVoices = availableVoices.filter((voice) => voice.lang.toLowerCase().startsWith("pt"));
+  return portugueseVoices.sort((a, b) => getVoiceQualityScore(b) - getVoiceQualityScore(a))[0] || null;
+}
+
+function getVoiceQualityScore(voice) {
+  const label = `${voice.name} ${voice.voiceURI}`.toLowerCase();
+  let score = voice.lang.toLowerCase() === "pt-br" ? 20 : 8;
+  if (!voice.localService) score += 10;
+  ["neural", "natural", "premium", "enhanced", "google", "microsoft"].forEach((keyword) => {
+    if (label.includes(keyword)) score += 6;
+  });
+  return score;
 }
 
 function narrateStory(text) {
   if (!("speechSynthesis" in window)) return;
   window.speechSynthesis.cancel();
-  const chunks = text
-    .replace(/\./g, ".|")
-    .replace(/,/g, ",|")
+  const chunks = getNarrationChunks(text);
+  speakChunks(chunks, 0);
+}
+
+function getNarrationChunks(text) {
+  return text
+    .replace(/\s+/g, " ")
+    .replace(/([.!?])\s+/g, "$1|")
     .split("|")
     .map((part) => part.trim())
     .filter(Boolean);
-  speakChunks(chunks, 0);
 }
 
 function speakChunks(chunks, index) {
@@ -1901,11 +1926,11 @@ function speakChunks(chunks, index) {
   const narratorVoice = chooseNarratorVoice();
   if (narratorVoice) utterance.voice = narratorVoice;
   utterance.lang = "pt-BR";
-  utterance.rate = 0.78;
-  utterance.pitch = 1.03;
-  utterance.volume = 0.96;
+  utterance.rate = Math.max(0.78, Math.min(1, narrationRate / 100));
+  utterance.pitch = 0.98;
+  utterance.volume = 1;
   utterance.onend = () => {
-    window.setTimeout(() => speakChunks(chunks, index + 1), chunks[index].endsWith(",") ? 180 : 360);
+    window.setTimeout(() => speakChunks(chunks, index + 1), 520);
   };
   window.speechSynthesis.speak(utterance);
 }
@@ -2074,6 +2099,7 @@ function renderParentArea() {
   dashboard.hidden = !parentUnlocked;
   renderDailyLimit();
   renderMusicVolume();
+  renderNarrationRate();
   renderParentProgressSummary();
   renderChildNameSettings();
   applyAgeChoiceState();
@@ -2143,6 +2169,20 @@ function updateMusicVolume(value) {
   renderMusicVolume();
 }
 
+function renderNarrationRate() {
+  const slider = document.querySelector("#narrationRateSlider");
+  const label = document.querySelector("#narrationRateLabel");
+  if (!slider || !label) return;
+  slider.value = String(narrationRate);
+  label.textContent = narrationRate < 84 ? "Mais calma" : narrationRate > 94 ? "Mais rápida" : "Ritmo natural";
+}
+
+function updateNarrationRate(value) {
+  narrationRate = Math.max(78, Math.min(100, Number(value)));
+  localStorage.setItem(narrationRateStorageKey, String(narrationRate));
+  renderNarrationRate();
+}
+
 function trackDailyUsage() {
   if (dailyUsage.date !== getTodayKey()) {
     dailyUsage = { date: getTodayKey(), seconds: 0 };
@@ -2198,6 +2238,9 @@ document.querySelector("#dailyLimitUnlimited").addEventListener("change", (event
 });
 document.querySelector("#musicVolumeSlider")?.addEventListener("input", (event) => {
   updateMusicVolume(event.target.value);
+});
+document.querySelector("#narrationRateSlider")?.addEventListener("input", (event) => {
+  updateNarrationRate(event.target.value);
 });
 document.querySelector("#miniGameNext").addEventListener("click", advanceMiniGame);
 
@@ -2402,6 +2445,7 @@ renderTrialStatus();
 showScreen("home", false);
 renderDailyLimit();
 renderMusicVolume();
+renderNarrationRate();
 startDailyUsageTracking();
 
 if ("serviceWorker" in navigator && window.location.protocol.startsWith("http")) {
