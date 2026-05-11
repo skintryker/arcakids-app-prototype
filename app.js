@@ -667,7 +667,7 @@ const screenEyebrow = document.querySelector("#screenEyebrow");
 const backButton = document.querySelector("#backButton");
 const navItems = [...document.querySelectorAll(".nav-item")];
 const soundButton = document.querySelector("#soundButton");
-const assetVersion = "40";
+const assetVersion = "41";
 const serviceWorkerPath = `./sw.js?v=${assetVersion}`;
 const trialStorageKey = "arcakidsTrialUntil";
 const membershipStorageKey = "arcakidsMembershipActive";
@@ -2021,7 +2021,6 @@ function renderStory() {
 function playStoryCue() {
   ensureAudio({ unlock: true });
   const page = stories[currentStory].pages[currentStoryPage];
-  playSoftChord([523.25, 659.25, 783.99], 0.7);
   narrateStory(page.text);
 }
 
