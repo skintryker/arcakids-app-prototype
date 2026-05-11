@@ -667,7 +667,7 @@ const screenEyebrow = document.querySelector("#screenEyebrow");
 const backButton = document.querySelector("#backButton");
 const navItems = [...document.querySelectorAll(".nav-item")];
 const soundButton = document.querySelector("#soundButton");
-const assetVersion = "39";
+const assetVersion = "40";
 const serviceWorkerPath = `./sw.js?v=${assetVersion}`;
 const trialStorageKey = "arcakidsTrialUntil";
 const membershipStorageKey = "arcakidsMembershipActive";
@@ -1871,8 +1871,10 @@ function makeWavDataUrl(events, sampleRate = 22050) {
   return `data:audio/wav;base64,${btoa(binary)}`;
 }
 
-function getSoundClip(name) {
-  if (soundClipCache[name]) return soundClipCache[name];
+function getSoundClip(name, volumeScale = 1) {
+  const safeScale = Math.max(0, Math.min(1, volumeScale));
+  const cacheKey = name === "unlock" ? name : `${name}-${Math.round(safeScale * 100)}`;
+  if (soundClipCache[cacheKey]) return soundClipCache[cacheKey];
   const definitions = {
     unlock: [{ frequency: 880, duration: 0.04, start: 0, volume: 0.01, type: "sine" }],
     tap: [{ frequency: 523.25, duration: 0.08, start: 0, volume: 0.16, type: "triangle" }],
@@ -1891,9 +1893,14 @@ function getSoundClip(name) {
       { frequency: 783.99, duration: 0.64, start: 0.08, volume: 0.1, type: "triangle" }
     ]
   };
-  const audio = new Audio(makeWavDataUrl(definitions[name] || definitions.tap));
+  const sourceEvents = definitions[name] || definitions.tap;
+  const scaledEvents = sourceEvents.map((event) => ({
+    ...event,
+    volume: name === "unlock" ? event.volume : (event.volume || 0.2) * safeScale
+  }));
+  const audio = new Audio(makeWavDataUrl(scaledEvents));
   audio.preload = "auto";
-  soundClipCache[name] = audio;
+  soundClipCache[cacheKey] = audio;
   return audio;
 }
 
@@ -1914,7 +1921,7 @@ function getMusicAudio() {
       frequency,
       duration: 0.42,
       start: stepIndex * 0.56 + noteIndex * 0.09,
-      volume: noteIndex === 0 ? 0.18 : 0.13,
+      volume: (noteIndex === 0 ? 0.18 : 0.13) * getMusicElementVolume(),
       type: "triangle"
     }))
   );
@@ -1942,9 +1949,9 @@ function unlockHtmlAudio() {
 
 function playAudioClip(name, volume = 1) {
   unlockHtmlAudio();
-  const source = getSoundClip(name);
+  const source = getSoundClip(name, volume * getMusicElementVolume());
   const clip = source.cloneNode(true);
-  clip.volume = Math.max(0, Math.min(1, volume));
+  clip.volume = 1;
   clip.play().catch(() => {});
 }
 
@@ -1984,7 +1991,7 @@ function playSuccessSound() {
   playAudioClip("success", 1);
   ensureAudio({ unlock: true });
   [523.25, 659.25, 783.99].forEach((note, index) => {
-    window.setTimeout(() => playTone(note, 0.18, 0.02, "triangle"), index * 95);
+    window.setTimeout(() => playTone(note, 0.18, 0.02 * getMusicElementVolume(), "triangle"), index * 95);
   });
 }
 
@@ -1992,7 +1999,7 @@ function playTryAgainSound() {
   playAudioClip("wrong", 1);
   ensureAudio({ unlock: true });
   [220.0, 164.81].forEach((note, index) => {
-    window.setTimeout(() => playTone(note, 0.16, 0.02, "square"), index * 120);
+    window.setTimeout(() => playTone(note, 0.16, 0.02 * getMusicElementVolume(), "square"), index * 120);
   });
 }
 
@@ -2116,7 +2123,7 @@ function speakChunks(chunks, index) {
 function playSoftChord(notes, duration = 0.7) {
   playAudioClip("chord", 0.85);
   notes.forEach((note, index) => {
-    window.setTimeout(() => playTone(note, duration, 0.01, "triangle"), index * 70);
+    window.setTimeout(() => playTone(note, duration, 0.01 * getMusicElementVolume(), "triangle"), index * 70);
   });
 }
 
@@ -2152,7 +2159,7 @@ function toggleMusic() {
   }
 
   unlockHtmlAudio();
-  music.volume = getMusicElementVolume();
+  music.volume = 1;
   music.currentTime = 0;
   music.play().then(() => {
     musicOn = true;
@@ -2369,7 +2376,16 @@ function renderMusicVolume() {
 function updateMusicVolume(value) {
   musicVolume = Math.max(0, Math.min(100, Number(value)));
   localStorage.setItem(musicVolumeStorageKey, String(musicVolume));
-  if (musicAudio) musicAudio.volume = getMusicElementVolume();
+  soundClipCache = {};
+  if (musicAudio) {
+    const shouldResume = musicOn && !musicAudio.paused;
+    musicAudio.pause();
+    musicAudio = null;
+    if (shouldResume) {
+      const nextMusic = getMusicAudio();
+      nextMusic.play().catch(() => {});
+    }
+  }
   renderMusicVolume();
 }
 
