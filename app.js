@@ -667,13 +667,14 @@ const screenEyebrow = document.querySelector("#screenEyebrow");
 const backButton = document.querySelector("#backButton");
 const navItems = [...document.querySelectorAll(".nav-item")];
 const soundButton = document.querySelector("#soundButton");
-const assetVersion = "41";
+const assetVersion = "42";
 const serviceWorkerPath = `./sw.js?v=${assetVersion}`;
 const trialStorageKey = "arcakidsTrialUntil";
 const membershipStorageKey = "arcakidsMembershipActive";
 const dailyLimitStorageKey = "arcakidsDailyLimit";
 const dailyLimitUnlimitedStorageKey = "arcakidsDailyLimitUnlimited";
 const musicVolumeStorageKey = "arcakidsMusicVolume";
+const narrationVolumeStorageKey = "arcakidsNarrationVolume";
 const narrationRateStorageKey = "arcakidsNarrationRate";
 const dailyUsageStorageKey = "arcakidsDailyUsage";
 const childAgeStorageKey = "arcakidsChildAge";
@@ -709,6 +710,7 @@ let musicTimer = null;
 let musicOn = false;
 let musicStep = 0;
 let musicVolume = Number(localStorage.getItem(musicVolumeStorageKey) || 80);
+let narrationVolume = Number(localStorage.getItem(narrationVolumeStorageKey) || 100);
 let narrationRate = Number(localStorage.getItem(narrationRateStorageKey) || 88);
 let availableVoices = [];
 let trialUntil = Number(localStorage.getItem(trialStorageKey) || 0);
@@ -2112,7 +2114,7 @@ function speakChunks(chunks, index) {
   utterance.lang = "pt-BR";
   utterance.rate = Math.max(0.78, Math.min(1, narrationRate / 100));
   utterance.pitch = 0.98;
-  utterance.volume = 1;
+  utterance.volume = Math.max(0, Math.min(1, narrationVolume / 100));
   utterance.onend = () => {
     window.setTimeout(() => speakChunks(chunks, index + 1), 520);
   };
@@ -2304,6 +2306,7 @@ function renderParentArea() {
   dashboard.hidden = !parentUnlocked;
   renderDailyLimit();
   renderMusicVolume();
+  renderNarrationVolume();
   renderNarrationRate();
   renderParentProgressSummary();
   renderChildNameSettings();
@@ -2369,7 +2372,7 @@ function renderMusicVolume() {
   const label = document.querySelector("#musicVolumeLabel");
   if (!slider || !label) return;
   slider.value = String(musicVolume);
-  label.textContent = `Volume da música: ${musicVolume}%`;
+  label.textContent = `Volume dos sons e da música: ${musicVolume}%`;
 }
 
 function updateMusicVolume(value) {
@@ -2386,6 +2389,20 @@ function updateMusicVolume(value) {
     }
   }
   renderMusicVolume();
+}
+
+function renderNarrationVolume() {
+  const slider = document.querySelector("#narrationVolumeSlider");
+  const label = document.querySelector("#narrationVolumeLabel");
+  if (!slider || !label) return;
+  slider.value = String(narrationVolume);
+  label.textContent = `Volume da voz: ${narrationVolume}%`;
+}
+
+function updateNarrationVolume(value) {
+  narrationVolume = Math.max(0, Math.min(100, Number(value)));
+  localStorage.setItem(narrationVolumeStorageKey, String(narrationVolume));
+  renderNarrationVolume();
 }
 
 function renderNarrationRate() {
@@ -2457,6 +2474,9 @@ document.querySelector("#dailyLimitUnlimited").addEventListener("change", (event
 });
 document.querySelector("#musicVolumeSlider")?.addEventListener("input", (event) => {
   updateMusicVolume(event.target.value);
+});
+document.querySelector("#narrationVolumeSlider")?.addEventListener("input", (event) => {
+  updateNarrationVolume(event.target.value);
 });
 document.querySelector("#narrationRateSlider")?.addEventListener("input", (event) => {
   updateNarrationRate(event.target.value);
@@ -2674,6 +2694,7 @@ renderTrialStatus();
 showScreen("home", false);
 renderDailyLimit();
 renderMusicVolume();
+renderNarrationVolume();
 renderNarrationRate();
 startDailyUsageTracking();
 
