@@ -667,7 +667,7 @@ const screenEyebrow = document.querySelector("#screenEyebrow");
 const backButton = document.querySelector("#backButton");
 const navItems = [...document.querySelectorAll(".nav-item")];
 const soundButton = document.querySelector("#soundButton");
-const assetVersion = "38";
+const assetVersion = "39";
 const serviceWorkerPath = `./sw.js?v=${assetVersion}`;
 const trialStorageKey = "arcakidsTrialUntil";
 const membershipStorageKey = "arcakidsMembershipActive";
@@ -702,6 +702,9 @@ let lockMemory = false;
 let memoryMistakes = 0;
 let audioContext = null;
 let audioUnlocked = false;
+let htmlAudioUnlocked = false;
+let soundClipCache = {};
+let musicAudio = null;
 let musicTimer = null;
 let musicOn = false;
 let musicStep = 0;
@@ -1787,6 +1790,7 @@ function getAudioConstructor() {
 
 function ensureAudio({ unlock = false } = {}) {
   const AudioCtor = getAudioConstructor();
+  if (unlock) unlockHtmlAudio();
   if (!AudioCtor) return null;
   if (!audioContext) {
     audioContext = new AudioCtor({ latencyHint: "interactive" });
@@ -1812,6 +1816,136 @@ function unlockAudioContext() {
   } catch {
     audioUnlocked = false;
   }
+}
+
+function writeAscii(view, offset, text) {
+  for (let index = 0; index < text.length; index += 1) {
+    view.setUint8(offset + index, text.charCodeAt(index));
+  }
+}
+
+function waveSample(type, phase) {
+  if (type === "square") return Math.sin(phase) >= 0 ? 1 : -1;
+  if (type === "triangle") return (2 / Math.PI) * Math.asin(Math.sin(phase));
+  return Math.sin(phase);
+}
+
+function makeWavDataUrl(events, sampleRate = 22050) {
+  const totalSeconds = Math.max(...events.map((event) => event.start + event.duration)) + 0.08;
+  const sampleCount = Math.ceil(totalSeconds * sampleRate);
+  const buffer = new ArrayBuffer(44 + sampleCount * 2);
+  const view = new DataView(buffer);
+  writeAscii(view, 0, "RIFF");
+  view.setUint32(4, 36 + sampleCount * 2, true);
+  writeAscii(view, 8, "WAVE");
+  writeAscii(view, 12, "fmt ");
+  view.setUint32(16, 16, true);
+  view.setUint16(20, 1, true);
+  view.setUint16(22, 1, true);
+  view.setUint32(24, sampleRate, true);
+  view.setUint32(28, sampleRate * 2, true);
+  view.setUint16(32, 2, true);
+  view.setUint16(34, 16, true);
+  writeAscii(view, 36, "data");
+  view.setUint32(40, sampleCount * 2, true);
+
+  for (let sampleIndex = 0; sampleIndex < sampleCount; sampleIndex += 1) {
+    const time = sampleIndex / sampleRate;
+    let value = 0;
+    events.forEach((event) => {
+      const localTime = time - event.start;
+      if (localTime < 0 || localTime > event.duration) return;
+      const fade = Math.min(1, localTime / 0.025, (event.duration - localTime) / 0.045);
+      const phase = 2 * Math.PI * event.frequency * localTime;
+      value += waveSample(event.type || "sine", phase) * (event.volume || 0.2) * Math.max(0, fade);
+    });
+    view.setInt16(44 + sampleIndex * 2, Math.max(-1, Math.min(1, value)) * 32767, true);
+  }
+
+  let binary = "";
+  const bytes = new Uint8Array(buffer);
+  const chunkSize = 8192;
+  for (let index = 0; index < bytes.length; index += chunkSize) {
+    binary += String.fromCharCode(...bytes.subarray(index, index + chunkSize));
+  }
+  return `data:audio/wav;base64,${btoa(binary)}`;
+}
+
+function getSoundClip(name) {
+  if (soundClipCache[name]) return soundClipCache[name];
+  const definitions = {
+    unlock: [{ frequency: 880, duration: 0.04, start: 0, volume: 0.01, type: "sine" }],
+    tap: [{ frequency: 523.25, duration: 0.08, start: 0, volume: 0.16, type: "triangle" }],
+    success: [
+      { frequency: 523.25, duration: 0.18, start: 0, volume: 0.26, type: "triangle" },
+      { frequency: 659.25, duration: 0.18, start: 0.1, volume: 0.26, type: "triangle" },
+      { frequency: 783.99, duration: 0.24, start: 0.2, volume: 0.3, type: "triangle" }
+    ],
+    wrong: [
+      { frequency: 220, duration: 0.16, start: 0, volume: 0.22, type: "square" },
+      { frequency: 164.81, duration: 0.22, start: 0.14, volume: 0.2, type: "square" }
+    ],
+    chord: [
+      { frequency: 523.25, duration: 0.64, start: 0, volume: 0.15, type: "triangle" },
+      { frequency: 659.25, duration: 0.64, start: 0.04, volume: 0.12, type: "triangle" },
+      { frequency: 783.99, duration: 0.64, start: 0.08, volume: 0.1, type: "triangle" }
+    ]
+  };
+  const audio = new Audio(makeWavDataUrl(definitions[name] || definitions.tap));
+  audio.preload = "auto";
+  soundClipCache[name] = audio;
+  return audio;
+}
+
+function getMusicAudio() {
+  if (musicAudio) return musicAudio;
+  const melody = [
+    [392, 523.25],
+    [440, 587.33],
+    [493.88, 659.25],
+    [523.25, 783.99],
+    [493.88, 659.25],
+    [440, 587.33],
+    [392, 523.25],
+    [329.63, 493.88]
+  ];
+  const events = melody.flatMap((notes, stepIndex) =>
+    notes.map((frequency, noteIndex) => ({
+      frequency,
+      duration: 0.42,
+      start: stepIndex * 0.56 + noteIndex * 0.09,
+      volume: noteIndex === 0 ? 0.18 : 0.13,
+      type: "triangle"
+    }))
+  );
+  musicAudio = new Audio(makeWavDataUrl(events));
+  musicAudio.loop = true;
+  musicAudio.preload = "auto";
+  return musicAudio;
+}
+
+function unlockHtmlAudio() {
+  if (htmlAudioUnlocked) return;
+  const clip = getSoundClip("unlock");
+  clip.muted = true;
+  clip.play()
+    .then(() => {
+      clip.pause();
+      clip.currentTime = 0;
+      clip.muted = false;
+      htmlAudioUnlocked = true;
+    })
+    .catch(() => {
+      clip.muted = false;
+    });
+}
+
+function playAudioClip(name, volume = 1) {
+  unlockHtmlAudio();
+  const source = getSoundClip(name);
+  const clip = source.cloneNode(true);
+  clip.volume = Math.max(0, Math.min(1, volume));
+  clip.play().catch(() => {});
 }
 
 function runWhenAudioReady(callback) {
@@ -1847,16 +1981,18 @@ function playTone(frequency, duration = 0.16, volume = 0.08, type = "sine") {
 }
 
 function playSuccessSound() {
+  playAudioClip("success", 1);
   ensureAudio({ unlock: true });
   [523.25, 659.25, 783.99].forEach((note, index) => {
-    window.setTimeout(() => playTone(note, 0.18, 0.16, "triangle"), index * 95);
+    window.setTimeout(() => playTone(note, 0.18, 0.02, "triangle"), index * 95);
   });
 }
 
 function playTryAgainSound() {
+  playAudioClip("wrong", 1);
   ensureAudio({ unlock: true });
   [220.0, 164.81].forEach((note, index) => {
-    window.setTimeout(() => playTone(note, 0.16, 0.13, "square"), index * 120);
+    window.setTimeout(() => playTone(note, 0.16, 0.02, "square"), index * 120);
   });
 }
 
@@ -1978,8 +2114,9 @@ function speakChunks(chunks, index) {
 }
 
 function playSoftChord(notes, duration = 0.7) {
+  playAudioClip("chord", 0.85);
   notes.forEach((note, index) => {
-    window.setTimeout(() => playTone(note, duration, 0.035, "triangle"), index * 70);
+    window.setTimeout(() => playTone(note, duration, 0.01, "triangle"), index * 70);
   });
 }
 
@@ -2003,22 +2140,35 @@ function playMusicStep() {
 
 function toggleMusic() {
   const nextState = !musicOn;
+  const music = getMusicAudio();
   if (!nextState) {
     musicOn = false;
     soundButton.classList.remove("active");
     soundButton.textContent = "♪";
     window.clearInterval(musicTimer);
     musicTimer = null;
+    music.pause();
     return;
   }
 
-  runWhenAudioReady(() => {
+  unlockHtmlAudio();
+  music.volume = getMusicElementVolume();
+  music.currentTime = 0;
+  music.play().then(() => {
     musicOn = true;
     soundButton.classList.add("active");
     soundButton.textContent = "♫";
     window.clearInterval(musicTimer);
-    playMusicStep();
-    musicTimer = window.setInterval(playMusicStep, 560);
+    musicTimer = null;
+  }).catch(() => {
+    runWhenAudioReady(() => {
+      musicOn = true;
+      soundButton.classList.add("active");
+      soundButton.textContent = "♫";
+      window.clearInterval(musicTimer);
+      playMusicStep();
+      musicTimer = window.setInterval(playMusicStep, 560);
+    });
   });
 }
 
@@ -2204,6 +2354,10 @@ function getMusicGain() {
   return 0.07 + normalized * 0.22;
 }
 
+function getMusicElementVolume() {
+  return Math.max(0, Math.min(1, musicVolume / 100));
+}
+
 function renderMusicVolume() {
   const slider = document.querySelector("#musicVolumeSlider");
   const label = document.querySelector("#musicVolumeLabel");
@@ -2215,6 +2369,7 @@ function renderMusicVolume() {
 function updateMusicVolume(value) {
   musicVolume = Math.max(0, Math.min(100, Number(value)));
   localStorage.setItem(musicVolumeStorageKey, String(musicVolume));
+  if (musicAudio) musicAudio.volume = getMusicElementVolume();
   renderMusicVolume();
 }
 
