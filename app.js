@@ -667,7 +667,7 @@ const screenEyebrow = document.querySelector("#screenEyebrow");
 const backButton = document.querySelector("#backButton");
 const navItems = [...document.querySelectorAll(".nav-item")];
 const soundButton = document.querySelector("#soundButton");
-const assetVersion = "37";
+const assetVersion = "38";
 const serviceWorkerPath = `./sw.js?v=${assetVersion}`;
 const trialStorageKey = "arcakidsTrialUntil";
 const membershipStorageKey = "arcakidsMembershipActive";
@@ -701,6 +701,7 @@ let firstMemoryCard = null;
 let lockMemory = false;
 let memoryMistakes = 0;
 let audioContext = null;
+let audioUnlocked = false;
 let musicTimer = null;
 let musicOn = false;
 let musicStep = 0;
@@ -1780,18 +1781,59 @@ function paintAt(event) {
   ctx.fill();
 }
 
-function ensureAudio() {
+function getAudioConstructor() {
+  return window.AudioContext || window.webkitAudioContext || null;
+}
+
+function ensureAudio({ unlock = false } = {}) {
+  const AudioCtor = getAudioConstructor();
+  if (!AudioCtor) return null;
   if (!audioContext) {
-    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    audioContext = new AudioCtor({ latencyHint: "interactive" });
   }
   if (audioContext.state === "suspended") {
-    audioContext.resume();
+    audioContext.resume().catch(() => {});
+  }
+  if (unlock) unlockAudioContext();
+  return audioContext;
+}
+
+function unlockAudioContext() {
+  if (!audioContext || audioUnlocked) return;
+  try {
+    const now = audioContext.currentTime;
+    const oscillator = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+    gain.gain.setValueAtTime(0.0001, now);
+    oscillator.connect(gain).connect(audioContext.destination);
+    oscillator.start(now);
+    oscillator.stop(now + 0.03);
+    audioUnlocked = true;
+  } catch {
+    audioUnlocked = false;
   }
 }
 
+function runWhenAudioReady(callback) {
+  const context = ensureAudio({ unlock: true });
+  if (!context) return;
+  const run = () => {
+    if (context.state === "running") callback();
+  };
+  if (context.state === "running") {
+    run();
+    return;
+  }
+  context.resume().then(run).catch(() => {});
+}
+
 function playTone(frequency, duration = 0.16, volume = 0.08, type = "sine") {
-  ensureAudio();
-  if (!audioContext) return;
+  const context = ensureAudio({ unlock: true });
+  if (!context) return;
+  if (context.state !== "running") {
+    context.resume().then(() => playTone(frequency, duration, volume, type)).catch(() => {});
+    return;
+  }
   const oscillator = audioContext.createOscillator();
   const gain = audioContext.createGain();
   oscillator.type = type;
@@ -1805,16 +1847,16 @@ function playTone(frequency, duration = 0.16, volume = 0.08, type = "sine") {
 }
 
 function playSuccessSound() {
-  ensureAudio();
+  ensureAudio({ unlock: true });
   [523.25, 659.25, 783.99].forEach((note, index) => {
-    window.setTimeout(() => playTone(note, 0.18, 0.1, "triangle"), index * 95);
+    window.setTimeout(() => playTone(note, 0.18, 0.16, "triangle"), index * 95);
   });
 }
 
 function playTryAgainSound() {
-  ensureAudio();
+  ensureAudio({ unlock: true });
   [220.0, 164.81].forEach((note, index) => {
-    window.setTimeout(() => playTone(note, 0.16, 0.08, "square"), index * 120);
+    window.setTimeout(() => playTone(note, 0.16, 0.13, "square"), index * 120);
   });
 }
 
@@ -1834,7 +1876,7 @@ function renderStory() {
 }
 
 function playStoryCue() {
-  ensureAudio();
+  ensureAudio({ unlock: true });
   const page = stories[currentStory].pages[currentStoryPage];
   playSoftChord([523.25, 659.25, 783.99], 0.7);
   narrateStory(page.text);
@@ -1960,17 +2002,24 @@ function playMusicStep() {
 }
 
 function toggleMusic() {
-  ensureAudio();
-  musicOn = !musicOn;
-  soundButton.classList.toggle("active", musicOn);
-  soundButton.textContent = musicOn ? "♫" : "♪";
-  if (musicOn) {
-    playMusicStep();
-    musicTimer = window.setInterval(playMusicStep, 560);
-  } else {
+  const nextState = !musicOn;
+  if (!nextState) {
+    musicOn = false;
+    soundButton.classList.remove("active");
+    soundButton.textContent = "♪";
     window.clearInterval(musicTimer);
     musicTimer = null;
+    return;
   }
+
+  runWhenAudioReady(() => {
+    musicOn = true;
+    soundButton.classList.add("active");
+    soundButton.textContent = "♫";
+    window.clearInterval(musicTimer);
+    playMusicStep();
+    musicTimer = window.setInterval(playMusicStep, 560);
+  });
 }
 
 function toggleFreeTrial() {
@@ -2152,7 +2201,7 @@ function updateDailyLimitUnlimited(checked) {
 
 function getMusicGain() {
   const normalized = Math.max(0, Math.min(100, musicVolume)) / 100;
-  return 0.035 + normalized * 0.155;
+  return 0.07 + normalized * 0.22;
 }
 
 function renderMusicVolume() {
@@ -2243,6 +2292,16 @@ document.querySelector("#narrationRateSlider")?.addEventListener("input", (event
   updateNarrationRate(event.target.value);
 });
 document.querySelector("#miniGameNext").addEventListener("click", advanceMiniGame);
+
+["pointerdown", "touchstart", "click"].forEach((eventName) => {
+  document.addEventListener(
+    eventName,
+    () => {
+      ensureAudio({ unlock: true });
+    },
+    { passive: true }
+  );
+});
 
 soundButton.addEventListener("click", (event) => {
   event.stopPropagation();
